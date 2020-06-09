@@ -1,0 +1,26 @@
+.countdown {
+    width: calc(var(--cell-size) * 1.5);
+    font-family: "pacifico";
+    height: calc(var(--cell-size) * .75);
+    font-size: calc(var(--cell-size) * .55);
+    line-height: calc(var(--cell-size) * .5);
+    text-align: start;
+    position: absolute;
+    font-family: "pacifico";
+}
+.countdown_player1 {
+    bottom: calc(var(--cell-size) * 1.75);
+    right: 0;
+}
+.countdown_player2 {
+    bottom: calc(var(--cell-size) * 1.75);
+    left: 0;
+}
+.countdown_player3 {
+    top: calc(var(--cell-size) * 1.75);
+    left: 0;
+}
+.countdown_player4 {
+    top: calc(var(--cell-size) * 1.75);
+    right: 0;
+}

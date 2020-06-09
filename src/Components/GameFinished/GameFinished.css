@@ -1,0 +1,66 @@
+.game-finished_main-container {
+    width: 100%;
+    height: 100%;
+    font-family: "pacifico";
+    color: var(--color-black);
+}
+.game_finished_table {
+    width: 100%;
+}
+.game_finished_tr_rank-delta {
+    width: 50px;
+    text-align: end;
+}
+.game_finished_tr_winner {
+    width: 25px;
+}
+.game-finished_medal_container {
+    position: relative;
+    width: 25px;
+    height: 25px;
+}
+.game-finished_medal {
+    width: 25px;
+    height: 25px;
+    background-color: yellow;
+    border: 3px solid orange;
+    border-radius: 50px;
+    line-height: 14px;
+    position: relative;
+    z-index: 1;
+}
+.game-finished_medal::after {
+    content: attr(data-num);
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: calc(var(--cell-size) / 2);
+}
+.game-finished_medal-tape {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 10px solid;
+    transform: rotate(45deg);
+    top: -50%;
+    left: 2px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: green;
+    border-right-color: blue;   
+}
+.game_finished_tr_name {
+    width: 160px
+}
+.game_finished_tr_rank-delta {
+    width: 40px;
+}
+.game_finished_table-header {
+    color: black;
+} 
+.game-finished_close {
+    position: absolute;
+    width: 15px;
+    right: 5px;
+    cursor: pointer;
+}

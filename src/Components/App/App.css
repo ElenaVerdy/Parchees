@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "my-font";
+  src: url("./19313.ttf") format("truetype");
+}
+button {
+  font-family: "my-font";
+  display: block;
+  padding: 10px;
+  width: 240px;
+  border-radius: 5px;
+  margin: 5px auto;
+  font-size: 21px;
+}
+div {
+  box-sizing: border-box;
+}
+.App {
+  width: 900px;
+  height: 650px;
+  background-color: rgb(255, 245, 233);
+}
+.App_header{
+  width: 100%;
+  height: 50px;
+  background-color: rgb(191, 255, 255);
+}
+.App_main {
+  width: 100%;
+  height: 600px;
+  display: flex;
+}
+.App_main-offside {
+  width: 300px;
+  display: flex;
+  flex: 1;
+}
+.App_main-container {
+  width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.App_game-finished_container {
+  position: absolute;
+  top: -100%;
+  width: calc(var(--cell-size) * 6);
+  height: calc(var(--cell-size) * 4);
+  background-color: rgba(238, 130, 238, 0.98);
+  transition: all 0.8s cubic-bezier(.33,1.45,.93,.97);
+  border: solid 2px violet;
+  border-radius: 10px;
+  box-shadow: 1px 1px 3px 2px  black;
+}
+.App_game-finished_container_shown {
+  top: calc(var(--cell-size) * 5);
+}

@@ -1,0 +1,52 @@
+:root {
+    --cell-size: 45px;
+    --color-black: #272727;
+}
+.tables_list {
+    width: 560px;
+    height: 450px;
+    border: 1px solid black;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    overflow-y: scroll;
+    padding: 15px 27px;
+    background-color: bisque;
+}
+.tables_container {
+    position: relative;
+    width: 100%;
+    height: 480px;
+}
+.tables_table {
+    width: calc(var(--cell-size) * 4);
+    height: calc(var(--cell-size) * 2);
+    border: solid 1px black;
+    float: left;
+    margin: calc(var(--cell-size) / 6);
+}
+.tables_player-names-container {
+    width: 50%
+}
+.tables_row-header {
+    font-weight: 300;
+}
+.tables_row {
+    font-family: "pacifico";
+}
+tbody .tables_row:nth-child(odd) {
+    background-color: rgba(0,0,0,0.1);
+}
+.tables_name {
+    width: 200px;
+}
+.tables_bet {
+    width: 90px;
+}
+.tables_rank {
+    width: 90px;
+    text-align: center;
+}
+.tables_players {
+    width: 90px;
+}
