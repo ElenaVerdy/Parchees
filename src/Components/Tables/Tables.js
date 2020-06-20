@@ -30,9 +30,8 @@ export default class Game extends React.Component {
                         </thead>
                         <tbody>
                             {this.props.tables.map(t => {
-                                console.log(t)
                                 return (
-                                    <tr className="tables_row" key={t.tableId} onClick={() => {this.props.socket.emit("connect-to-request", {id: t.id})}}>
+                                    <tr className="tables_row" key={t.tableId} onClick={() => {console.log(t);this.props.socket.emit("connect-to-request", {id: t.tableId})}}>
                                         <td className="tables_name">{t.tableId}</td>
                                         <td className="tables_bet">123</td>
                                         <td className="tables_rank">123</td>

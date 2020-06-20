@@ -4,7 +4,7 @@ import './CountDown.css';
 export default class CountDown extends React.Component {
   constructor(props){
 	super(props)
-	this.givenTime = 20;
+	this.givenTime = 30;
     this.state = {
       	time: 0
 	}
@@ -26,14 +26,14 @@ export default class CountDown extends React.Component {
 
 	}
 	componentDidMount() {
-		this.restart();
+		this.restart(15);
 	}
 	componentWillUnmount() {
 		clearTimeout(this.timer);
 	}
-  	restart() {
+  	restart(seconds) {
 	    this.setState({
-			time: this.givenTime
+			time: seconds || this.givenTime
 		})
     	this.timer = setTimeout(this.tick, 1000);
   	}

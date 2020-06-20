@@ -62,7 +62,7 @@ export default class SideMenu extends React.Component {
                                 ( this.props.dice.length && !this.state.doublesStreak ? 
                                     <button disabled={this.props.disabled} onClick={() => {this.props.socket.emit("finish-turn", {tableId: this.props.tableId})}}>{this.dictionary.finish}</button>
                                     : <button disabled={this.props.disabled} onClick={() => {
-                                        this.props.socket.emit("roll-dice", {dice:[6], tableId: this.props.tableId})
+                                        this.props.socket.emit("roll-dice", {dice:[], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
                                 : <button disabled className="side-menu_other-players-turn">{this.dictionary.otherPlayersMove}</button>}
                             <div className="side-menu_info">

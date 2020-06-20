@@ -6,11 +6,18 @@ import Lobby from "../Lobby/Lobby"
 import io from "socket.io-client";
 import SideMenu from "../SideMenu/SideMenu"
 import GameFinished from "../GameFinished/GameFinished"
-import _ from "lodash";
+import cloneDeep from 'lodash.clonedeep'
 
+const VK = window.VK;
 
-const ENDPOINT = "http://192.168.1.67:8080";
-
+const ENDPOINT = "https://parcheesi.herokuapp.com/";
+VK.init(function() {
+	window.isVK = true;
+	 console.log("success")
+  }, function() {
+	window.isVK = false;
+	console.log("bad")
+}, '5.103');
 const socket = io.connect(ENDPOINT);
 export default class App extends React.Component {
 	constructor(props) {
@@ -39,7 +46,7 @@ export default class App extends React.Component {
 		this.diceRolled = diceRolled.bind(this);
 		this.endGame = endGame.bind(this);
 		this.disable = disable.bind(this);
-		this.timers = []
+		this.timers = [];
 	}
 	
 	componentDidMount() {
@@ -50,7 +57,7 @@ export default class App extends React.Component {
 		this.socket.on("update-tables", data => {this.setState({tables: data})})		
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
-				let playersInfo = _.cloneDeep(this.state.playersInfo);
+				let playersInfo = cloneDeep(this.state.playersInfo);
 				playersInfo[data.playerLeftIndex].left = true;
 
 				this.setState({playersInfo});
