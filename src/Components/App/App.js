@@ -8,16 +8,20 @@ import SideMenu from "../SideMenu/SideMenu"
 import GameFinished from "../GameFinished/GameFinished"
 import cloneDeep from 'lodash.clonedeep'
 
-const VK = window.VK;
+let debug = window.location.href === "http://192.168.1.67:3000/";
+const ENDPOINT = debug ? "http://192.168.1.67:8000/" : "https://parcheesi.herokuapp.com/";
 
-const ENDPOINT = "https://parcheesi.herokuapp.com/";
-VK.init(function() {
-	window.isVK = true;
-	 console.log("success")
-  }, function() {
-	window.isVK = false;
-	console.log("bad")
-}, '5.103');
+if (!debug) {
+	const VK = window.VK;
+	VK.init(function() {
+		window.isVK = true;
+		console.log("success")
+	}, function() {
+		window.isVK = false;
+		console.log("bad")
+	}, '5.103');
+}
+
 const socket = io.connect(ENDPOINT);
 export default class App extends React.Component {
 	constructor(props) {
