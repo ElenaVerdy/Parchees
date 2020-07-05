@@ -10,14 +10,27 @@ import cloneDeep from 'lodash.clonedeep'
 
 let debug = window.location.href === "http://192.168.1.67:3000/";
 const ENDPOINT = debug ? "http://192.168.1.67:8000/" : "https://parcheesi.herokuapp.com/";
-
+const VK = window.VK;
+const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
+let userInfo = {
+	photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
+	photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
+	rank: 2100, 
+	bank: 3000,
+	username: 'Lindsey',
+	id: 123123123
+};
 if (!debug) {
-	const VK = window.VK;
 	VK.init(function() {
-		window.isVK = true;
-		console.log("success")
+		VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
+			const data = res && res.response && res.response[0];
+			if (!data) throw new Error('can not fetch user data');
+			userInfo.photo_50 = data.photo_50;
+			userInfo.photo_100 = data.photo_100;
+			userInfo.username = data.first_name;
+			userInfo.id = data.id;
+		});
 	}, function() {
-		window.isVK = false;
 		console.log("bad")
 	}, '5.103');
 }
@@ -43,6 +56,7 @@ export default class App extends React.Component {
 			gameResults: [],
 			endGameAfterDisableFalls: false
 		}
+		this.userInfo = userInfo;
 		this.socket = socket;
 		this.handleAllPlayersReady = handleAllPlayersReady.bind(this);
 		this.handleGameStart = handleGameStart.bind(this);
@@ -55,16 +69,16 @@ export default class App extends React.Component {
 	
 	componentDidMount() {
 		this.socket.on("connect-to", data => {
-			this.setState({connectedToTable: true, tableId: data.id});
+			this.setState({ connectedToTable: true, tableId: data.id });
 		})
 		
-		this.socket.on("update-tables", data => {this.setState({tables: data})})		
+		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
 				let playersInfo = cloneDeep(this.state.playersInfo);
 				playersInfo[data.playerLeftIndex].left = true;
 
-				this.setState({playersInfo});
+				this.setState({ playersInfo });
 			} else if (!this.state.gameOn && data.players) {
 				let playersOrder = getPlayersOrder(data.players.length);
 				this.setState({
@@ -112,7 +126,8 @@ export default class App extends React.Component {
 								  dice={this.state.dice}
 								  diceRolled={this.diceRolled}
 								  disable={this.disable}
-								  disabled={this.state.disabled} />
+								  disabled={this.state.disabled} 
+								  userInfo={this.userInfo}/>
 
 					</div>
 					<div className="App_main-container">
@@ -127,7 +142,8 @@ export default class App extends React.Component {
 													 disable={this.disable} 
 													 disabled={this.state.disabled} /> 
 											 : <Lobby tables={this.state.tables} 
-													   socket={this.socket} />}
+													  socket={this.socket}
+													  userInfo={this.userInfo} />}
 						<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
 							<GameFinished results={this.state.gameResults} close={() => {this.setState({gameFinishedModal: false, gameResults: []})}} />
 						</div>

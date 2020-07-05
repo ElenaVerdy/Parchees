@@ -9,7 +9,7 @@ export default class Game extends React.Component {
     componentDidMount() {
         this.props.socket.emit("get-tables-request");
         this.timer = setInterval(()=>{
-			this.props.socket.emit("get-tables-request");
+            this.props.socket.emit("get-tables-request");
 		}, 1000)
     }
     componentWillUnmount() {
@@ -21,21 +21,23 @@ export default class Game extends React.Component {
                 <div className="tables_list">
                     <table>
                         <thead>
-                            <tr className="tables_row tables_row-header">
-                                <td className="tables_name">Стол</td>
-                                <td className="tables_bet">Ставка</td>
+                            <tr className="tables_row-header">
+                                <td className="tables_players table_players-header">игроки</td>
+                                <td className="tables_bet">ставка</td>
                                 <td className="tables_rank">&#9733;</td>
-                                <td className="tables_players">Игроки</td>
                             </tr>
                         </thead>
                         <tbody>
                             {this.props.tables.map(t => {
                                 return (
-                                    <tr className="tables_row" key={t.tableId} onClick={() => {console.log(t);this.props.socket.emit("connect-to-request", {id: t.tableId})}}>
-                                        <td className="tables_name">{t.tableId}</td>
+                                    <tr className="tables_row" key={t.tableId}>
+                                        <td className="tables_players">
+                                            <div className="tables_join-button" onClick={() => {this.props.socket.emit("connect-to-request", {...this.props.userInfo, id: t.tableId})}}>играть</div>
+                                            {t.players.map(player => (<div className="tables_player-icon"><img width={40} height={40} src={player.photo_50}></img></div>))}
+                                            <div className="tables_player-icon table-join-icon" onClick={() => {this.props.socket.emit("connect-to-request", {...this.props.userInfo, id: t.tableId})}}></div>
+                                        </td>
                                         <td className="tables_bet">123</td>
                                         <td className="tables_rank">123</td>
-                                        <td className="tables_players">123</td>
                                     </tr>
                                 )  
                             })}

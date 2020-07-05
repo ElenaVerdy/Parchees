@@ -1,26 +1,48 @@
 .countdown {
-    width: calc(var(--cell-size) * 1.5);
-    font-family: "pacifico";
     height: calc(var(--cell-size) * .75);
     font-size: calc(var(--cell-size) * .55);
     line-height: calc(var(--cell-size) * .5);
     text-align: start;
     position: absolute;
-    font-family: "pacifico";
+    font-weight: 400;
+    display: flex;
+}
+.countdown_player1, .countdown_player2 {
+    align-items: flex-end;
+}
+.countdown_player3, .countdown_player4 {
+    align-items: flex-start;
+}
+.countdown_player1 .countdown_timer,
+.countdown_player2 .countdown_timer{
+    line-height: 0.7;
+}
+.countdown_timer {
+    height: fit-content;
+}
+.countdown_timer-icon::before {
+    width: 20px;
+    height: 20px;
+    background-image: url(../../assets/icons/clock1.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    content: "  ";
+    display: block;
 }
 .countdown_player1 {
-    bottom: calc(var(--cell-size) * 1.75);
-    right: 0;
+    bottom: calc(var(--cell-size) * 1.2);
+    right: calc(var(--cell-size) * 1.9);
 }
 .countdown_player2 {
-    bottom: calc(var(--cell-size) * 1.75);
-    left: 0;
+    bottom: calc(var(--cell-size) * 1.2);
+    left: calc(var(--cell-size) * 1.9);
 }
 .countdown_player3 {
-    top: calc(var(--cell-size) * 1.75);
-    left: 0;
+    top: calc(var(--cell-size) * 1.2);
+    left: calc(var(--cell-size) * 1.9);
 }
 .countdown_player4 {
-    top: calc(var(--cell-size) * 1.75);
-    right: 0;
+    top: calc(var(--cell-size) * 1.2);
+    right: calc(var(--cell-size) * 1.9);
 }

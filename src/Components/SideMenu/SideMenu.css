@@ -5,7 +5,7 @@
     border: 7.5px solid bisque;
 }
 .die .face {
-    border: 1px solid black;
+    border: 1px solid var(--color-black);
     border-radius: 5px;
 }
 .die-container_active {
@@ -21,8 +21,7 @@
     height: 83px;
     border: 3px solid bisque;
     background-color: bisque;
-    font-family: "pacifico";
-    font-size: larger;
+    font-size: x-large;
     line-height: 30px;
     display: table-cell;
     text-align: center;

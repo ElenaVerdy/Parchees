@@ -95,7 +95,7 @@ export default class SideMenu extends React.Component {
                             </div>
                         </div>)
                     : <div>
-                        <button onClick={() => {this.props.socket.emit("new-table")}}>Новая игра!</button>
+                        <button onClick={() => {this.props.socket.emit("new-table", this.props.userInfo)}}>Новая игра!</button>
                         <div className="side-menu_info">Создай новый стол или присоединись к существующему!</div>
                     </div>
             }

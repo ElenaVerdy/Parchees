@@ -1,7 +1,7 @@
 import React from 'react';
 import './Game.css';
 import CountDown from '../CountDown/CountDown';
-
+import PlayerInfo from '../PlayerInfo/PlayerInfo'
 
 export default class Game extends React.Component {
 
@@ -194,7 +194,7 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell_player2" data-number="8" id="game_cell32"></div>
                     <div className="game_cell game_cell_player2" data-number="7" id="game_cell31"></div>
                     <div className="game_cell" data-number="6" id="game_cell30"></div>
-                    <div className="game_cell game_cell_cant-stand game_cell_arrow" data-number="&larr;"></div>
+                    <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-left"></div>
                     <div className="game_cell" data-number="6" id="game_cell18"></div>
                     <div className="game_cell game_cell_player4" data-number="5" id="game_cell17"></div>
                     <div className="game_cell game_cell_player4" data-number="4" id="game_cell16"></div>
@@ -208,9 +208,9 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_2"></div>
                     <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_3"></div>
                     <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_4"></div>
-                    <div className="game_cell game_cell_cant-stand game_cell_arrow" data-number="&darr;"></div>
-                    <div className="game_cell game_cell_cant-stand game_cell_center" data-number="🡤🡥 🡧🡦"></div>
-                    <div className="game_cell game_cell_cant-stand game_cell_arrow" data-number="&uarr;"></div>
+                    <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-down"></div>
+                    <div className="game_cell game_cell_cant-stand game_cell_center arrow arrows-crossing" ></div>
+                    <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-up"></div>
                     <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_4"></div>
                     <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_3"></div>
                     <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_2"></div>
@@ -224,7 +224,7 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell_player2" data-number="4" id="game_cell40"></div>
                     <div className="game_cell game_cell_player2" data-number="5" id="game_cell41"></div>
                     <div className="game_cell" data-number="6" id="game_cell42"></div>
-                    <div className="game_cell game_cell_cant-stand game_cell_arrow" data-number="&rarr;"></div>
+                    <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-right"></div>
                     <div className="game_cell" data-number="6" id="game_cell6"></div>
                     <div className="game_cell game_cell_player4" data-number="7" id="game_cell7"></div>
                     <div className="game_cell game_cell_player4" data-number="8" id="game_cell8"></div>
@@ -281,9 +281,6 @@ export default class Game extends React.Component {
                     )}
                     {this.props.playersOrder.map((i, index) => {
                         let playerLeft = this.props.playersInfo[index].left;
-                        let playerInfoClassName = 'game_player-info game_player-info_' + i;
-                        playerInfoClassName += this.props.yourTurn === index ? ' game_player-info_me' : '';
-                        playerInfoClassName += playerLeft ? ' disabled' : '';
                         return (
                         <React.Fragment key={`game_chip-base_player${i}`}>
                             <div className={`game_chip-base game_chip-base_player${i}${playerLeft ? ' disabled' : ''}`}>
@@ -293,12 +290,8 @@ export default class Game extends React.Component {
                                          key={`game_chip-base_chip-space_player${i}_num${k}`}/>
                                 ))}
                             </div>
-                            <div className={playerInfoClassName}>
-                                <div className="game_player-info_name">{this.props.playersInfo[index].name}</div>
-                                <div className="game_player-info_img"><img width={50} height={50} src={this.props.playersInfo[index].picture}></img></div>
-                                {!this.props.gameOn && this.props.playersInfo[index].ready ? <div className={`game_player-info_ready game_player-info_ready_${i}`}>Готов!</div> : ""}
-                            </div> 
-                            {this.props.playersOrder[this.props.turn] === i? 
+                            <PlayerInfo playerLeft={playerLeft} num={i} playersInfo={this.props.playersInfo[index]}/>
+                            {this.props.playersOrder[this.props.turn] === i ?
                                 <CountDown playerNum={i} timedOut={this.timedOut} disabled={this.props.disabled} dice={this.state.dice} myTimer={this.props.turn === this.props.yourTurn} />
                                 : ""}
                             {[1, 2, 3, 4].map(k => {

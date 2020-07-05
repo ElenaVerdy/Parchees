@@ -1,3 +1,43 @@
+table {
+    border-collapse: collapse;
+}
 .disabled {
     opacity: 0.5;
+}
+button {
+    display: block;
+    padding: 10px 0px;
+    width: 240px;
+    border-radius: 5px;
+    margin: 5px auto;
+    font-size: 30px;
+    font-weight: 600;
+    font-family: inherit;
+}
+div {
+    box-sizing: border-box;
+}
+.btn-small {
+    width: 100%;
+    font-weight: 600;
+    font-size: 20px;
+    padding: 3px 3px;
+    margin: 2px;
+}
+.icon {
+    font-size: 25px;
+    text-align: center;
+    width: 20px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
 }

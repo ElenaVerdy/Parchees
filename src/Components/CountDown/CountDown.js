@@ -51,7 +51,7 @@ export default class CountDown extends React.Component {
   render() {
     return(
       <div className={`countdown countdown_player${this.props.playerNum}`}>
-        <span>{"00:" + ("0" + this.state.time).slice(-2)}</span>
+        <div className="countdown_timer-icon" /><div className="countdown_timer">{"00:" + ("0" + this.state.time).slice(-2)}</div>
       </div>
     )
   }

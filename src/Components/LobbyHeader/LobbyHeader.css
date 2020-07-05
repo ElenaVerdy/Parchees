@@ -1,4 +1,41 @@
 .lobby-header {
     height:120px;
-    border: 7.5px solid bisque;
+    display: flex;
+    padding: 20px 20px 0px 20px;
+}
+.lobby-header_right {
+    display: flex;
+    flex: 10 auto;
+    border-right: 1px solid var(--color-black);
+    padding: 0px 3px;
+}
+.lobby-header_left {
+    width: 150px;
+}
+.lobby-header_photo {
+    border-radius: 7px;
+    margin-right: 8px;
+    overflow: hidden;
+    box-shadow: 0px 1px 2px var(--color-black);
+}
+.lobby-header_name {
+    text-decoration: underline;
+    font-size: 30px;
+}
+.lobby-header_rank, .lobby-header_bank {
+    display: flex;
+    align-items: center;
+    margin-top: -7px;
+}
+.lobby-header_rank-number {
+    padding-top: 3px;
+}
+.lobby-header_dollar-number {
+    padding-top: 3px;
+}
+.lobby-header_rank-star {
+    color: gold;
+}
+.lobby-header_dollar-sign {
+    color: green;
 }
