@@ -46,6 +46,7 @@ export default class App extends React.Component {
 			tableId: null,
 			playersInfo: [],
 			playersOrder: [],
+			doublesStreak: 0,
 			gameOn: false,
 			yourTurn: null,
 			countDown: null,
@@ -54,7 +55,8 @@ export default class App extends React.Component {
 			disabled: false,
 			gameFinishedModal: false,
 			gameResults: [],
-			endGameAfterDisableFalls: false
+			doAfterDisable: [],
+			moveData: null
 		}
 		this.userInfo = userInfo;
 		this.socket = socket;
@@ -64,6 +66,7 @@ export default class App extends React.Component {
 		this.diceRolled = diceRolled.bind(this);
 		this.endGame = endGame.bind(this);
 		this.disable = disable.bind(this);
+		this.logAction = logAction.bind(this);
 		this.timers = [];
 	}
 	
@@ -92,21 +95,52 @@ export default class App extends React.Component {
 		this.socket.on("game-start", this.handleGameStart);
 		this.socket.on("next-turn", this.handleNextTurn);
 		this.socket.on("player-won", (data) => {
-			this.setState({ gameResults: data.results });
-			if (this.state.disabled) {
-				this.setState({endGameAfterDisableFalls: true});
-			} else {
+			if (data.error) return console.error(data.error);
+			if (this.state.disabled)
+				this.logAction('player-won', data);
+			else
 				this.endGame(data);
-			}
-		})
+		});
+		this.socket.on("dice-rolled", data => {
+			if (data.error) return console.error(data.error);
+            if (this.state.disabled)
+				this.logAction('dice-rolled', data)
+			else
+				this.diceRolled(data);
+		});
+		this.socket.on("player-made-move", (data) => {
+			if (data.error) return console.error(data.error);
+			if (this.state.disabled)
+				this.logAction('player-made-move', data)
+			else
+				this.setState({ moveData: data });
+        });
 	}
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.connectedToTable !== this.state.connectedToTable && !this.state.connectedToTable) {
 			this.socket.emit("get-tables-request")
 		}
 
-		if (prevState.disabled && !this.state.disabled && this.state.endGameAfterDisableFalls) {
-			this.endGame()
+		if (prevState.disabled && !this.state.disabled && this.state.doAfterDisable.length) {
+			let action = this.state.doAfterDisable.pop();
+			
+			switch (action.name) {
+				case 'player-won':
+					this.endGame(action.data);
+					break;
+
+				case 'dice-rolled':
+					this.diceRolled(action.data);
+					break;
+
+				case 'player-made-move':
+					this.setState({ moveData: action.data });
+					break;
+
+				default:
+					console.log('check actions out!')
+					break;
+			}
 		}
 	}
 
@@ -124,7 +158,7 @@ export default class App extends React.Component {
 								  yourTurn={this.state.yourTurn}
 								  turn={this.state.turn} 
 								  dice={this.state.dice}
-								  diceRolled={this.diceRolled}
+								  doublesStreak={this.state.doublesStreak}
 								  disable={this.disable}
 								  disabled={this.state.disabled} 
 								  userInfo={this.userInfo}/>
@@ -132,18 +166,24 @@ export default class App extends React.Component {
 					</div>
 					<div className="App_main-container">
 						{this.state.connectedToTable ? <Game tableId={this.state.tableId}
-													 socket={this.socket}
-													 playersInfo={this.state.playersInfo}
-													 playersOrder={this.state.playersOrder}
-													 yourTurn={this.state.yourTurn}
-													 gameOn={this.state.gameOn}
-													 turn={this.state.turn}
-													 dice={this.state.dice} 
-													 disable={this.disable} 
-													 disabled={this.state.disabled} /> 
-											 : <Lobby tables={this.state.tables} 
+															 socket={this.socket}
+														 	 playersInfo={this.state.playersInfo}
+														 	 playersOrder={this.state.playersOrder}
+														 	 yourTurn={this.state.yourTurn}
+															 gameOn={this.state.gameOn}
+															 turn={this.state.turn}
+															 dice={this.state.dice}
+															 disable={this.disable}
+															 disabled={this.state.disabled}
+															 logAction={this.logAction}
+															 moveMade={() => this.setState({ moveData: null })}
+															 moveData={this.state.moveData}
+														/>
+											 : <Lobby tables={this.state.tables}
 													  socket={this.socket}
-													  userInfo={this.userInfo} />}
+													  userInfo={this.userInfo}
+												/>
+						}
 						<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
 							<GameFinished results={this.state.gameResults} close={() => {this.setState({gameFinishedModal: false, gameResults: []})}} />
 						</div>
@@ -153,14 +193,26 @@ export default class App extends React.Component {
 		);
 	}
 }
-function endGame() {
+function diceRolled(data) {
+	let tmp = 0;
+	if (data.dice[0] === data.dice[1])
+		tmp = this.state.doublesStreak === 2 ? 0 : this.state.doublesStreak + 1;
+
+	this.setState({ doublesStreak: tmp, dice: data.dice });
+}
+function logAction(name, data) {
+	let doAfterDisable = this.state.doAfterDisable;
+	doAfterDisable.push({ name, data });
+	this.setState({ doAfterDisable });
+}
+function endGame(data) {
 	this.setState({
 		gameFinishedModal: true, 
 		gameOn: false,
 		turn: null,
 		dice: [],
 		disabled: false,
-		endGameAfterDisableFalls: false
+		gameResults: data.results
 	});
 }
 function handleGameStart(data) {
@@ -188,10 +240,6 @@ function handleAllPlayersReady(data) {
 			}, 5000 - i * 1000)
 		}
 	}
-}
-
-function diceRolled(dice) {
-	this.setState({dice})
 }
 
 function disable(bool) {

@@ -26,18 +26,6 @@ export default class SideMenu extends React.Component {
             ready: false,
             doublesStreak: 0
 		}
-		this.props.socket.on("dice-rolled", data => {
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                if (data.dice[0] === data.dice[1]) {
-                    this.state.doublesStreak = this.state.doublesStreak === 2 ? 0 : this.state.doublesStreak + 1;
-                } else {
-                    this.state.doublesStreak = 0;
-                }
-                this.props.diceRolled(data.dice)
-            }
-        });
 	}
 	componentDidUpdate(prevProps, prevState) {
         if (prevProps.dice !== this.props.dice && this.props.dice.length) {
@@ -58,17 +46,17 @@ export default class SideMenu extends React.Component {
                     (this.props.gameOn ?
                         <div>
                             {this.props.turn === this.props.yourTurn ? 
-                                ( this.props.dice.length && !this.state.doublesStreak ? 
+                                ( this.props.dice.length && !this.props.doublesStreak ? 
                                     <button disabled={this.props.disabled} onClick={() => {this.props.socket.emit("finish-turn", {tableId: this.props.tableId})}}>{this.dictionary.finish}</button>
                                     : <button disabled={this.props.disabled} onClick={() => {
-                                        this.props.socket.emit("roll-dice", {dice:[6], tableId: this.props.tableId})
+                                        this.props.socket.emit("roll-dice", {dice:[6, 6], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
                                 : <button disabled className="side-menu_other-players-turn">{this.dictionary.otherPlayersMove}</button>}
                             <div className="side-menu_info">
                                 {this.props.turn === this.props.yourTurn ? 
                                 (this.props.dice.length ? 
-                                    (this.state.doublesStreak ? 
-                                        this.dictionary.double.replace("@", this.state.doublesStreak) : "") + this.dictionary.makeYourMove 
+                                    (this.props.doublesStreak ? 
+                                        this.dictionary.double.replace("@", this.props.doublesStreak) : "") + this.dictionary.makeYourMove 
                                         : this.dictionary.throwDiceTip)
                                 : ""
                             }

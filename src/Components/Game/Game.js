@@ -38,16 +38,6 @@ export default class Game extends React.Component {
     }
     
     componentDidMount() {
-        this.socket.on("player-made-move", (data) => {
-            if (data.error) {
-                console.error(data.error)
-            } else {
-                if (!data.position) console.log("no destination from server hmm")
-                if (data.diceNum === 7)
-                    this.moveChipToCell(this.state.chips[1][1], data.position, false, true);
-                this.performMove(this.state.chips[data.playerNum][data.num], data.diceNum, data.position);
-            }
-        });
         this.socket.on('removed', () => {console.log('removed')})
     }
 
@@ -61,6 +51,9 @@ export default class Game extends React.Component {
 
             setTimeout(() => this.props.playersOrder.map( i => this.returnChipsToBase(i)), 1000);
         }
+
+        if (!prevProps.moveData && this.props.moveData)
+            this.performMove(this.state.chips[this.props.moveData.playerNum][this.props.moveData.num], this.props.moveData.diceNum, this.props.moveData.position);
 
         if (prevProps.playersInfo !== this.props.playersInfo) {
             if (this.props.gameOn) {
@@ -123,7 +116,8 @@ export default class Game extends React.Component {
         }
     }
   	render(){
-        let chargedChipsNums = [ ,
+        let chargedChipsNums = [
+            null,
             this.state.scheme["game_start-cell_player1"].chips.length > 1 ? this.state.scheme["game_start-cell_player1"].chips.length : '',
             this.state.scheme["game_start-cell_player2"].chips.length > 1 ? this.state.scheme["game_start-cell_player2"].chips.length : '',
             this.state.scheme["game_start-cell_player3"].chips.length > 1 ? this.state.scheme["game_start-cell_player3"].chips.length : '',
@@ -137,8 +131,7 @@ export default class Game extends React.Component {
 
                     if (!event.target.classList.contains("game_cell-move") || this.props.yourTurn !== this.props.turn)
                         return;
-                        
-                    this.props.disable(true);
+
                     this.socket.emit("chip-moved", {tableId: this.props.tableId, 
                                                     yourTurn: this.props.yourTurn, 
                                                     chipNum: this.state.selectedChip.num,
@@ -383,14 +376,14 @@ function updateDiceActive() {
     
     dice.forEach((item, i) => {
         if (item && !this.props.disabled) 
-            diceElems[i].classList.add("die-container_active")
+            diceElems[i].classList.add("die-container_active");
         else 
             diceElems[i].classList.remove("die-container_active");
     })
 }
 
 function returnChipsToBase(playerNum) {
-    [1, 2, 3, 4].map( k => {
+    [1, 2, 3, 4].forEach( k => {
         let chip = this.state.chips[playerNum][k];
         let cellId = `game_chip-base_chip-space_player${playerNum}_num${k}`;
         this.moveChipToCell(chip, cellId, true);
@@ -416,7 +409,7 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     chip.position = cellId;
     chip.isAtBase = isBase;
 
-    if (this.state.scheme[cellId].chips.length && this.getPlayerFromCell(cellId) != chip.player) {
+    if (this.state.scheme[cellId].chips.length && (+this.getPlayerFromCell(cellId) !== +chip.player)) {
         let eatenChipElem = document.getElementById(this.state.scheme[cellId].chips[0]);
         let [player, num] = [eatenChipElem.getAttribute("data-player"), eatenChipElem.getAttribute("data-num")];
         
@@ -693,6 +686,8 @@ function getPossibleMoves(chip, dice) {
 
 function performMove(chip, diceNum, finalCellId) {
     let route = this.buildRoute(chip, finalCellId, diceNum);
+    this.props.disable(true);
+    this.props.moveMade();
 
     for (let i = 0; i < route.length; i++) {
         setTimeout(() => {

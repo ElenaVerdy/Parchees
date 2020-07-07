@@ -51,7 +51,7 @@
 .game_cell-start::after {
     content: attr(data-charged-chips);
     position: absolute;
-    bottom: -3px;
+    bottom: -13px;
     right: -1px;
     font-weight: 600;
     width: 100%;

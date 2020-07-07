@@ -12,7 +12,7 @@ export default function PlayerInfo (props) {
 						<div className="player-info_rank-number">{ props.playersInfo.rank }</div>
 					</div>
 				</div>
-				<div className="player-info_img"><img width={50} height={50} src={props.playersInfo.photo_50}></img></div>
+				<div className="player-info_img"><img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.userInfo.username }></img></div>
 			</div> 
 			<div className={`player-info_ready player-info_ready_${props.num} ${props.playersInfo.ready ? "player-info_ready-active" : ''}`}>
 				<div className="player-info_fire"></div>
