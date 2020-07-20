@@ -30,7 +30,9 @@ export default class Game extends React.Component {
                                     <tr className="tables_row" key={t.tableId}>
                                         <td className="tables_players">
                                             <div className="tables_join-button" onClick={() => {this.props.socket.emit("connect-to-request", {...this.props.userInfo, id: t.tableId})}}>играть</div>
-                                            {t.players.map(player => (<div className="tables_player-icon"><img width={40} height={40} src={player.photo_50} alt={player.username} /></div>))}
+                                            {t.players.map((player, index) => (<div className="tables_player-icon" key={`${t.playerId}_pl${index}`}>
+                                                <img width={40} height={40} src={player.photo_50} alt={player.username} />
+                                            </div>))}
                                             <div className="tables_player-icon table-join-icon" onClick={() => {this.props.socket.emit("connect-to-request", {...this.props.userInfo, id: t.tableId})}}></div>
                                         </td>
                                         <td className="tables_bet">123</td>

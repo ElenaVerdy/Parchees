@@ -49,7 +49,7 @@ export default class SideMenu extends React.Component {
                                 ( this.props.dice.length && !this.props.doublesStreak ? 
                                     <button disabled={this.props.disabled} onClick={() => {this.props.socket.emit("finish-turn", {tableId: this.props.tableId})}}>{this.dictionary.finish}</button>
                                     : <button disabled={this.props.disabled} onClick={() => {
-                                        this.props.socket.emit("roll-dice", {dice:[6, 6], tableId: this.props.tableId})
+                                        this.props.socket.emit("roll-dice", {dice:[], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
                                 : <button disabled className="side-menu_other-players-turn">{this.dictionary.otherPlayersMove}</button>}
                             <div className="side-menu_info">
@@ -67,7 +67,7 @@ export default class SideMenu extends React.Component {
                                        dotColor={"#272727"} 
                                        faceColor={"#ffffff"} 
                                        disableIndividual={true} 
-                                       rollDone={()=>{this.props.disable(false)}} />
+                                       rollDone={()=>{setTimeout(() => this.props.disable(false), 200)}} />
                         </div>
                         : <div>
                             {this.state.ready ? 

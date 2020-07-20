@@ -93,8 +93,13 @@ export default class App extends React.Component {
 		});
 		this.socket.on("all-players-ready", this.handleAllPlayersReady);
 		this.socket.on("game-start", this.handleGameStart);
-		this.socket.on("next-turn", this.handleNextTurn);
-		this.socket.on("player-won", (data) => {
+		this.socket.on("next-turn", data => {
+			if (this.state.disabled)
+				this.logAction('next-turn', data);
+			else
+				this.handleNextTurn(data);
+		});
+		this.socket.on("player-won", data => {
 			if (data.error) return console.error(data.error);
 			if (this.state.disabled)
 				this.logAction('player-won', data);
@@ -108,7 +113,7 @@ export default class App extends React.Component {
 			else
 				this.diceRolled(data);
 		});
-		this.socket.on("player-made-move", (data) => {
+		this.socket.on("player-made-move", data => {
 			if (data.error) return console.error(data.error);
 			if (this.state.disabled)
 				this.logAction('player-made-move', data)
@@ -122,9 +127,12 @@ export default class App extends React.Component {
 		}
 
 		if (prevState.disabled && !this.state.disabled && this.state.doAfterDisable.length) {
-			let action = this.state.doAfterDisable.pop();
-			
+			let action = this.state.doAfterDisable.shift();
 			switch (action.name) {
+				case 'next-turn':
+					this.handleNextTurn(action.data);
+					break;
+
 				case 'player-won':
 					this.endGame(action.data);
 					break;
@@ -138,7 +146,7 @@ export default class App extends React.Component {
 					break;
 
 				default:
-					console.log('check actions out!')
+					console.log('check actions out!');
 					break;
 			}
 		}

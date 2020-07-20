@@ -26,7 +26,7 @@ export default class CountDown extends React.Component {
 
 	}
 	componentDidMount() {
-		this.restart(15);
+		this.restart(10);
 	}
 	componentWillUnmount() {
 		clearTimeout(this.timer);
@@ -45,6 +45,7 @@ export default class CountDown extends React.Component {
 		this.timer = setTimeout(this.tick, 1000);
 	
 		if (!this.state.time && this.props.myTimer) {
+			clearTimeout(this.timer);
 			this.props.timedOut();
 		}
 	}

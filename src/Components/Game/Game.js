@@ -51,8 +51,7 @@ export default class Game extends React.Component {
 
             setTimeout(() => this.props.playersOrder.map( i => this.returnChipsToBase(i)), 1000);
         }
-
-        if (!prevProps.moveData && this.props.moveData)
+        if (prevProps.moveData !== this.props.moveData && this.props.moveData)
             this.performMove(this.state.chips[this.props.moveData.playerNum][this.props.moveData.num], this.props.moveData.diceNum, this.props.moveData.position);
 
         if (prevProps.playersInfo !== this.props.playersInfo) {
@@ -359,7 +358,7 @@ function timedOut () {
     if (this.props.disabled)
         return;
 
-    this.props.socket.emit("finish-turn", {tableId: this.props.tableId});
+    this.props.socket.emit("timed-out", {tableId: this.props.tableId});
 }
 function updateDiceActive() {
     let diceElems = document.getElementsByClassName("die-container");
@@ -371,7 +370,7 @@ function updateDiceActive() {
     if (this.state.chipsToMove.length) {
         let chips = this.state.chips[this.props.playersOrder[this.props.turn]].slice();
 
-        dice = this.state.dice.map(d => chips.some(chip => this.getPossibleMoves(chip, d).length))
+        dice = this.state.dice.map(d => chips.some(chip => this.getPossibleMoves(chip, d).length));
     }
     
     dice.forEach((item, i) => {
@@ -390,7 +389,6 @@ function returnChipsToBase(playerNum) {
     })
 }
 function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = null) {
-
     let board = document.getElementsByClassName("game_board")[0];
     let cellElem = document.getElementById(cellId);
     let chipElem = document.getElementById(chip.id);
@@ -419,15 +417,14 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     if (isLast) {
         if (diceNum) {
             this.state.dice[diceNum] = undefined;
-            this.props.disable(false);
+            setTimeout(() => this.props.disable(false), 200);
             this.setState({dice: this.state.dice.slice(), selectedChip: null});
         } else {
             this.setState({selectedChip: null});
         }
     }
-
     this.state.scheme[cellId].chips.push(chip.id);
-    this.setState({scheme: Object.assign({}, this.state.scheme)})
+    this.setState({scheme: Object.assign({}, this.state.scheme)});
 }
 
 function buildRoute(chip, cellId, diceNum) {
@@ -651,8 +648,9 @@ function getPossibleMoves(chip, dice) {
                     toFinish = scheme[toFinish.links.next];
                     if (!toFinish || toFinish.chips.length)
                         break;
+                    
+                    if (k === dice && toFinish) result.push(toFinish.id);
                 }
-                if (toFinish) result.push(toFinish.id);
             }
             current = scheme[current.links.next];
             if (!current) {
@@ -680,7 +678,7 @@ function getPossibleMoves(chip, dice) {
                 result.push(current.links.toSH);
         }
     }
-    
+
     return result;
 }
 
@@ -689,10 +687,13 @@ function performMove(chip, diceNum, finalCellId) {
     this.props.disable(true);
     this.props.moveMade();
 
+    if (diceNum === 'test')
+        route = ['game_start-cell_player1', finalCellId];
+
     for (let i = 0; i < route.length; i++) {
         setTimeout(() => {
             this.moveChipToCell(chip, route[i], false, i === route.length - 1, diceNum);
-        }, i * 250) 
+        }, i * 250);
     }
 }
 
@@ -716,11 +717,10 @@ function defaultChipsPositions(playersOrder) {
                 player,
                 num: i,
                 isAtBase: true, 
-                id: `game_chip_player${player}_num${i}`, 
+                id: `game_chip_player${player}_num${i}`,
                 position: `game_chip-base_chip-space_player${player}_num${i}`
-            }
-        })
-        
+            };
+        });
     })
 
     return ret;
