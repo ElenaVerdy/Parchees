@@ -52,11 +52,13 @@ export default class App extends React.Component {
 			countDown: null,
 			turn: null,
 			dice: [],
+			activeDice: [],
 			disabled: false,
 			gameFinishedModal: false,
 			gameResults: [],
-			doAfterDisable: [],
-			moveData: null
+			doAfterDisable: {},
+			moveData: null,
+			actionCount: 0
 		}
 		this.userInfo = userInfo;
 		this.socket = socket;
@@ -94,40 +96,40 @@ export default class App extends React.Component {
 		this.socket.on("all-players-ready", this.handleAllPlayersReady);
 		this.socket.on("game-start", this.handleGameStart);
 		this.socket.on("next-turn", data => {
-			if (this.state.disabled)
+			if (this.state.disabled || data.actionCount !== this.state.actionCount)
 				this.logAction('next-turn', data);
 			else
 				this.handleNextTurn(data);
 		});
 		this.socket.on("player-won", data => {
 			if (data.error) return console.error(data.error);
-			if (this.state.disabled)
+			if (this.state.disabled || data.actionCount !== this.state.actionCount)
 				this.logAction('player-won', data);
 			else
 				this.endGame(data);
 		});
 		this.socket.on("dice-rolled", data => {
 			if (data.error) return console.error(data.error);
-            if (this.state.disabled)
-				this.logAction('dice-rolled', data)
+            if (this.state.disabled || data.actionCount !== this.state.actionCount)
+				this.logAction('dice-rolled', data);
 			else
 				this.diceRolled(data);
 		});
 		this.socket.on("player-made-move", data => {
 			if (data.error) return console.error(data.error);
-			if (this.state.disabled)
-				this.logAction('player-made-move', data)
+			if (this.state.disabled || data.actionCount !== this.state.actionCount)
+				this.logAction('player-made-move', data);
 			else
 				this.setState({ moveData: data });
         });
 	}
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.connectedToTable !== this.state.connectedToTable && !this.state.connectedToTable) {
-			this.socket.emit("get-tables-request")
-		}
+		if (prevState.connectedToTable !== this.state.connectedToTable && !this.state.connectedToTable) 
+			this.socket.emit("get-tables-request");
 
-		if (prevState.disabled && !this.state.disabled && this.state.doAfterDisable.length) {
-			let action = this.state.doAfterDisable.shift();
+		if ((prevState.disabled && !this.state.disabled) || (prevState.actionCount !== this.state.actionCount)) {
+			if (!this.state.doAfterDisable[this.state.actionCount]) return;
+			let action = this.state.doAfterDisable[this.state.actionCount];
 			switch (action.name) {
 				case 'next-turn':
 					this.handleNextTurn(action.data);
@@ -166,10 +168,12 @@ export default class App extends React.Component {
 								  yourTurn={this.state.yourTurn}
 								  turn={this.state.turn} 
 								  dice={this.state.dice}
+								  activeDice={this.state.activeDice}
 								  doublesStreak={this.state.doublesStreak}
 								  disable={this.disable}
 								  disabled={this.state.disabled} 
-								  userInfo={this.userInfo}/>
+								  userInfo={this.userInfo}
+								  diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}/>
 
 					</div>
 					<div className="App_main-container">
@@ -184,7 +188,8 @@ export default class App extends React.Component {
 															 disable={this.disable}
 															 disabled={this.state.disabled}
 															 logAction={this.logAction}
-															 moveMade={() => this.setState({ moveData: null })}
+															 setActiveDice={activeDice => {this.setState({activeDice})}}
+															 moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
 															 moveData={this.state.moveData}
 														/>
 											 : <Lobby tables={this.state.tables}
@@ -210,7 +215,7 @@ function diceRolled(data) {
 }
 function logAction(name, data) {
 	let doAfterDisable = this.state.doAfterDisable;
-	doAfterDisable.push({ name, data });
+	doAfterDisable[data.actionCount] = { name, data };
 	this.setState({ doAfterDisable });
 }
 function endGame(data) {
@@ -220,7 +225,8 @@ function endGame(data) {
 		turn: null,
 		dice: [],
 		disabled: false,
-		gameResults: data.results
+		gameResults: data.results,
+		actionCount: this.state.actionCount + 1
 	});
 }
 function handleGameStart(data) {
@@ -230,11 +236,12 @@ function handleGameStart(data) {
 		dice: [], 
 		playersInfo: data.players,
 		gameFinishedModal: false,
-		gameResults: []
+		gameResults: [],
+		actionCount: 1
 	});
 }
 function handleNextTurn(data) {
-	this.setState({turn: data.turn, dice: []});
+	this.setState({turn: data.turn, dice: [], actionCount: data.actionCount + 1});
 }
 function handleAllPlayersReady(data) {
 	if (data.cancel) {

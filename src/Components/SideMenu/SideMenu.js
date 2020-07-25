@@ -7,6 +7,8 @@ export default class SideMenu extends React.Component {
 	constructor(props) {
         super(props);
         this.dictionary = {
+            mainMenu: "Создай новый стол или присоединись к существующему!",
+            newGame: "Новая игра!",
             throwDice: "Бросить кубик",
             otherPlayersMove: "Ход другого игрока",
             makeYourMove: "Ваш ход!",
@@ -32,6 +34,18 @@ export default class SideMenu extends React.Component {
             this.props.disable(true);
             this.ReactDice.rollAll(this.props.dice);
         }
+        if (prevProps.activeDice !== this.props.activeDice) {
+            let diceElems = document.getElementsByClassName("die-container");
+            if (!diceElems.length)
+                return;
+        
+            this.props.activeDice.forEach((item, i) => {
+            if (item && !this.props.disabled) 
+                diceElems[i].classList.add("die-container_active");
+            else 
+                diceElems[i].classList.remove("die-container_active");
+            });
+        }
         if (prevProps.gameOn && !this.props.gameOn) {
             this.setState({ready: false})
         }
@@ -47,7 +61,7 @@ export default class SideMenu extends React.Component {
                         <div>
                             {this.props.turn === this.props.yourTurn ? 
                                 ( this.props.dice.length && !this.props.doublesStreak ? 
-                                    <button disabled={this.props.disabled} onClick={() => {this.props.socket.emit("finish-turn", {tableId: this.props.tableId})}}>{this.dictionary.finish}</button>
+                                    <button disabled={this.props.disabled || this.props.activeDice[0] || this.props.activeDice[1]} onClick={() => {this.props.socket.emit("finish-turn", {tableId: this.props.tableId})}}>{this.dictionary.finish}</button>
                                     : <button disabled={this.props.disabled} onClick={() => {
                                         this.props.socket.emit("roll-dice", {dice:[], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
@@ -61,13 +75,13 @@ export default class SideMenu extends React.Component {
                                 : ""
                             }
                             </div>
-                            <ReactDice numDice={2} 
-                                       rollTime={1} 
-                                       ref={dice => this.ReactDice = dice} 
-                                       dotColor={"#272727"} 
-                                       faceColor={"#ffffff"} 
-                                       disableIndividual={true} 
-                                       rollDone={()=>{setTimeout(() => this.props.disable(false), 200)}} />
+                            <ReactDice numDice={2}
+                                       rollTime={1}
+                                       ref={dice => this.ReactDice = dice}
+                                       dotColor={"#272727"}
+                                       faceColor={"#ffffff"}
+                                       disableIndividual={true}
+                                       rollDone={() => this.props.diceRolled()} />
                         </div>
                         : <div>
                             {this.state.ready ? 
@@ -83,8 +97,8 @@ export default class SideMenu extends React.Component {
                             </div>
                         </div>)
                     : <div>
-                        <button onClick={() => {this.props.socket.emit("new-table", this.props.userInfo)}}>Новая игра!</button>
-                        <div className="side-menu_info">Создай новый стол или присоединись к существующему!</div>
+                        <button onClick={() => {this.props.socket.emit("new-table", this.props.userInfo)}}>{this.dictionary.newGame}</button>
+                        <div className="side-menu_info">{this.dictionary.mainMenu}</div>
                     </div>
             }
             </div>

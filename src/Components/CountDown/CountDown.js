@@ -12,12 +12,6 @@ export default class CountDown extends React.Component {
 		this.tick = this.tick.bind(this);
 	}
 	componentDidUpdate(prevProps) {
-		if (!prevProps.disabled && this.props.disabled) {
-			clearTimeout(this.timer);
-		}
-		if (prevProps.disabled && !this.props.disabled) {
-			this.timer = setTimeout(this.tick, 1000);
-		}
 		if (prevProps.dice !== this.props.dice) {
 			if (this.props.dice[0] && this.props.dice[1]) {
 				this.resetTimer()
@@ -46,7 +40,6 @@ export default class CountDown extends React.Component {
 	
 		if (!this.state.time && this.props.myTimer) {
 			clearTimeout(this.timer);
-			this.props.timedOut();
 		}
 	}
   render() {
