@@ -37,7 +37,7 @@ export default class Game extends React.Component {
     }
     
     componentDidMount() {
-        this.socket.on('removed', () => {console.log('removed')})
+        this.socket.on('removed', () => {console.log('removed')});
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -120,9 +120,17 @@ export default class Game extends React.Component {
             this.state.scheme["game_start-cell_player2"].chips.length > 1 ? this.state.scheme["game_start-cell_player2"].chips.length : '',
             this.state.scheme["game_start-cell_player3"].chips.length > 1 ? this.state.scheme["game_start-cell_player3"].chips.length : '',
             this.state.scheme["game_start-cell_player4"].chips.length > 1 ? this.state.scheme["game_start-cell_player4"].chips.length : '',
-        ]
+        ];
 		return (
-			<div className="game_container">
+			<div className={`game_container game_container-player${this.props.playersOrder[this.props.yourTurn]}`}>
+                {this.props.playersOrder.map((i, index) => (
+                    <React.Fragment>
+                        <PlayerInfo playerLeft={this.props.playersInfo[index].left} num={i} playersInfo={this.props.playersInfo[index]} myNum={this.props.playersOrder[this.props.yourTurn]}/>
+                        {this.props.playersOrder[this.props.turn] === i ?
+                            <CountDown playerNum={i} dice={this.state.dice} myTimer={this.props.turn === this.props.yourTurn} myNum={this.props.playersOrder[this.props.yourTurn]} />
+                            : ""}
+                    </React.Fragment>
+                ))}
                 <div className="game_board" onClick={(event) => {
                     if (this.props.disabled)
                         return;
@@ -276,15 +284,11 @@ export default class Game extends React.Component {
                         <React.Fragment key={`game_chip-base_player${i}`}>
                             <div className={`game_chip-base game_chip-base_player${i}${playerLeft ? ' disabled' : ''}`}>
                                 {[1, 2, 3, 4].map(k => (
-                                    <div className={`game_chip-base_chip-space game_chip-base_chip-space_player${i}_num${k}`} 
+                                    <div className={`game_chip-base_chip-space game_chip-base_chip-space_player${i}_num${k}`}
                                          id={`game_chip-base_chip-space_player${i}_num${k}`}
                                          key={`game_chip-base_chip-space_player${i}_num${k}`}/>
                                 ))}
                             </div>
-                            <PlayerInfo playerLeft={playerLeft} num={i} playersInfo={this.props.playersInfo[index]}/>
-                            {this.props.playersOrder[this.props.turn] === i ?
-                                <CountDown playerNum={i} dice={this.state.dice} myTimer={this.props.turn === this.props.yourTurn} />
-                                : ""}
                             {[1, 2, 3, 4].map(k => {
                                 let additionalClassName = "";
 
@@ -374,10 +378,11 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     let cellElem = document.getElementById(cellId);
     let chipElem = document.getElementById(chip.id);
     let cellSize = this.cellSize;
-
     let cellCoords = cellElem.getBoundingClientRect();
+    let transform = board.style.transform;
+    board.style.transform = 'none';
     let boardCoords = board.getBoundingClientRect();
-    
+    board.style.transform = transform;
     this.state.scheme[chip.position].chips.splice(this.state.scheme[chip.position].chips.indexOf(chip.id), 1);
 
     setTimeout(() => {

@@ -1,11 +1,12 @@
 .countdown {
-    height: calc(var(--cell-size) * .75);
+    height: calc(var(--cell-size) * .45);
     font-size: calc(var(--cell-size) * .55);
     line-height: calc(var(--cell-size) * .5);
     text-align: start;
     position: absolute;
     font-weight: 400;
     display: flex;
+    z-index: 1;
 }
 .countdown_player1, .countdown_player2 {
     align-items: flex-end;
@@ -30,19 +31,19 @@
     content: "  ";
     display: block;
 }
-.countdown_player1 {
+.countdown_bottom-right {
     bottom: calc(var(--cell-size) * 1.2);
     right: calc(var(--cell-size) * 1.9);
 }
-.countdown_player2 {
+.countdown_bottom-left {
     bottom: calc(var(--cell-size) * 1.2);
     left: calc(var(--cell-size) * 1.9);
 }
-.countdown_player3 {
+.countdown_top-left {
     top: calc(var(--cell-size) * 1.2);
     left: calc(var(--cell-size) * 1.9);
 }
-.countdown_player4 {
+.countdown_top-right {
     top: calc(var(--cell-size) * 1.2);
     right: calc(var(--cell-size) * 1.9);
 }

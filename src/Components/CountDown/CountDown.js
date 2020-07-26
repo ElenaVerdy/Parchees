@@ -8,6 +8,14 @@ export default class CountDown extends React.Component {
     this.state = {
       	time: 0
 	}
+	if (props.playerNum === props.myNum) this.position = 'bottom-right';
+	if ((props.myNum - props.playerNum === -1) || (props.myNum === 4 && props.playerNum === 1))
+		this.position = 'bottom-left';
+	if (Math.abs(props.myNum - props.playerNum) === 2)
+		this.position = 'top-left';
+	if ((props.myNum - props.playerNum === 1) || (props.myNum === 1 && props.playerNum === 4))
+		this.position = 'top-right';
+		
 		this.resetTimer = this.resetTimer.bind(this)
 		this.tick = this.tick.bind(this);
 	}
@@ -44,7 +52,7 @@ export default class CountDown extends React.Component {
 	}
   render() {
     return(
-      <div className={`countdown countdown_player${this.props.playerNum}`}>
+      <div className={`countdown countdown_${this.position}`}>
         <div className="countdown_timer-icon" /><div className="countdown_timer">{"00:" + ("0" + this.state.time).slice(-2)}</div>
       </div>
     )

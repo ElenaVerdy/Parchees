@@ -17,6 +17,30 @@
     background-color: white;
     height: calc(var(--cell-size) * 13);
 }
+.game_container {
+    position: relative;
+}
+.game_container-player2 .game_board {
+    transform: rotate(270deg);
+}
+.game_container-player3 .game_board {
+    transform: rotate(180deg);
+}
+.game_container-player4 .game_board {
+    transform: rotate(90deg);
+}
+.game_container-player2 .game_cell-start::after, 
+.game_container-player2 .game_cell::after {
+    transform: rotate(90deg);
+}
+.game_container-player3 .game_cell-start::after, 
+.game_container-player3 .game_cell::after {
+    transform: rotate(180deg);
+}
+.game_container-player4 .game_cell-start::after, 
+.game_container-player4 .game_cell::after {
+    transform: rotate(270deg);
+}
 .game_space {
     height: var(--cell-size);
     float: left;
