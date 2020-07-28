@@ -1,8 +1,8 @@
 .side-menu_container {
     width: 300px;
     height: 250px;
-    background-color: whitesmoke;
-    border: 7.5px solid bisque;
+    /* border: 7.5px solid rgb(153, 33, 88);
+    background-color: #AB274F; */
 }
 .die .face {
     border: 1px solid var(--color-black);
@@ -19,8 +19,8 @@
 .side-menu_info {
     width: 300px;
     height: 83px;
-    border: 3px solid bisque;
-    background-color: bisque;
+    padding: 3px;
+    /* background-color: rgb(153, 33, 88); */
     font-size: x-large;
     line-height: 30px;
     display: table-cell;

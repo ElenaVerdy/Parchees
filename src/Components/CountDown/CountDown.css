@@ -32,18 +32,18 @@
     display: block;
 }
 .countdown_bottom-right {
-    bottom: calc(var(--cell-size) * 1.2);
+    bottom: calc(var(--cell-size) * 1.4);
     right: calc(var(--cell-size) * 1.9);
 }
 .countdown_bottom-left {
-    bottom: calc(var(--cell-size) * 1.2);
+    bottom: calc(var(--cell-size) * 1.4);
     left: calc(var(--cell-size) * 1.9);
 }
 .countdown_top-left {
-    top: calc(var(--cell-size) * 1.2);
+    top: calc(var(--cell-size) * 1.4);
     left: calc(var(--cell-size) * 1.9);
 }
 .countdown_top-right {
-    top: calc(var(--cell-size) * 1.2);
+    top: calc(var(--cell-size) * 1.4);
     right: calc(var(--cell-size) * 1.9);
 }

@@ -1,5 +1,5 @@
 .lobby-header {
-    height:120px;
+    height: 90px;
     display: flex;
     padding: 20px 20px 0px 20px;
 }
@@ -21,17 +21,18 @@
 .lobby-header_name {
     text-decoration: underline;
     font-size: 30px;
+    font-weight: 600;
+    color: #EEEEEE;
 }
 .lobby-header_rank, .lobby-header_bank {
     display: flex;
     align-items: center;
     margin-top: -7px;
 }
-.lobby-header_rank-number {
-    padding-top: 3px;
-}
+.lobby-header_rank-number,
 .lobby-header_dollar-number {
     padding-top: 3px;
+    color: #EEEEEE;
 }
 .lobby-header_rank-star {
     color: gold;

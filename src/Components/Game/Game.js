@@ -152,39 +152,41 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell_player3" data-number="1" id="game_cell25"></div>
                     <div className="game_cell game_cell_player3" data-number="12" id="game_cell24"></div>
                     <div className="game_cell game_cell_player3" data-number="11" id="game_cell23"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space5 b-l-1"></div>
 
                     {/*2 row*/}
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space4"></div>
+                    <div className="game_space game_space1 b-t-1"></div>
                     <div className="game_cell game_cell_player3" data-number="2" id="game_cell26"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player3" id="game_cell-finish_player3_1"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player3 b-l-1 b-t-1" id="game_cell-finish_player3_1"></div>
                     <div className="game_cell game_cell_player3" data-number="10" id="game_cell22"></div>
                     <div className="game_cell game_cell-safe-house" id="game_cell-safe-house1"></div>
-                    <div className="game_space game_space4"></div>
+                    <div className="game_space game_space4 b-l-1"></div>
 
                     {/*3 row*/}
                     <div className="game_space game_space5"></div>
                     <div className="game_cell game_cell_player3" data-number="3" id="game_cell27"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player3" id="game_cell-finish_player3_2"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player3 b-l-1" id="game_cell-finish_player3_2"></div>
                     <div className="game_cell game_cell_player3" data-number="9" id="game_cell21"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space1 b-l-1 b-t-1"></div>
+                    <div className="game_space game_space4"></div>
 
                     {/*4 row*/}
                     <div className="game_space game_space5"></div>
                     <div className="game_cell game_cell_player3" data-number="4" id="game_cell28"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player3" id="game_cell-finish_player3_3"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player3 b-l-1" id="game_cell-finish_player3_3"></div>
                     <div className="game_cell game_cell_player3" data-number="8" id="game_cell20"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space5 b-l-1"></div>
 
                     {/*5 row*/}
                     <div className="game_space game_space1"></div>
                     <div className="game_cell game_cell-safe-house" id="game_cell-safe-house2"></div>
-                    <div className="game_space game_space3"></div>
+                    <div className="game_space game_space3 b-l-1"></div>
                     <div className="game_cell game_cell_player3" data-number="5" id="game_cell29"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player3" id="game_cell-finish_player3_4"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player3 b-l-1" id="game_cell-finish_player3_4"></div>
                     <div className="game_cell game_cell_player3" data-number="7" id="game_cell19"></div>
-                    <div className="game_space game_space4"></div>
-                    <div className="game_cell game_cell-start" id="game_start-cell_player4"  data-charged-chips={chargedChipsNums[4]}></div>
+                    <div className="game_space game_space4 b-l-1"></div>
+                    <div className="game_cell game_cell-start b-r-1" id="game_start-cell_player4"  data-charged-chips={chargedChipsNums[4]}></div>
 
                     {/*6 row*/}
                     <div className="game_cell game_cell_player2" data-number="11" id="game_cell35"></div>
@@ -199,22 +201,22 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell_player4" data-number="4" id="game_cell16"></div>
                     <div className="game_cell game_cell_player4" data-number="3" id="game_cell15"></div>
                     <div className="game_cell game_cell_player4" data-number="2" id="game_cell14"></div>
-                    <div className="game_cell game_cell_player4" data-number="1" id="game_cell13"></div>
+                    <div className="game_cell game_cell_player4 b-r-1" data-number="1" id="game_cell13"></div>
 
                     {/*7 row */}
                     <div className="game_cell game_cell_player2" data-number="12" id="game_cell36"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_1"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_2"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_3"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player2" id="game_cell-finish_player2_4"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player2 b-t-1 b-l-1" id="game_cell-finish_player2_1"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player2 b-t-1" id="game_cell-finish_player2_2"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player2 b-t-1" id="game_cell-finish_player2_3"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player2 b-t-1" id="game_cell-finish_player2_4"></div>
                     <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-down"></div>
                     <div className="game_cell game_cell_cant-stand game_cell_center arrow arrows-crossing" ></div>
                     <div className="game_cell game_cell_cant-stand game_cell_arrow arrow arrow-up"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_4"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_3"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_2"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player4" id="game_cell-finish_player4_1"></div>
-                    <div className="game_cell game_cell_player4" data-number="12" id="game_cell12"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player4 b-t-1 b-l-1" id="game_cell-finish_player4_4"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player4 b-t-1" id="game_cell-finish_player4_3"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player4 b-t-1" id="game_cell-finish_player4_2"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player4 b-t-1" id="game_cell-finish_player4_1"></div>
+                    <div className="game_cell game_cell_player4 b-r-1" data-number="12" id="game_cell12"></div>
 
                     {/*8 row*/}
                     <div className="game_cell game_cell_player2" data-number="1" id="game_cell37"></div>
@@ -229,47 +231,51 @@ export default class Game extends React.Component {
                     <div className="game_cell game_cell_player4" data-number="8" id="game_cell8"></div>
                     <div className="game_cell game_cell_player4" data-number="9" id="game_cell9"></div>
                     <div className="game_cell game_cell_player4" data-number="10" id="game_cell10"></div>
-                    <div className="game_cell game_cell_player4" data-number="11" id="game_cell11"></div>
+                    <div className="game_cell game_cell_player4 b-r-1" data-number="11" id="game_cell11"></div>
 
                     {/*9 row*/}
                     <div className="game_cell game_cell-start" id="game_start-cell_player2" data-charged-chips={chargedChipsNums[2]}></div>
-                    <div className="game_space game_space4"></div>
+                    <div className="game_space game_space4 b-t-1 b-l-1"></div>
                     <div className="game_cell game_cell_player1" data-number="7" id="game_cell43"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player1" id="game_cell-finish_player1_4"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player1 b-t-1 b-l-1" id="game_cell-finish_player1_4"></div>
                     <div className="game_cell game_cell_player1" data-number="5" id="game_cell5"></div>
-                    <div className="game_space game_space3"></div>
+                    <div className="game_space game_space3 b-t-1 b-l-1"></div>
                     <div className="game_cell game_cell-safe-house" id="game_cell-safe-house0"></div>
-                    <div className="game_space game_space1"></div>
+                    <div className="game_space game_space1 b-t-1 b-l-1"></div>
 
                     {/*10 row*/}
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space1 b-t-1"></div>
+                    <div className="game_space game_space4"></div>
                     <div className="game_cell game_cell_player1" data-number="8" id="game_cell44"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player1" id="game_cell-finish_player1_3"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player1 b-l-1" id="game_cell-finish_player1_3"></div>
                     <div className="game_cell game_cell_player1" data-number="4" id="game_cell4"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space3 b-l-1"></div>
+                    <div className="game_space game_space1 b-t-1"></div>
+                    <div className="game_space game_space1"></div>
 
                     {/*11 row*/}
                     <div className="game_space game_space5"></div>
                     <div className="game_cell game_cell_player1" data-number="9" id="game_cell45"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player1" id="game_cell-finish_player1_2"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player1 b-l-1" id="game_cell-finish_player1_2"></div>
                     <div className="game_cell game_cell_player1" data-number="3" id="game_cell3"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space5 b-l-1"></div>
 
                     {/*12 row*/}
                     <div className="game_space game_space4"></div>
                     <div className="game_cell game_cell-safe-house" id="game_cell-safe-house3" ></div>
                     <div className="game_cell game_cell_player1" data-number="10" id="game_cell46"></div>
-                    <div className="game_cell game_cell-finish game_cell-finish_player1" id="game_cell-finish_player1_1"></div>
+                    <div className="game_cell game_cell-finish game_cell-finish_player1 b-l-1" id="game_cell-finish_player1_1"></div>
                     <div className="game_cell game_cell_player1" data-number="2" id="game_cell2"></div>
-                    <div className="game_space game_space5"></div>
+                    <div className="game_space game_space5 b-l-1"></div>
 
                     {/*13 row*/}
-                    <div className="game_space game_space5"></div>
-                    <div className="game_cell game_cell_player1" data-number="11" id="game_cell47"></div>
-                    <div className="game_cell game_cell_player1" data-number="12" id="game_cell48"></div>
-                    <div className="game_cell game_cell_player1" data-number="1" id="game_cell1"></div>
-                    <div className="game_cell game_cell-start" id="game_start-cell_player1" data-charged-chips={chargedChipsNums[1]}></div>
                     <div className="game_space game_space4"></div>
+                    <div className="game_space game_space1 b-t-1"></div>
+                    <div className="game_cell game_cell_player1 b-b-1" data-number="11" id="game_cell47"></div>
+                    <div className="game_cell game_cell_player1 b-b-1" data-number="12" id="game_cell48"></div>
+                    <div className="game_cell game_cell_player1 b-b-1" data-number="1" id="game_cell1"></div>
+                    <div className="game_cell game_cell-start b-b-1" id="game_start-cell_player1" data-charged-chips={chargedChipsNums[1]}></div>
+                    <div className="game_space game_space4 b-l-1"></div>
 
                     {[1, 2, 3, 4].map(k => (
                             <React.Fragment key={k}>
@@ -378,13 +384,12 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     let cellElem = document.getElementById(cellId);
     let chipElem = document.getElementById(chip.id);
     let cellSize = this.cellSize;
-    let cellCoords = cellElem.getBoundingClientRect();
     let transform = board.style.transform;
     board.style.transform = 'none';
+    let cellCoords = cellElem.getBoundingClientRect();
     let boardCoords = board.getBoundingClientRect();
     board.style.transform = transform;
     this.state.scheme[chip.position].chips.splice(this.state.scheme[chip.position].chips.indexOf(chip.id), 1);
-
     setTimeout(() => {
         chipElem.style.top = cellCoords.top - boardCoords.top + (isBase ? 0 : cellSize * 0.1 ) + "px";
         chipElem.style.left = cellCoords.left - boardCoords.left + (isBase ? 0 : cellSize * 0.1 ) + "px";

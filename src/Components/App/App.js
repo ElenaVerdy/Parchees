@@ -5,6 +5,7 @@ import Game from "../Game/Game"
 import Lobby from "../Lobby/Lobby"
 import io from "socket.io-client";
 import SideMenu from "../SideMenu/SideMenu"
+import Chat from "../Chat/Chat"
 import GameFinished from "../GameFinished/GameFinished"
 import cloneDeep from 'lodash.clonedeep'
 
@@ -174,6 +175,7 @@ export default class App extends React.Component {
 								  disabled={this.state.disabled} 
 								  userInfo={this.userInfo}
 								  diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}/>
+						<Chat roomId={this.state.tableId}></Chat>
 
 					</div>
 					<div className="App_main-container">
