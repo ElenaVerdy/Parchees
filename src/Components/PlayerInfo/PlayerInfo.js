@@ -16,8 +16,8 @@ export default function PlayerInfo (props) {
 				<div className="player-info_main">
 					<div className="player-info_name"><span className={`player-info_chip-icon player-info_chip-icon_${props.num}`}></span>{props.playersInfo.name}</div>
 					<div className='player-info_rank'>
-						<div className='icon player-info_rank-star'>&#9733;</div>
-						<div className="player-info_rank-number">{ props.playersInfo.rank }</div>
+						<div className="player-info_rank-number">{ props.playersInfo.rating }</div>
+						<div className='icon player-info_rank-star'></div>
 					</div>
 				</div>
 				<div className="player-info_img"><img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.playersInfo.username }></img></div>

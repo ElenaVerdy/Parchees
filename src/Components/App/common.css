@@ -13,6 +13,10 @@ button {
     font-size: 30px;
     font-weight: 600;
     font-family: inherit;
+    background: linear-gradient(to bottom, #F0F8FF 0%, #E1E9F0 100%);
+}
+button:not(:disabled) {
+    color: var(--color-black);
 }
 .hidden {
     display: none !important;

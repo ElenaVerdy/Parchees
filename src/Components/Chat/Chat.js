@@ -14,9 +14,15 @@ export default class Chat extends React.Component {
 		this.sendMsg = sendMsg.bind(this);
 		this.talkTo = talkTo.bind(this);
 	}
+    componentDidMount() {
+		this.props.socket.on('new-msg', newMsg.bind(this));
+		this.props.socket.emit("get-common-msgs");
+	}
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.roomId && !this.props.roomId && this.state.selectedRoom !== 'main')
 			this.setState({selectedRoom: 'main'});
+		if (!prevProps.roomId && this.props.roomId)
+			this.setState({selectedRoom: 'room'});
 	}
 	render() {
 		return (
@@ -33,10 +39,10 @@ export default class Chat extends React.Component {
 				</div>
 				<div className="chat_body-container">
 					<div className={`chat-body chat-body-main${this.state.selectedRoom !== 'main' ? ' hidden' : ''}`}>
-						{this.state.msgsMain.map(item => messege({...item, talkTo: this.talkTo}))}
+						{this.state.msgsMain.map((item, i) => messege({...item, i, talkTo: this.talkTo}))}
 					</div>
 					<div className={`chat-body chat-body-room${this.state.selectedRoom !== 'room' ? ' hidden' : ''}`}>
-						{this.state.msgsRoom.map(item => messege({...item, talkTo: this.talkTo}))}
+						{this.state.msgsRoom.map((item, i) => messege({...item, i, talkTo: this.talkTo}))}
 					</div>
 				</div>
 				<div className="chat_input-wrapper flex-sb">
@@ -57,7 +63,7 @@ export default class Chat extends React.Component {
 
 function messege(props) {
 	return (
-		<div className="chat_messege p-tb-5" key={props.timestamp}>
+		<div className="chat_messege p-tb-5" key={props.i}>
 			<span className="chat_messege_author" onClick={() => {props.talkTo(props.player.name)}}>{props.player.name}: </span><span className="chat_messege_text">{props.text}</span>
 		</div>
 	)
@@ -65,17 +71,30 @@ function messege(props) {
 
 function sendMsg() {
 	if (!this.state.inputText.trim() || this.state.blockBtn) return;
-	let tmp = this.state[this.state.selectedRoom === 'main' ? 'msgsMain' : 'msgsRoom'];
-	tmp.unshift({player: {id: 'id123123123', name: 'Сахьянова Елена'}, text: this.state.inputText });
-	this.setState({[this.state.selectedRoom === 'main' ? 'msgsMain' : 'msgsRoom']: tmp, inputText: '', blockBtn: true});
-	setTimeout(() => {
-		this.setState({blockBtn: false});
-	}, 1000);
+	this.props.socket.emit('send-msg', {
+		player: {
+			id: this.props.userInfo.id,
+			name: this.props.userInfo.name
+		},
+		text: this.state.inputText,
+		room: this.state.selectedRoom ==='main' ? 'main' : this.props.roomId
+	});
+	this.setState({ inputText: '', blockBtn: true });
+	setTimeout(() => this.setState({blockBtn: false}), 1000);
+}
+function newMsg({ old, room, player, text }) {
+	if (Array.isArray(old)) {
+		if (room === 'main') this.setState({ msgsMain: old });
+		if (room === this.props.roomId) this.setState({ msgsRoom: old });
+	} else {
+		let tmp = this.state[room === 'main' ? 'msgsMain' : 'msgsRoom'];
+		tmp.unshift({ player, text });
+		this.setState({[room === 'main' ? 'msgsMain' : 'msgsRoom']: tmp });
+	}
 }
 
 function talkTo(name) {
 	if (~this.state.inputText.indexOf(name + ',')) return;
 	this.setState({inputText: (name + ', ' + this.state.inputText)});
 	document.getElementById("chat_input").focus();
-	
 }

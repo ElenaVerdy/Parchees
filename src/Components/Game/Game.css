@@ -41,6 +41,18 @@
 .game_container-player4 .game_cell::after {
     transform: rotate(270deg);
 }
+.game_container-player2 .game_cell-start::after {
+    right: 15px;
+    bottom: 0px;
+}
+.game_container-player3 .game_cell-start::after {
+    right: 0px;
+    bottom: 15px;
+}
+.game_container-player4 .game_cell-start::after {
+    right: -14px;
+    bottom: 0px;
+}
 .game_space {
     height: var(--cell-size);
     float: left;
@@ -94,7 +106,7 @@
 .game_cell-start::after {
     content: attr(data-charged-chips);
     position: absolute;
-    bottom: -13px;
+    bottom: -14px;
     right: -1px;
     font-weight: 600;
     width: 100%;
@@ -294,7 +306,7 @@
 .game_chip {
     width: calc(var(--cell-size) * .8 - 1px);    
     height: calc(var(--cell-size) * .8 - 1px);
-    border: 2px solid;
+    border: 1px solid;
     border-radius: var(--cell-size);
     float: left;
     position: absolute;
@@ -322,6 +334,15 @@
 }
 .game_cell-move {
     background: linear-gradient(to bottom, #9966CC 0%, #8A57BD 100%);
+}
+.game_container-player2 .game_cell-move {
+    background: linear-gradient(to left, #9966CC 0%, #8A57BD 100%);
+}
+.game_container-player3 .game_cell-move {
+    background: linear-gradient(to top, #9966CC 0%, #8A57BD 100%);
+}
+.game_container-player4 .game_cell-move {
+    background: linear-gradient(to right, #9966CC 0%, #8A57BD 100%);
 }
 .game_chip-selected {
     box-shadow:  0px 0px 4px 4px red;    

@@ -12,6 +12,11 @@
   background-size: 120px;
   background-repeat: repeat;
 }
+.loading {
+  width: 900px;
+  height: 650px;
+  background-color: lightcoral;
+}
 .App_header{
   width: 100%;
   height: 50px;

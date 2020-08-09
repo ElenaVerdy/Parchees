@@ -22,7 +22,6 @@
     text-decoration: underline;
     font-size: 30px;
     font-weight: 600;
-    color: #EEEEEE;
 }
 .lobby-header_rank, .lobby-header_bank {
     display: flex;
@@ -32,7 +31,6 @@
 .lobby-header_rank-number,
 .lobby-header_dollar-number {
     padding-top: 3px;
-    color: #EEEEEE;
 }
 .lobby-header_rank-star {
     color: gold;

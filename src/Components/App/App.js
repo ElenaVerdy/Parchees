@@ -13,28 +13,27 @@ let debug = window.location.href === "http://192.168.1.67:3000/";
 const ENDPOINT = debug ? "http://192.168.1.67:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
 const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
-let userInfo = {
-	photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
-	photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-	rank: 2100, 
-	bank: 3000,
-	username: 'Lindsey',
-	id: 123123123
-};
-if (!debug) {
-	VK.init(function() {
-		VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
-			const data = res && res.response && res.response[0];
-			if (!data) throw new Error('can not fetch user data');
-			userInfo.photo_50 = data.photo_50;
-			userInfo.photo_100 = data.photo_100;
-			userInfo.username = data.first_name;
-			userInfo.id = data.id;
+const init = new Promise((resolve, reject) => {
+	if (!debug) {
+		VK.init(function() {
+			VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
+				const data = res && res.response && res.response[0];
+				if (!data) throw new Error('can not fetch user data');
+				resolve(data);
+			});
+		}, function() {
+			console.log("bad")
+		}, '5.103');
+	} else {
+		resolve({
+			photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
+			photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
+			first_name: 'Lindsey',
+			last_name: "Stirling",
+			id: 123123123
 		});
-	}, function() {
-		console.log("bad")
-	}, '5.103');
-}
+	}
+})
 
 const socket = io.connect(ENDPOINT);
 export default class App extends React.Component {
@@ -59,9 +58,11 @@ export default class App extends React.Component {
 			gameResults: [],
 			doAfterDisable: {},
 			moveData: null,
-			actionCount: 0
+			userInfo: {},
+			actionCount: 0,
+			canSkip: false,
+			loading: true
 		}
-		this.userInfo = userInfo;
 		this.socket = socket;
 		this.handleAllPlayersReady = handleAllPlayersReady.bind(this);
 		this.handleGameStart = handleGameStart.bind(this);
@@ -74,10 +75,18 @@ export default class App extends React.Component {
 	}
 	
 	componentDidMount() {
+		init.then(userInfo => {
+			this.setState({ userInfo });
+			this.socket.emit("init", userInfo);
+		});
+		this.socket.on("init-finished", data => {
+			console.log('finished', data)
+			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
+		})
 		this.socket.on("connect-to", data => {
 			this.setState({ connectedToTable: true, tableId: data.id });
 		})
-		
+		this.socket.on("err", data => console.error(data));
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
@@ -122,7 +131,7 @@ export default class App extends React.Component {
 				this.logAction('player-made-move', data);
 			else
 				this.setState({ moveData: data });
-        });
+		});
 	}
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.connectedToTable !== this.state.connectedToTable && !this.state.connectedToTable) 
@@ -157,53 +166,59 @@ export default class App extends React.Component {
 
   	render() {
 		return (
-			<div className="App">
-				<div className="App_header">
-				</div>
-				<div className="App_main">
-					<div className="App_main-offside">
-						<SideMenu socket={this.socket}
-								  tableId={this.state.tableId}
-								  gameOn={this.state.gameOn}
-								  countDown={this.state.countDown}
-								  yourTurn={this.state.yourTurn}
-								  turn={this.state.turn} 
-								  dice={this.state.dice}
-								  activeDice={this.state.activeDice}
-								  doublesStreak={this.state.doublesStreak}
-								  disable={this.disable}
-								  disabled={this.state.disabled} 
-								  userInfo={this.userInfo}
-								  diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}/>
-						<Chat roomId={this.state.tableId}></Chat>
-
+			<div className="main-container">
+				{this.state.loading ? <div className="loading"></div> :
+				<div className="App">
+					<div className="App_header">
 					</div>
-					<div className="App_main-container">
-						{this.state.connectedToTable ? <Game tableId={this.state.tableId}
-															 socket={this.socket}
-														 	 playersInfo={this.state.playersInfo}
-														 	 playersOrder={this.state.playersOrder}
-														 	 yourTurn={this.state.yourTurn}
-															 gameOn={this.state.gameOn}
-															 turn={this.state.turn}
-															 dice={this.state.dice}
-															 disable={this.disable}
-															 disabled={this.state.disabled}
-															 logAction={this.logAction}
-															 setActiveDice={activeDice => {this.setState({activeDice})}}
-															 moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
-															 moveData={this.state.moveData}
-														/>
-											 : <Lobby tables={this.state.tables}
-													  socket={this.socket}
-													  userInfo={this.userInfo}
-												/>
-						}
-						<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
-							<GameFinished results={this.state.gameResults} close={() => {this.setState({gameFinishedModal: false, gameResults: []})}} />
+					<div className="App_main">
+						<div className="App_main-offside">
+							<SideMenu socket={this.socket}
+									tableId={this.state.tableId}
+									gameOn={this.state.gameOn}
+									countDown={this.state.countDown}
+									yourTurn={this.state.yourTurn}
+									turn={this.state.turn} 
+									dice={this.state.dice}
+									activeDice={this.state.activeDice}
+									doublesStreak={this.state.doublesStreak}
+									disable={this.disable}
+									disabled={this.state.disabled} 
+									userInfo={this.state.userInfo}
+									diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}
+									canSkip={this.state.canSkip}
+							/>
+							<Chat roomId={this.state.tableId} socket={this.socket} userInfo={this.state.userInfo}></Chat>
+
+						</div>
+						<div className="App_main-container">
+							{this.state.connectedToTable ? <Game tableId={this.state.tableId}
+																socket={this.socket}
+																playersInfo={this.state.playersInfo}
+																playersOrder={this.state.playersOrder}
+																yourTurn={this.state.yourTurn}
+																gameOn={this.state.gameOn}
+																turn={this.state.turn}
+																dice={this.state.dice}
+																disable={this.disable}
+																disabled={this.state.disabled}
+																logAction={this.logAction}
+																setActiveDice={activeDice => {this.setState({activeDice})}}
+																moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
+																moveData={this.state.moveData}
+																setCanSkip={(canSkip) => this.setState({ canSkip })}
+															/>
+												: <Lobby tables={this.state.tables}
+														socket={this.socket}
+														userInfo={this.state.userInfo}
+													/>
+							}
+							<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
+								<GameFinished results={this.state.gameResults} close={() => {this.setState({gameFinishedModal: false, gameResults: []})}} />
+							</div>
 						</div>
 					</div>
-				</div>
+				</div>}
 			</div>
 		);
 	}

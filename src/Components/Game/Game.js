@@ -16,9 +16,9 @@ export default class Game extends React.Component {
             chipsToMove: [],
             selectedChip: null,
             cellsToMove: [],
-            scheme: createScheme(),
             gameFinished: false
         }
+        this.scheme = createScheme();
         this.socket = this.props.socket;
         
         this.moveChipToCell = moveChipToCell.bind(this);
@@ -72,21 +72,29 @@ export default class Game extends React.Component {
         }
 
         if (prevState.dice !== this.state.dice) {
-            this.setState({chipsToMove: this.getChipsToMove().map(i => i.num)}, () => {
+            let chipsToMove = this.getChipsToMove();
+            this.setState({chipsToMove: chipsToMove.map(i => i.num)}, () => {
                 this.updateDiceActive();
+                this.props.setCanSkip(chipsToMove.every(chip => chip.canSkip));
             });
         }
         
         if (prevProps.turn !== this.props.turn) {
-            this.setState({selectedChip: null})
+            this.setState({selectedChip: null});
+            if (this.props.turn === this.props.yourTurn) {
+                this.socket.emit("reset-timer", {
+                    tableId: this.props.tableId,
+                    turn: this.props.turn
+                });
+            }
         }
 
         if (prevState.selectedChip !== this.state.selectedChip) {
             if (this.state.selectedChip) {
                 let chip = this.state.chips[this.props.playersOrder[this.props.turn]][this.state.selectedChip.num];
-                let cellsToMove = this.getPossibleMoves(chip, this.state.dice[0]).map(id => ({ diceNum: 0, id }));
+                let cellsToMove = this.getPossibleMoves(chip, this.state.dice[0]).map(cell => ({ ...cell, diceNum: 0 }));
 
-                cellsToMove = cellsToMove.concat(this.getPossibleMoves(chip, this.state.dice[1]).map(id => ({ diceNum: 1, id })));
+                cellsToMove = cellsToMove.concat(this.getPossibleMoves(chip, this.state.dice[1]).map(cell => ({ ...cell, diceNum: 1 })));
                 
                 this.setState({cellsToMove});
             } else {
@@ -116,15 +124,15 @@ export default class Game extends React.Component {
   	render(){
         let chargedChipsNums = [
             null,
-            this.state.scheme["game_start-cell_player1"].chips.length > 1 ? this.state.scheme["game_start-cell_player1"].chips.length : '',
-            this.state.scheme["game_start-cell_player2"].chips.length > 1 ? this.state.scheme["game_start-cell_player2"].chips.length : '',
-            this.state.scheme["game_start-cell_player3"].chips.length > 1 ? this.state.scheme["game_start-cell_player3"].chips.length : '',
-            this.state.scheme["game_start-cell_player4"].chips.length > 1 ? this.state.scheme["game_start-cell_player4"].chips.length : '',
+            this.scheme["game_start-cell_player1"].chips.length > 1 ? this.scheme["game_start-cell_player1"].chips.length : '',
+            this.scheme["game_start-cell_player2"].chips.length > 1 ? this.scheme["game_start-cell_player2"].chips.length : '',
+            this.scheme["game_start-cell_player3"].chips.length > 1 ? this.scheme["game_start-cell_player3"].chips.length : '',
+            this.scheme["game_start-cell_player4"].chips.length > 1 ? this.scheme["game_start-cell_player4"].chips.length : '',
         ];
 		return (
 			<div className={`game_container game_container-player${this.props.playersOrder[this.props.yourTurn]}`}>
                 {this.props.playersOrder.map((i, index) => (
-                    <React.Fragment>
+                    <React.Fragment key={i}>
                         <PlayerInfo playerLeft={this.props.playersInfo[index].left} num={i} playersInfo={this.props.playersInfo[index]} myNum={this.props.playersOrder[this.props.yourTurn]}/>
                         {this.props.playersOrder[this.props.turn] === i ?
                             <CountDown playerNum={i} dice={this.state.dice} myTimer={this.props.turn === this.props.yourTurn} myNum={this.props.playersOrder[this.props.yourTurn]} />
@@ -329,7 +337,7 @@ export default class Game extends React.Component {
                                             this.setState({ selectedChip: null });
                                             return;
                                         }
-                                        if (~this.state.scheme['game_start-cell_player' + i].chips.indexOf(`game_chip_player${i}_num${k}`)
+                                        if (~this.scheme['game_start-cell_player' + i].chips.indexOf(`game_chip_player${i}_num${k}`)
                                                 && document.getElementById('game_start-cell_player' + i).classList.contains('game_cell-move')) {
                                                 this.socket.emit("chip-moved", {
                                                     tableId: this.props.tableId,
@@ -389,17 +397,17 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     let cellCoords = cellElem.getBoundingClientRect();
     let boardCoords = board.getBoundingClientRect();
     board.style.transform = transform;
-    this.state.scheme[chip.position].chips.splice(this.state.scheme[chip.position].chips.indexOf(chip.id), 1);
+    this.scheme[chip.position].chips.splice(this.scheme[chip.position].chips.indexOf(chip.id), 1);
     setTimeout(() => {
-        chipElem.style.top = cellCoords.top - boardCoords.top + (isBase ? 0 : cellSize * 0.1 ) + "px";
-        chipElem.style.left = cellCoords.left - boardCoords.left + (isBase ? 0 : cellSize * 0.1 ) + "px";
+        chipElem.style.top = cellCoords.top - boardCoords.top + (isBase ? 0 : cellSize * 0.1 ) + (this.props.playersOrder[this.props.yourTurn] === 1 ? 1 : 0) +"px";
+        chipElem.style.left = cellCoords.left - boardCoords.left + (isBase ? 0 : cellSize * 0.1 ) + (this.props.playersOrder[this.props.yourTurn] === 1 ? 1 : 0) + "px";
     }, isBase ? 100 : 0)
 
     chip.position = cellId;
     chip.isAtBase = isBase;
 
-    if (this.state.scheme[cellId].chips.length && (+this.getPlayerFromCell(cellId) !== +chip.player)) {
-        let eatenChipElem = document.getElementById(this.state.scheme[cellId].chips[0]);
+    if (this.scheme[cellId].chips.length && (+this.getPlayerFromCell(cellId) !== +chip.player)) {
+        let eatenChipElem = document.getElementById(this.scheme[cellId].chips[0]);
         let [player, num] = [eatenChipElem.getAttribute("data-player"), eatenChipElem.getAttribute("data-num")];
         
         this.moveChipToCell(this.state.chips[player][num], `game_chip-base_chip-space_player${player}_num${num}`, true);
@@ -411,19 +419,18 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
             setTimeout(() => {
                 this.props.disable(false);
                 this.props.moveMade();
+                this.setState({dice: this.state.dice.slice(), selectedChip: null});
             }, 200);
-            this.setState({dice: this.state.dice.slice(), selectedChip: null});
         } else {
             this.setState({selectedChip: null});
         }
     }
-    this.state.scheme[cellId].chips.push(chip.id);
-    this.setState({scheme: Object.assign({}, this.state.scheme)});
+    this.scheme[cellId].chips.push(chip.id);
 }
 
 function buildRoute(chip, cellId, diceNum) {
     
-    let scheme = this.state.scheme;
+    let scheme = this.scheme;
     let result = [];
     
     let dice = this.state.dice[diceNum];
@@ -503,24 +510,8 @@ function createScheme() {
         ret[id]    = k;
 
         if (i % 12 === 0) {
-            let n;
+            let n = (60 - i) / 12;
 
-            switch (i) {
-                case 48:
-                    n = 1;
-                    break;
-                case 12:
-                    n = 4;
-                    break;
-                case 24:
-                    n = 3;
-                    break;
-                case 36:
-                    n = 2;
-                    break;
-                default:
-                    break;
-            }
             k.links["toFinish" + n] = `game_cell-finish_player${n}_1`; 
 
             [1, 2, 3, 4].forEach(k => {
@@ -588,41 +579,44 @@ function createScheme() {
 }
 
 function getChipsToMove() {
-    if (this.props.playersOrder.length === 0 || (!this.state.dice[0] && !this.state.dice[1])) 
+    if (this.props.playersOrder.length === 0 || (!this.state.dice[0] && !this.state.dice[1]) || this.props.turn !== this.props.yourTurn) 
         return [];
-    
+
     let dice = this.state.dice.slice();
-    
+
     let player = this.props.playersOrder[this.props.turn];
 
     let chips = this.state.chips[player].slice();
 
     chips = chips.filter(chip => {
-        return dice.some(d => {return (this.getPossibleMoves(chip, d)).length !== 0})
+        chip.canSkip = true;
+        return dice.some(d => {
+            let possible = this.getPossibleMoves(chip, d);
+            chip.canSkip = chip.canSkip && possible.every(item => item.canSkip);
+            return possible.length !== 0;
+        });
     });
-    
-    return chips; 
 
+    return chips;
 }
 function getPossibleMoves(chip, dice) {
 
     if (!chip || !dice)
         return [];
 
-    let scheme = this.state.scheme;
-        
+    let scheme = this.scheme;
     let chipCell = scheme[chip.position];
     let currentPlayer = document.getElementById(chip.id).getAttribute("data-player");
     let result = [];
 
-    if (dice === 1 && chipCell.links.for1 && this.getPlayerFromCell(chipCell.links.for1) !== currentPlayer)    
-        result.push(chipCell.links.for1);
+    if (dice === 1 && chipCell.links.for1 && this.getPlayerFromCell(chipCell.links.for1) !== currentPlayer)
+        result.push({ id: chipCell.links.for1 });
 
-    if (dice === 3 && chipCell.links.for3 && this.getPlayerFromCell(chipCell.links.for3) !== currentPlayer) 
-        result.push(chipCell.links.for3);
+    if (dice === 3 && chipCell.links.for3 && this.getPlayerFromCell(chipCell.links.for3) !== currentPlayer)
+        result.push({ id: chipCell.links.for3 });
 
     if (dice === 6 && chipCell.links.for6)
-        result.push(chipCell.links.for6);
+        result.push({ id: chipCell.links.for6 });
 
     if (!chip.isAtBase) {
         let current = chipCell;
@@ -642,8 +636,8 @@ function getPossibleMoves(chip, dice) {
                     toFinish = scheme[toFinish.links.next];
                     if (!toFinish || toFinish.chips.length)
                         break;
-                    
-                    if (k === dice && toFinish) result.push(toFinish.id);
+
+                    if (k === dice && toFinish) result.push({ id: toFinish.id });
                 }
             }
             current = scheme[current.links.next];
@@ -663,19 +657,39 @@ function getPossibleMoves(chip, dice) {
         }
 
         if (canMove) {
-            result.push(current.id);
+            result.push({ id: current.id });
 
             if (current.links.end && this.getPlayerFromCell(current.links.end) !== currentPlayer)
-                result.push(current.links.end);
+                result.push({ id: current.links.end });
 
             if (current.links.toSH && !scheme[current.links.toSH].chips.length)
-                result.push(current.links.toSH);
+                result.push({ id: current.links.toSH });
+        }
+        if (!chipCell.isFinish) {
+            let cellsToFinish = getCellsToFinish(scheme, this.props.playersOrder[this.props.turn], chip.position);
+
+            result.forEach(cell => {
+                if (scheme[cell.id].isFinish) return;
+                if (getCellsToFinish(scheme, this.props.playersOrder[this.props.turn], cell.id) > cellsToFinish) cell.canSkip = true;
+            })
         }
     }
 
     return result;
 }
+function getCellsToFinish(scheme, playerNum, position) {
+    let preFinishCell = "game_cell" + (60 - playerNum * 12);
+    let current = scheme[position];
+    let ret = 0;
+    if (current.isSH)
+        current = scheme[current.links.outOfSH];
 
+    while (current.id !== preFinishCell) {
+        current = scheme[current.links.next];
+        ret++;
+    }
+    return ret;
+}
 function performMove(chip, diceNum, finalCellId) {
     let route = this.buildRoute(chip, finalCellId, diceNum);
     this.props.disable(true);
@@ -690,7 +704,7 @@ function performMove(chip, diceNum, finalCellId) {
 }
 
 function getPlayerFromCell(cellId) {
-    let chipId = this.state.scheme[cellId].chips[0];
+    let chipId = this.scheme[cellId].chips[0];
 
     let chipElem = document.getElementById(chipId);
     if (chipElem === null)
