@@ -15,12 +15,11 @@ export default class Game extends React.Component {
             chips: [],
             chipsToMove: [],
             selectedChip: null,
-            cellsToMove: [],
-            gameFinished: false
+            cellsToMove: []
         }
         this.scheme = createScheme();
         this.socket = this.props.socket;
-        
+
         this.moveChipToCell = moveChipToCell.bind(this);
         
         this.getChipsToMove = getChipsToMove.bind(this);
@@ -47,14 +46,14 @@ export default class Game extends React.Component {
                 chips: defaultChipsPositions(this.props.playersOrder),
                 selectedChip: null
             });
-
+            this.scheme = createScheme();
             setTimeout(() => this.props.playersOrder.map( i => this.returnChipsToBase(i)), 1000);
         }
         if (prevProps.moveData !== this.props.moveData && this.props.moveData)
             this.performMove(this.state.chips[this.props.moveData.playerNum][this.props.moveData.num], this.props.moveData.diceNum, this.props.moveData.position);
 
         if (prevProps.playersInfo !== this.props.playersInfo) {
-            if (this.props.gameOn) {
+            if (this.props.gameOn && prevProps.playersInfo.length === this.props.playersInfo.length) {
                 let playerLeft = prevProps.playersInfo.find((pl, i) => {return pl.left !== this.props.playersInfo[i].left});
 
                 let playerLeftIndex = prevProps.playersInfo.indexOf(playerLeft);
@@ -327,8 +326,6 @@ export default class Game extends React.Component {
                                 <div className={`game_chip game_chip_player${i}${additionalClassName}`} 
                                     id={`game_chip_player${i}_num${k}`}
                                     key={`game_chip_player${i}_num${k}`}
-                                    data-player={i}
-                                    data-num={k}
                                     onClick={(event) => {
                                         if (this.props.disabled || this.props.yourTurn !== this.props.turn)
                                             return;
@@ -407,8 +404,8 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     chip.isAtBase = isBase;
 
     if (this.scheme[cellId].chips.length && (+this.getPlayerFromCell(cellId) !== +chip.player)) {
-        let eatenChipElem = document.getElementById(this.scheme[cellId].chips[0]);
-        let [player, num] = [eatenChipElem.getAttribute("data-player"), eatenChipElem.getAttribute("data-num")];
+        let chipId = this.scheme[cellId].chips[0];
+        let [player, num] = [chipId[16], chipId[21]];
         
         this.moveChipToCell(this.state.chips[player][num], `game_chip-base_chip-space_player${player}_num${num}`, true);
     }
@@ -435,7 +432,7 @@ function buildRoute(chip, cellId, diceNum) {
     
     let dice = this.state.dice[diceNum];
     let chipCell = scheme[chip.position];
-    let currentPlayer = document.getElementById(chip.id).getAttribute("data-player");
+    let currentPlayer = '' + chip.player;
     
     if (dice === 1 && chipCell.links.for1 && chipCell.links.for1 === cellId) {
         return [chipCell.links.for1];
@@ -606,7 +603,7 @@ function getPossibleMoves(chip, dice) {
 
     let scheme = this.scheme;
     let chipCell = scheme[chip.position];
-    let currentPlayer = document.getElementById(chip.id).getAttribute("data-player");
+    let currentPlayer = '' + chip.player;
     let result = [];
 
     if (dice === 1 && chipCell.links.for1 && this.getPlayerFromCell(chipCell.links.for1) !== currentPlayer)
@@ -632,6 +629,7 @@ function getPossibleMoves(chip, dice) {
         for (let i = 1; i <= dice; i++) {
             let toFinish = scheme[current.links["toFinish" + currentPlayer]];
             if (toFinish && !toFinish.chips.length) {
+                if (i === dice) result.push({ id: toFinish.id });
                 for (let k = i + 1; k <= dice; k++) {
                     toFinish = scheme[toFinish.links.next];
                     if (!toFinish || toFinish.chips.length)
@@ -706,11 +704,10 @@ function performMove(chip, diceNum, finalCellId) {
 function getPlayerFromCell(cellId) {
     let chipId = this.scheme[cellId].chips[0];
 
-    let chipElem = document.getElementById(chipId);
-    if (chipElem === null)
+    if (!chipId)
         return null;
 
-    return chipElem.getAttribute("data-player");
+    return chipId[16];
 }
 
 function defaultChipsPositions(playersOrder) {

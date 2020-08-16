@@ -107,6 +107,7 @@
     top: 0;
     left: 0;
     flex-direction: row-reverse;
+    text-align: end;
 }
 .player-info_top-right {
     top: 0;

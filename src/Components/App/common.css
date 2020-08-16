@@ -30,6 +30,14 @@ div {
 .flex {
     display: flex;
 }
+.transparent {
+    opacity: 0;
+}
+.abs-top-right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
 .flex-sb {
     display: flex;
     justify-content: space-between;

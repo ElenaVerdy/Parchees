@@ -27,17 +27,24 @@
 .tables_row-header {
     font-weight: 600;
     font-size: large;
-    font-size: 23px;    
+    font-size: 23px;
+    background-color: transparent;    
+    height: 20px;
 }
 .tables_row {
     font-weight: 600;
     font-size: 20px;
     margin: 3px auto;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 50px;
 }
 .tables_row > *, .tables_row-header > * {
     text-align: center;
+    height: 100%;
 }
-.tables_row > * {
+.tables_row-body > * {
     background-color: tan;
 }
 .tables_bet {
@@ -46,6 +53,12 @@
 .tables_rank {
     width: 90px;
     border-radius: 0px 5px 5px 0px;
+}
+.tables_row-body > .tables_bet, .tables_row-body > .tables_rank {
+    line-height: 50px;
+}
+.tables_row-header > .tables_rank {
+    line-height: 20px;
 }
 .tables_players {
     width: 300px;
@@ -72,6 +85,7 @@
     padding: 5px 23px;
     margin: 0px 8px;
     background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 48%, rgba(255,255,255,0.3) 52%);
+    /* background-image: linear-gradient(to bottom, #A57164 0%, #966255 100%); */
 }
 .table-join-icon {
     background-color: whitesmoke;

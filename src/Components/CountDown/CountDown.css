@@ -24,7 +24,7 @@
 .countdown_timer-icon::before {
     width: 20px;
     height: 20px;
-    background-image: url(../../assets/icons/clock1.svg);
+    background-image: url(../../assets/icons/clock.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

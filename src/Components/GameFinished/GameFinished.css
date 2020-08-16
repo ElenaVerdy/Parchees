@@ -3,9 +3,21 @@
     height: 100%;
     font-weight: 500;
     color: var(--color-black);
+    font-size: calc(var(--cell-size) * 0.45);
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 1px 1px 3px 2px var(--color-black);
+    background: linear-gradient(to bottom, #FAEBD7 0%, #EBDCC8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FAEBD7), color-stop(100%, #EBDCC8));
+    background: -webkit-linear-gradient(top, #FAEBD7 0%, #EBDCC8 100%);
+    background: -moz-linear-gradient(top, #FAEBD7 0%, #EBDCC8 100%);
+    background: -o-linear-gradient(top, #FAEBD7 0%, #EBDCC8 100%);
+    background: -ms-linear-gradient(top, #FAEBD7 0%, #EBDCC8 100%);
 }
 .game_finished_table {
-    width: 100%;
 }
 .game_finished_tr_rank-delta {
     width: 50px;
@@ -35,6 +47,7 @@
     width: 100%;
     text-align: center;
     font-size: calc(var(--cell-size) / 2);
+    line-height: calc(var(--cell-size) * 0.45);
 }
 .game-finished_medal-tape {
     position: absolute;
@@ -57,10 +70,33 @@
 }
 .game_finished_table-header {
     color: var(--color-black);
-} 
-.game-finished_close {
+}
+.game_finished_td:not(.game_finished_tr_winner) {
+    padding: 5px 3px;
+}
+.game-finished_close::before {
     position: absolute;
-    width: 15px;
-    right: 5px;
+    right: 7px;
+    top: 7px;
     cursor: pointer;
+    width: 15px;
+    height: 15px;
+    background-image: url(../../assets/icons/close.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    content: "  ";
+    display: block;
+}
+.game_finished_btn {
+    background: #007bff;
+    color: white !important;
+    border-radius: 4px;
+    border: 0px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    margin: 3px 6px;
+    font-weight: 400;
+    font-size: calc(var(--cell-size) * 0.5);
+    background-image: linear-gradient(to bottom, #A57164 0%, #966255 100%);
 }

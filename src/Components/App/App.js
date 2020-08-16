@@ -30,7 +30,7 @@ const init = new Promise((resolve, reject) => {
 			photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
 			first_name: 'Lindsey',
 			last_name: "Stirling",
-			id: 123123123
+			id: Math.random() * 1000000000 ^ 0
 		});
 	}
 })
@@ -41,8 +41,8 @@ export default class App extends React.Component {
 		super(props);
 
 		this.state = {
+			userInfo: {},
 			tables: [],
-			connectedToTable: false,
 			tableId: null,
 			playersInfo: [],
 			playersOrder: [],
@@ -58,13 +58,11 @@ export default class App extends React.Component {
 			gameResults: [],
 			doAfterDisable: {},
 			moveData: null,
-			userInfo: {},
 			actionCount: 0,
 			canSkip: false,
 			loading: true
 		}
 		this.socket = socket;
-		this.handleAllPlayersReady = handleAllPlayersReady.bind(this);
 		this.handleGameStart = handleGameStart.bind(this);
 		this.handleNextTurn = handleNextTurn.bind(this);
 		this.diceRolled = diceRolled.bind(this);
@@ -80,12 +78,12 @@ export default class App extends React.Component {
 			this.socket.emit("init", userInfo);
 		});
 		this.socket.on("init-finished", data => {
-			console.log('finished', data)
 			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
-		})
+		});
+		this.socket.on("update-user-info", data => this.setState({ userInfo: { ...this.state.userInfo, ...data } }))
 		this.socket.on("connect-to", data => {
-			this.setState({ connectedToTable: true, tableId: data.id });
-		})
+			this.setState({ tableId: data.id });
+		});
 		this.socket.on("err", data => console.error(data));
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {
@@ -94,16 +92,16 @@ export default class App extends React.Component {
 				playersInfo[data.playerLeftIndex].left = true;
 
 				this.setState({ playersInfo });
-			} else if (!this.state.gameOn && data.players) {
+			} else if (data.afterWin || (!this.state.gameOn && data.players)) {
 				let playersOrder = getPlayersOrder(data.players.length);
 				this.setState({
 					playersInfo: data.players, 
 					playersOrder,
 					yourTurn: data.players.indexOf(data.players.find(pl => pl.id === this.socket.id))
 				});
-			} 
+			}
 		});
-		this.socket.on("all-players-ready", this.handleAllPlayersReady);
+		this.socket.on("all-players-ready", handleAllPlayersReady.bind(this));
 		this.socket.on("game-start", this.handleGameStart);
 		this.socket.on("next-turn", data => {
 			if (this.state.disabled || data.actionCount !== this.state.actionCount)
@@ -134,7 +132,7 @@ export default class App extends React.Component {
 		});
 	}
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.connectedToTable !== this.state.connectedToTable && !this.state.connectedToTable) 
+		if (prevState.tableId && !this.state.tableId)
 			this.socket.emit("get-tables-request");
 
 		if ((prevState.disabled && !this.state.disabled) || (prevState.actionCount !== this.state.actionCount)) {
@@ -166,10 +164,13 @@ export default class App extends React.Component {
 
   	render() {
 		return (
-			<div className="main-container">
+			<div id="main-container" className="main-container">
 				{this.state.loading ? <div className="loading"></div> :
 				<div className="App">
 					<div className="App_header">
+						{this.state.tableId ?
+							<div className="App_header_leave-btn" onClick={toTables.bind(this)}></div>
+						: null}
 					</div>
 					<div className="App_main">
 						<div className="App_main-offside">
@@ -192,7 +193,7 @@ export default class App extends React.Component {
 
 						</div>
 						<div className="App_main-container">
-							{this.state.connectedToTable ? <Game tableId={this.state.tableId}
+							{this.state.tableId ? <Game tableId={this.state.tableId}
 																socket={this.socket}
 																playersInfo={this.state.playersInfo}
 																playersOrder={this.state.playersOrder}
@@ -214,7 +215,10 @@ export default class App extends React.Component {
 													/>
 							}
 							<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
-								<GameFinished results={this.state.gameResults} close={() => {this.setState({gameFinishedModal: false, gameResults: []})}} />
+								<GameFinished results={this.state.gameResults}
+											  close={() => {this.setState({gameFinishedModal: false, gameResults: []})}}
+											  toTables={toTables.bind(this)}
+								/>
 							</div>
 						</div>
 					</div>
@@ -222,6 +226,28 @@ export default class App extends React.Component {
 			</div>
 		);
 	}
+}
+function toTables() {
+	socket.emit('leave-table', { tableId: this.state.tableId });
+	this.setState({
+		tableId: null,
+		playersInfo: [],
+		playersOrder: [],
+		doublesStreak: 0,
+		gameOn: false,
+		yourTurn: null,
+		countDown: null,
+		turn: null,
+		dice: [],
+		activeDice: [],
+		disabled: false,
+		gameFinishedModal: false,
+		gameResults: [],
+		doAfterDisable: {},
+		moveData: null,
+		actionCount: 0,
+		canSkip: false
+	});
 }
 function diceRolled(data) {
 	let tmp = 0;
@@ -243,16 +269,17 @@ function endGame(data) {
 		dice: [],
 		disabled: false,
 		gameResults: data.results,
-		actionCount: this.state.actionCount + 1
+		actionCount: this.state.actionCount + 1,
+		doAfterDisable: []
 	});
 }
 function handleGameStart(data) {
 	this.setState({
-		turn: data.turn, 
-		gameOn: true, 
-		dice: [], 
-		playersInfo: data.players,
 		gameFinishedModal: false,
+		gameOn: true, 
+		turn: data.turn, 
+		dice: [],
+		playersInfo: data.players,
 		gameResults: [],
 		actionCount: 1
 	});

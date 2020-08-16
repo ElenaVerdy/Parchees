@@ -22,7 +22,7 @@ export default function PlayerInfo (props) {
 				</div>
 				<div className="player-info_img"><img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.playersInfo.username }></img></div>
 			</div> 
-			<div className={`player-info_ready player-info_ready_${position} ${props.playersInfo.ready ? "player-info_ready-active" : ''}`}>
+			<div className={`player-info_ready player-info_ready_${position} ${props.playersInfo.ready ? "player-info_ready-active" : ''} ${props.playerLeft ? " transparent" : ""}`}>
 				<div className="player-info_fire"></div>
 				<div>Готов!</div>
 			</div>

@@ -1,14 +1,14 @@
 import React from 'react';
 import './SideMenu.css';
+import GameStart from '../GameStart/GameStart';
 import ReactDice from "react-dice-complete";
-import 'react-dice-complete/dist/react-dice-complete.css'
+import 'react-dice-complete/dist/react-dice-complete.css';
 
 export default class SideMenu extends React.Component {
 	constructor(props) {
         super(props);
         this.dictionary = {
             mainMenu: "Создай новый стол или присоединись к существующему!",
-            newGame: "Новая игра!",
             throwDice: "Бросить кубик",
             otherPlayersMove: "Ход другого игрока",
             makeYourMove: "Ваш ход!",
@@ -46,8 +46,8 @@ export default class SideMenu extends React.Component {
                 diceElems[i].classList.remove("die-container_active");
             });
         }
-        if (prevProps.gameOn && !this.props.gameOn) {
-            this.setState({ready: false})
+        if ((prevProps.gameOn && !this.props.gameOn) || (prevProps.tableId !== this.props.tableId)) {
+            this.setState({ready: false});
         }
 	}
     rollAll () {
@@ -101,7 +101,7 @@ export default class SideMenu extends React.Component {
                             </div>
                         </div>)
                     : <div>
-                        <button onClick={() => {this.props.socket.emit("new-table", this.props.userInfo)}}>{this.dictionary.newGame}</button>
+                        <GameStart startGame={(bet) => {this.props.socket.emit("new-table", { ...this.props.userInfo, bet })}}></GameStart>
                         <div className="side-menu_info">{this.dictionary.mainMenu}</div>
                     </div>
             }

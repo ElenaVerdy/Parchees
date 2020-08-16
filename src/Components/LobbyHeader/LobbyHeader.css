@@ -23,18 +23,27 @@
     font-size: 30px;
     font-weight: 600;
 }
-.lobby-header_rank, .lobby-header_bank {
+.lobby-header_rank, .lobby-header_chips {
     display: flex;
     align-items: center;
-    margin-top: -7px;
+    margin-right: 10px;
 }
 .lobby-header_rank-number,
-.lobby-header_dollar-number {
+.lobby-header_chips-number {
     padding-top: 3px;
 }
-.lobby-header_rank-star {
-    color: gold;
+.lobby-header_rank-star,
+.lobby-header_chips-icon {
+    height: 20px;
+    width: 20px;
+    background-size: cover;
+    background-position: center;
+    margin-right: 3px;
+
 }
-.lobby-header_dollar-sign {
-    color: green;
+.lobby-header_rank-star {
+    background-image: url(../../assets/icons/star.svg);
+}
+.lobby-header_chips-icon {
+    background-image: url(../../assets/icons/chip.svg);
 }
