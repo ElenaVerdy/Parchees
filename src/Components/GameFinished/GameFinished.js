@@ -10,6 +10,7 @@ export default function GameFinished(props) {
 					<tr>
 						<td className="game_finished_td game_finished_tr_winner" />
 						<td className="game_finished_td game_finished_tr_name">Имя</td>
+						<td className="game_finished_td game_finished_tr_chips"></td>
 						<td className="game_finished_td game_finished_tr_rank">Ранк</td>
 						<td className="game_finished_td game_finished_tr_rank-delta"></td>
 					</tr>
@@ -26,15 +27,16 @@ export default function GameFinished(props) {
 								: ""}
 							</td>
 							<td className="game_finished_td game_finished_tr_name">{res.name}</td>
+							<td className="game_finished_td game_finished_tr_chips">{`${res.deltaChips < 0 ? '' : '+'}${res.deltaChips}`}</td>
 							<td className="game_finished_td game_finished_tr_rank">{res.rating}</td>
 							<td className="game_finished_td game_finished_tr_rank-delta">{`(${res.deltaRank < 0 ? '' : '+'}${res.deltaRank})`}</td>
 						</tr>)
 					})}
 				</tbody>
 			</table>
-			<div className="flex">
-				<button className="game_finished_btn" onClick={props.toTables}>к столам</button>
-				<button className="game_finished_btn" onClick={props.close}>закрыть</button>
+			<div className="flex game_finished_btn-wrapper">
+				<button className="btn-brown game_finished_btn" onClick={props.toTables}>к столам</button>
+				<button className="btn-brown game_finished_btn" onClick={props.close}>закрыть</button>
 			</div>
 		</div>
 	)

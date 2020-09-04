@@ -30,10 +30,10 @@ export default class Chat extends React.Component {
 				<div className="chat_header flex-sb">
 					<div className="flex">
 						<div className="chat_header_name">чат</div>
-						<div className={`margin-lr-5${this.state.selectedRoom !== 'main' ? ' disabled' : ''}`} onClick={() => this.setState({selectedRoom: 'main'})}>общий</div>
+						<div className={`pointer margin-lr-5${this.state.selectedRoom !== 'main' ? ' disabled' : ''}`} onClick={() => this.setState({selectedRoom: 'main'})}>общий</div>
 						{this.props.roomId ? <div className="chat_room-game flex">
 							<div className="margin-lr-5">/</div>
-							<div className={`margin-lr-5${this.state.selectedRoom === 'main' ? ' disabled' : ''}`} onClick={() => this.setState({selectedRoom: 'room'})}>стол</div>
+							<div className={`pointer margin-lr-5${this.state.selectedRoom === 'main' ? ' disabled' : ''}`} onClick={() => this.setState({selectedRoom: 'room'})}>стол</div>
 						</div> : null}
 					</div>
 				</div>
@@ -54,7 +54,7 @@ export default class Chat extends React.Component {
 						   onChange={(e) => this.setState({inputText: e.target.value})}
 						   onKeyUp={e => e.keyCode === 13 && this.sendMsg()}
 					/>
-					<div className={`chat_send-btn${this.state.blockBtn ? ' disabled' : ''}`} onClick={this.sendMsg}></div>
+					<div className={`pointer chat_send-btn${this.state.blockBtn ? ' disabled' : ''}`} onClick={this.sendMsg}></div>
 				</div>
 			</div>
 		)

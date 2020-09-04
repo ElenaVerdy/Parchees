@@ -24,13 +24,6 @@
 .tables_player-names-container {
     width: 50%
 }
-.tables_row-header {
-    font-weight: 600;
-    font-size: large;
-    font-size: 23px;
-    background-color: transparent;    
-    height: 20px;
-}
 .tables_row {
     font-weight: 600;
     font-size: 20px;
@@ -39,6 +32,13 @@
     align-items: center;
     margin-bottom: 10px;
     height: 50px;
+}
+.tables_row-header {
+    font-weight: 600;
+    font-size: large;
+    font-size: 23px;
+    background-color: transparent;    
+    height: 20px;
 }
 .tables_row > *, .tables_row-header > * {
     text-align: center;

@@ -1,0 +1,68 @@
+{
+    "cheats": [
+        {
+            "id": "skip",
+            "iconClass": "cheat-block__skip",
+            "title": "Пропуск хода",
+            "description": "Любите часовые засады в домике? Закончивайте ход, даже если у вас остались не использованные ходы",
+            "currency": "money",
+            "price": 5
+        },
+        {
+            "id": "reroll",
+            "title": "Перебросить кубик",
+            "iconClass": "cheat-block__reroll",
+            "description": "В любом деле нужно много упорства! Бросьте кубик еще раз, устройте себе тренировку",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "shield",
+            "title": "Щит",
+            "iconClass": "cheat-block__shield",
+            "description": "Вашу фишку нельзя скушать. И все тут.",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "runaway",
+            "title": "Убегалка",
+            "iconClass": "cheat-block__runaway",
+            "description": "Если кто-то попытается вас съесть, то ваша фишка просто убежит. Быстрый бег - лучшая самооборона!",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "no_shortcuts",
+            "title": "Тернистый путь",
+            "description": "Срезать по полдоски за раз - это только ваша прерогатива. Запретите сопернику так делать!",
+            "iconClass": "cheat-block__no-shortcuts",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "free_shortcuts",
+            "title": "Стрелочник",
+            "description": "Если остановились на стрелочке, то можно пообщаться со старым другом и пройти не заплатив.",
+            "iconClass": "cheat-block__free-shortcuts",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "flight",
+            "title": "Полет",
+            "description": "Только пролетая над мерзкими фишками врагов можно почувствовать себя счастливым человеком!",
+            "iconClass": "cheat-block__flight",
+            "currency": "money",
+            "price": 3
+        },
+        {
+            "id": "move_back",
+            "title": "Шаг назад",
+            "description": "Противник дезориентирован и уходит от финиша. Вы здесь не при чем!",
+            "iconClass": "cheat-block__move-back",
+            "currency": "money",
+            "price": 3
+        }
+    ]
+}

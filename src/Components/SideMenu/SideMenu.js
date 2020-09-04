@@ -1,7 +1,9 @@
 import React from 'react';
 import './SideMenu.css';
 import GameStart from '../GameStart/GameStart';
-import ReactDice from "react-dice-complete";
+// import ReactDice from "react-dice-complete";
+import ReactDice from '../react-dice-complete/src/ReactDice'
+import CheatsBlock from "../CheatsBlock/CheatsBlock";
 import 'react-dice-complete/dist/react-dice-complete.css';
 
 export default class SideMenu extends React.Component {
@@ -61,15 +63,15 @@ export default class SideMenu extends React.Component {
                         <div>
                             {this.props.turn === this.props.yourTurn ? 
                                 ( this.props.dice.length && !this.props.doublesStreak ? 
-                                    <button disabled={this.props.disabled || !this.props.canSkip}
+                                    <button className="btn-grey" disabled={this.props.disabled || !this.props.canSkip}
                                             onClick={() => { this.props.disabled || !this.props.canSkip || this.props.socket.emit("finish-turn", {tableId: this.props.tableId}); }}>
                                         {this.dictionary.finish}
                                     </button>
-                                    : <button disabled={this.props.disabled} onClick={() => {
+                                    : <button className="btn-grey" disabled={this.props.disabled} onClick={() => {
                                         if (this.props.disabled) return;
-                                        this.props.socket.emit("roll-dice", {dice:[4, 5], tableId: this.props.tableId})
+                                        this.props.socket.emit("roll-dice", {dice:[], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
-                                : <button disabled className="side-menu_other-players-turn">{this.dictionary.otherPlayersMove}</button>}
+                                : <button className="btn-grey" disabled>{this.dictionary.otherPlayersMove}</button>}
                             <div className="side-menu_info">
                                 {this.props.turn === this.props.yourTurn ? 
                                 (this.props.dice.length ? 
@@ -85,19 +87,24 @@ export default class SideMenu extends React.Component {
                                        dotColor={"#272727"}
                                        faceColor={"#ffffff"}
                                        disableIndividual={true}
-                                       rollDone={() => this.props.diceRolled()} />
+                                       rollDone={() => this.props.diceRolled()}
+                                       disableRandom={true} />
+                            <CheatsBlock userInfo={this.props.userInfo}
+                                         socket={this.props.socket}
+                                         tableId={this.props.tableId}
+                                         myTurn={this.props.turn === this.props.yourTurn}
+                                         canReroll={!!this.props.dice.length}
+                            />
                         </div>
                         : <div>
                             {this.state.ready ? 
-                            <button onClick={() => {this.props.socket.emit("ready", {tableId: this.props.tableId, socketId: this.props.socket.id, ready: false}); this.setState({ready: false})}}>Не готов!</button>:
-                            <button onClick={() => {this.props.socket.emit("ready", {tableId: this.props.tableId, socketId: this.props.socket.id, ready: true}); this.setState({ready: true})}}>Готов!</button>}
+                            <button className="btn-grey" onClick={() => {this.props.socket.emit("ready", {tableId: this.props.tableId, socketId: this.props.socket.id, ready: false}); this.setState({ready: false})}}>Не готов!</button>:
+                            <button className="btn-grey" onClick={() => {this.props.socket.emit("ready", {tableId: this.props.tableId, socketId: this.props.socket.id, ready: true}); this.setState({ready: true})}}>Готов!</button>}
                             <div className="side-menu_info">
-                                
                                 {this.props.countDown === null ? 
                                 <span>{this.state.ready ? this.dictionary.waitingForOtherPlayers : this.dictionary.pressReady}</span>  
                                 : 
                                 <span>{this.dictionary["countDown" + this.props.countDown]}</span>}
-
                             </div>
                         </div>)
                     : <div>

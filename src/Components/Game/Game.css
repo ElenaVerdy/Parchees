@@ -20,7 +20,7 @@
 .game_container {
     position: relative;
 }
-.game_container-player2 .game_board {
+.game_container-player2 .game_board, .chip {
     transform: rotate(270deg);
 }
 .game_container-player3 .game_board {
@@ -30,15 +30,18 @@
     transform: rotate(90deg);
 }
 .game_container-player2 .game_cell-start::after, 
-.game_container-player2 .game_cell::after {
+.game_container-player2 .game_cell::after,
+.game_container-player2 .game_chip {
     transform: rotate(90deg);
 }
 .game_container-player3 .game_cell-start::after, 
-.game_container-player3 .game_cell::after {
+.game_container-player3 .game_cell::after,
+.game_container-player3 .game_chip {
     transform: rotate(180deg);
 }
 .game_container-player4 .game_cell-start::after, 
-.game_container-player4 .game_cell::after {
+.game_container-player4 .game_cell::after,
+.game_container-player4 .game_chip {
     transform: rotate(270deg);
 }
 .game_container-player2 .game_cell-start::after {
@@ -81,6 +84,7 @@
     border: solid var(--color-black);
     border-width: 1px 0px 0px 1px;
     background: linear-gradient(to bottom, #FFE4C4 0%, #F0D5B5 100%);
+    overflow: hidden;
 }
 .game_container-player2 .game_cell {
     background: linear-gradient(to left, #FFE4C4 0%, #F0D5B5 100%);
@@ -321,13 +325,13 @@
     background-color: green;
 }
 .game_chip_player3 {
-    background-color: blue;
+    background-color: rgb(30, 90, 255);
 }
 .game_chip_player4 {
     background-color: yellow;
 }
 .game_chip_can-move {
-    border-width: 3px;
+    box-shadow: 0px 0px 1px 2px;
 }
 .game_chip_can-move_hoverable:hover {
     box-shadow:  0px 0px 5px 5px red;
@@ -345,7 +349,7 @@
     background: linear-gradient(to right, #9966CC 0%, #8A57BD 100%);
 }
 .game_chip-selected {
-    box-shadow:  0px 0px 4px 4px red;    
+    box-shadow:  0px 0px 4px 4px red;
 }
 .game_chip-can-be-eaten {
     box-shadow:  0px 0px 4px 4px orange;
@@ -416,4 +420,29 @@
 #game_chip_player4_num4 {
     top: calc(var(--cell-size) * 3.9);
     left: calc(var(--cell-size) * 9.3);
+}
+.game_chip-to-be-selected {
+    box-shadow:  0px 0px 5px 5px green;
+}
+.game_chip-shield::after {
+    content: ' ';
+    display: block;
+    width: calc(var(--cell-size) * 0.4);
+    height: calc(var(--cell-size) * 0.4);
+    top: 7px;
+    left: 0px;
+    background-image: url(../../assets/icons/shield.svg);
+    background-repeat: no-repeat;
+    position: absolute;
+}
+.game_chip-flight::after {
+    content: ' ';
+    display: block;
+    width: calc(var(--cell-size) * 0.4);
+    height: calc(var(--cell-size) * 0.4);
+    background-repeat: no-repeat;
+    top: 7px;
+    right: 0px;
+    background-image: url(../../assets/icons/flight-white.svg);
+    position: absolute;
 }

@@ -17,13 +17,6 @@
   height: 650px;
   background-color: lightcoral;
 }
-.App_header{
-  width: 100%;
-  height: 50px;
-  background-color: rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: flex-end;
-}
 .App_main {
   width: 100%;
   height: 600px;
@@ -54,11 +47,11 @@
 .App_game-finished_container_shown {
   top: calc(var(--cell-size) * 5);
 }
-.App_header_leave-btn {
-  width: 30px;
-  height: 30px;
-  background-image: url(../../assets/icons/leave.svg);
-  background-position: center;
-  background-size: cover;
-  margin: 10px;
+.app_modal-error {
+  width: calc(var(--cell-size) * 6);
+  height: calc(var(--cell-size) * 3);
+  padding: 5px 15px !important;
+}
+.app_modal-error_text {
+  flex: 1;
 }

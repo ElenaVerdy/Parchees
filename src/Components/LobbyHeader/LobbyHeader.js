@@ -14,13 +14,12 @@ export default class LobbyHeader extends React.Component {
 					<div className='lobby-header_photo'><img src={ userInfo.photo_100 } alt={userInfo.name} height="70" width="70"/></div>
 					<div>
 						<div className='lobby-header_name'>{ userInfo.name }</div>
-						<div className='lobby-header_chips'><div className='icon lobby-header_chips-icon'></div><div className="lobby-header_chips-number">{ userInfo.chips }</div></div>
 						<div className='lobby-header_rank'><div className='icon lobby-header_rank-star'></div><div className="lobby-header_rank-number">{ userInfo.rating }</div></div>
 					</div>
 				</div>
 				<div className='lobby-header_left'>
-					<button className="btn-small">с компьютером</button>
-					<button className="btn-small">играть с другом</button>
+					<button className="btn-grey btn-grey-small">с компьютером</button>
+					<button className="btn-grey btn-grey-small">играть с другом</button>
 				</div>
 			</div>
 		)

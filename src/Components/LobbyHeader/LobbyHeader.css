@@ -28,12 +28,11 @@
     align-items: center;
     margin-right: 10px;
 }
-.lobby-header_rank-number,
-.lobby-header_chips-number {
+.lobby-header_rank-number {
     padding-top: 3px;
+    font-size: 20px;
 }
-.lobby-header_rank-star,
-.lobby-header_chips-icon {
+.lobby-header_rank-star {
     height: 20px;
     width: 20px;
     background-size: cover;

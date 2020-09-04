@@ -1,39 +1,43 @@
 import React from 'react';
+import Modal from 'react-modal';
+import io from "socket.io-client";
 import './App.css';
 import './common.css'
 import Game from "../Game/Game"
 import Lobby from "../Lobby/Lobby"
-import io from "socket.io-client";
 import SideMenu from "../SideMenu/SideMenu"
 import Chat from "../Chat/Chat"
 import GameFinished from "../GameFinished/GameFinished"
+import AppHeader from "../AppHeader/AppHeader"
 import cloneDeep from 'lodash.clonedeep'
 
 let debug = window.location.href === "http://192.168.1.67:3000/";
 const ENDPOINT = debug ? "http://192.168.1.67:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
 const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
-const init = new Promise((resolve, reject) => {
-	if (!debug) {
-		VK.init(function() {
-			VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
-				const data = res && res.response && res.response[0];
-				if (!data) throw new Error('can not fetch user data');
-				resolve(data);
+const init = function() {
+	return new Promise((resolve, reject) => {
+		if (!debug) {
+			VK.init(function() {
+				VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
+					const data = res && res.response && res.response[0];
+					if (!data) throw new Error('can not fetch user data');
+					resolve(data);
+				});
+			}, function() {
+				console.log("bad")
+			}, '5.103');
+		} else {
+			resolve({
+				photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
+				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
+				first_name: 'Lindsey',
+				last_name: "Stirling",
+				id: 123123123
 			});
-		}, function() {
-			console.log("bad")
-		}, '5.103');
-	} else {
-		resolve({
-			photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
-			photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-			first_name: 'Lindsey',
-			last_name: "Stirling",
-			id: Math.random() * 1000000000 ^ 0
-		});
-	}
-})
+		}
+	})
+}
 
 const socket = io.connect(ENDPOINT);
 export default class App extends React.Component {
@@ -73,9 +77,12 @@ export default class App extends React.Component {
 	}
 	
 	componentDidMount() {
-		init.then(userInfo => {
+		init().then(userInfo => {
 			this.setState({ userInfo });
 			this.socket.emit("init", userInfo);
+		});
+		this.socket.on("request-auth", () => {
+			if (this.state.userInfo.id) return this.socket.emit("init", this.state.userInfo);
 		});
 		this.socket.on("init-finished", data => {
 			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
@@ -84,7 +91,7 @@ export default class App extends React.Component {
 		this.socket.on("connect-to", data => {
 			this.setState({ tableId: data.id });
 		});
-		this.socket.on("err", data => console.error(data));
+		this.socket.on("err", data => this.setState({ error: data.text }));
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
@@ -160,6 +167,8 @@ export default class App extends React.Component {
 					break;
 			}
 		}
+		if (prevState.error !== this.state.error && this.state.error)
+			console.log(this.state.error)
 	}
 
   	render() {
@@ -167,11 +176,7 @@ export default class App extends React.Component {
 			<div id="main-container" className="main-container">
 				{this.state.loading ? <div className="loading"></div> :
 				<div className="App">
-					<div className="App_header">
-						{this.state.tableId ?
-							<div className="App_header_leave-btn" onClick={toTables.bind(this)}></div>
-						: null}
-					</div>
+					<AppHeader tableId={this.state.tableId} toTables={toTables.bind(this)} userInfo={this.state.userInfo} socket={this.socket} />
 					<div className="App_main">
 						<div className="App_main-offside">
 							<SideMenu socket={this.socket}
@@ -179,12 +184,12 @@ export default class App extends React.Component {
 									gameOn={this.state.gameOn}
 									countDown={this.state.countDown}
 									yourTurn={this.state.yourTurn}
-									turn={this.state.turn} 
+									turn={this.state.turn}
 									dice={this.state.dice}
 									activeDice={this.state.activeDice}
 									doublesStreak={this.state.doublesStreak}
 									disable={this.disable}
-									disabled={this.state.disabled} 
+									disabled={this.state.disabled}
 									userInfo={this.state.userInfo}
 									diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}
 									canSkip={this.state.canSkip}
@@ -194,25 +199,25 @@ export default class App extends React.Component {
 						</div>
 						<div className="App_main-container">
 							{this.state.tableId ? <Game tableId={this.state.tableId}
-																socket={this.socket}
-																playersInfo={this.state.playersInfo}
-																playersOrder={this.state.playersOrder}
-																yourTurn={this.state.yourTurn}
-																gameOn={this.state.gameOn}
-																turn={this.state.turn}
-																dice={this.state.dice}
-																disable={this.disable}
-																disabled={this.state.disabled}
-																logAction={this.logAction}
-																setActiveDice={activeDice => {this.setState({activeDice})}}
-																moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
-																moveData={this.state.moveData}
-																setCanSkip={(canSkip) => this.setState({ canSkip })}
-															/>
-												: <Lobby tables={this.state.tables}
 														socket={this.socket}
-														userInfo={this.state.userInfo}
-													/>
+														playersInfo={this.state.playersInfo}
+														playersOrder={this.state.playersOrder}
+														yourTurn={this.state.yourTurn}
+														gameOn={this.state.gameOn}
+														turn={this.state.turn}
+														dice={this.state.dice}
+														disable={this.disable}
+														disabled={this.state.disabled}
+														logAction={this.logAction}
+														setActiveDice={activeDice => {this.setState({activeDice})}}
+														moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
+														moveData={this.state.moveData}
+														setCanSkip={(canSkip) => this.setState({ canSkip })}
+												  />
+							: <Lobby tables={this.state.tables}
+									 socket={this.socket}
+								 	 userInfo={this.state.userInfo}
+							  />
 							}
 							<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
 								<GameFinished results={this.state.gameResults}
@@ -223,6 +228,17 @@ export default class App extends React.Component {
 						</div>
 					</div>
 				</div>}
+				{this.state.error ? 
+					<Modal
+						isOpen={!!this.state.error}
+						onRequestClose={() => this.setState({ error: '' })}
+						className="modal app_modal-error"
+						closeTimeoutMS={500}
+						contentLabel="Example Modal">
+							<div className="modal-header">Ой-ой-ой!</div>
+							<div className="app_modal-error_text">{this.state.error}</div>
+							<button className="modal-close-btn btn-brown" onClick={() => this.setState({ error: '' })}>закрыть</button>
+					</Modal> : null}
 			</div>
 		);
 	}

@@ -1,0 +1,120 @@
+.cheat-block_wrapper {
+    display: flex;
+}
+.cheat-block {
+    background: linear-gradient(to bottom, #E9D66B 0%, #DAC75C 100%);
+    width: 37.5px;
+    height: 40px;
+    border-top: 1px solid var(--color-black);
+    border-right: 1px solid var(--color-black);
+    position: relative;
+}
+.cheat-block:hover {
+    background: linear-gradient(to bottom, #FDEE00 0%, #EEDF00 100%)
+}
+.cheat-block:last-child {
+    border-right-color: var(--color-black);
+}
+.cheat-block_icon{
+    width: 23px;
+    height: 23px;
+    background-size: cover;
+    background-position: center;
+    margin: 7.5px auto;
+}
+.cheat-block__skip {
+    background-image: url(../../assets/icons/skip.svg);
+}
+.cheat-block__reroll {
+    background-image: url(../../assets/icons/redo.svg);
+}
+.cheat-block__shield {
+    background-image: url(../../assets/icons/shield.svg);
+}
+.cheat-block__runaway {
+    background-image: url(../../assets/icons/sport.svg);
+}
+.cheat-block__no-shortcuts {
+    background-image: url(../../assets/icons/no-shortcuts.svg);
+}
+.cheat-block__free-shortcuts {
+    background-image: url(../../assets/icons/free-shortcuts.svg);
+}
+.cheat-block__flight {
+    background-image: url(../../assets/icons/flight.svg);
+}
+.cheat-block__move-back {
+    background-image: url(../../assets/icons/skip.svg);
+    transform: rotate(180deg);
+}
+.cheat-block_price {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+.cheat-block_qty {
+    position: absolute;
+    right: 0px;
+}
+.cheat-block_tooltip {
+    max-width: 220px;
+    opacity: 1 !important;
+    color: var(--color-black) !important;
+    z-index: 2;
+    background: linear-gradient(to bottom, #FEFEFA 0%, #EFEFEB 100%) !important;
+    font-size: 15px !important;
+}
+.cheat-block_tooltip-title {
+    font-weight: 500;
+    font-size: 20px;
+    margin: 3px auto;
+    width: fit-content;
+}
+.cheat-block_tooltip-qty {
+    float: right;
+}
+.cheat-block_tooltip-description {
+    padding: 5px;
+    margin-top: 15px;
+}
+.cheat-block_tooltip-price {
+    float: right;
+}
+.chear-block_tooltip-price-icon {
+    width: 18px;
+    height: 18px;
+    background-size: cover;
+    background-position: center;
+    background-image: url(../../assets/icons/coin.svg);
+}
+.chear-block_tooltip-price-number {
+    margin-left: 4px;
+    font-size: 20px;
+}
+.cheat-block-buy-modal {
+    width: calc(var(--cell-size) * 6.5);
+    height: calc(var(--cell-size) * 3.5);
+    padding: 5px 15px !important;
+}
+.cheat-block_modal-money::before {
+    content: ' ';
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    background-position: center;
+    background-image: url(../../assets/icons/coin.svg);
+    margin-bottom: -5px;
+    display: inline-block;
+}
+.cheat-block_buy-modal_btn {
+    border-radius: 4px;
+    border: 0px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    margin: 5px auto 8px;
+    font-weight: 400;
+    font-size: calc(var(--cell-size) * 0.5);
+    display: block;
+    width: 100px;
+    color: white;
+}

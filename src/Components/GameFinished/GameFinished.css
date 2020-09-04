@@ -65,6 +65,14 @@
 .game_finished_tr_name {
     width: 160px
 }
+thead .game_finished_tr_chips {
+    height: 15px;
+    display: block;
+    background-position: center;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-image: url(/static/media/chip.36338ea6.svg);
+}
 .game_finished_tr_rank-delta {
     width: 40px;
 }
@@ -89,7 +97,7 @@
     display: block;
 }
 .game_finished_btn {
-    background: #007bff;
+    width: 100px;
     color: white !important;
     border-radius: 4px;
     border: 0px;
@@ -98,5 +106,7 @@
     margin: 3px 6px;
     font-weight: 400;
     font-size: calc(var(--cell-size) * 0.5);
-    background-image: linear-gradient(to bottom, #A57164 0%, #966255 100%);
+}
+.game_finished_btn-wrapper {
+    justify-content: center;
 }

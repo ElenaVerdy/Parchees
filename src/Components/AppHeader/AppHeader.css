@@ -1,0 +1,101 @@
+
+.app-header{
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+}
+.app-header_left {
+    padding-left: 30px;
+}
+.app-header_btn-wrapper {
+    border-radius: 7px;
+    height: 35px;
+    box-shadow: 0px 0px 2px;
+    margin: 3px;
+    background: linear-gradient(to bottom, #E9D66B 0%, #DAC75C 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #E9D66B), color-stop(100%, #DAC75C));
+    background: -webkit-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
+    background: -moz-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
+    background: -o-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
+    background: -ms-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
+    max-width: 200px;
+    transition: max-width .5s linear;
+    overflow: hidden;
+}
+.app-header_btn-wrapper:hover {
+    background: linear-gradient(to bottom, #FDEE00 0%, #EEDF00 100%);
+}
+.app-header_btn-wrapper-hidden {
+    max-width: 0px;
+}
+.app-header_btn {
+    width: 30px;
+    height: 30px;
+    background-position: center;
+    background-size: cover;
+    margin: 3px 10px;
+}
+.app-header_leave-btn {
+    background-image: url(../../assets/icons/leave.svg);
+}
+.app-header_shop-btn {
+    background-image: url(../../assets/icons/shop.svg);
+}
+.app-header_dice-btn {
+    background-image: url(../../assets/icons/dice.svg);
+}
+.app-header_records-btn {
+    background-image: url(../../assets/icons/records.svg);
+}
+.app-header_music-btn {
+    background-image: url(../../assets/icons/music.svg);
+}
+.app-header_sound-btn {
+    background-image: url(../../assets/icons/speaker.svg);
+}
+.app-header_mute-btn {
+    background-image: url(../../assets/icons/mute.svg);
+}
+.app-header_chips, .app-header_money {
+    height: 100%;
+}
+.app-header_chips::before {
+    margin: 3px 5px;
+    width: 25px;
+    height: 25px;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 1px 1px 3px;
+    border-radius: 50px;
+    content: '  ';
+    background-image: url(../../assets/icons/chip.svg);
+}
+.app-header_money::before {
+    margin: 3px 5px;
+    width: 25px;
+    border-radius: 50px;
+    height: 25px;
+    display: block;
+    box-shadow: 1px 1px 3px;
+    background-position: center;
+    background-size: cover;
+    content: '  ';
+    background-image: url(../../assets/icons/coin.svg);
+}
+
+.app-header_money-number, .app-header_chips-number {
+    font-size: 25px;
+    position: relative;
+    top: 2px;
+}
+.app-header_chips-add, .app-header_money-add {
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-size: cover;
+    border-radius: 15px;
+    margin: 4px 7px;
+    background-image: url(../../assets/icons/more.svg);
+}
