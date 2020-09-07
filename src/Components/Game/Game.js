@@ -26,7 +26,6 @@ export default class Game extends React.Component {
         this.getPossibleMoves = getPossibleMoves.bind(this);
 
         this.getPlayerFromCell = getPlayerFromCell.bind(this);
-        this.buildRoute = buildRoute.bind(this);
         this.updateDiceActive = updateDiceActive.bind(this);
         this.returnChipsToBase = returnChipsToBase.bind(this);
         this.chipCanMove = chipCanMove.bind(this);
@@ -38,9 +37,9 @@ export default class Game extends React.Component {
     componentDidMount() {
         this.socket.on('removed', () => {console.log('removed')});
 		this.socket.on("cheat-updated", data => {
-            if (data.cheatId === 'shield' || data.cheatId === 'flight') {
+            if (['flight', 'shield', 'free_shortcuts', 'no_shortcuts'].indexOf(data.cheatId) !== -1) {
                 this.state.chips[data.player][data.num][data.cheatId] = data.on;
-                this.setState({ dice: this.state.dice.slice() });
+                this.setState({ dice: this.state.dice.slice(), selectedChip: null });
             }
         })
     }
@@ -101,13 +100,13 @@ export default class Game extends React.Component {
         if (prevState.selectedChip !== this.state.selectedChip) {
             if (this.state.selectedChip) {
                 let chip = this.state.chips[this.props.playersOrder[this.props.turn]][this.state.selectedChip.num];
-                let cellsToMove = this.getPossibleMoves(chip, this.state.dice[0]).map(cell => ({ ...cell, diceNum: 0 }));
-
-                cellsToMove = cellsToMove.concat(this.getPossibleMoves(chip, this.state.dice[1]).map(cell => ({ ...cell, diceNum: 1 })));
+                let cellsToMove = this.getPossibleMoves(chip, this.state.dice[0]).map(cell => ({ ...cell, diceNum: 0 }))
+                    .concat(this.getPossibleMoves(chip, this.state.dice[1]).map(cell => ({ ...cell, diceNum: 1 })))
+                    .concat(getFreeShortcuts.call(this, chip));
                 
-                this.setState({cellsToMove});
+                this.setState({ cellsToMove });
             } else {
-                this.setState({cellsToMove: []})
+                this.setState({ cellsToMove: [] })
             }
         }
         if (prevState.cellsToMove !== this.state.cellsToMove) {
@@ -115,14 +114,17 @@ export default class Game extends React.Component {
             Array.from(document.getElementsByClassName("game_cell-move")).forEach(elem => {
                 elem.removeAttribute("data-dice-num");
                 elem.classList.remove("game_cell-move");
+                elem.classList.remove("game_cell-move-free");
             });
 
-            this.state.cellsToMove.forEach(elem => {
-                if (!document.getElementById(elem.id))
+            this.state.cellsToMove.forEach(cell => {
+                const elem = document.getElementById(cell.id);
+                if (!elem)
                     console.log("some weird shit", this.state.cellsToMove)
                 else {
-                    document.getElementById(elem.id).classList.add("game_cell-move");
-                    document.getElementById(elem.id).setAttribute("data-dice-num", elem.diceNum);
+                    elem.classList.add("game_cell-move");
+                    elem.setAttribute("data-dice-num", cell.diceNum);
+                    if (cell.diceNum === false) elem.classList.add("game_cell-move-free");
                 }
             })
         }
@@ -159,7 +161,7 @@ export default class Game extends React.Component {
                                                     yourTurn: this.props.yourTurn, 
                                                     chipNum: this.state.selectedChip.num,
                                                     targetId: event.target.id,
-                                                    diceNum: event.target.getAttribute("data-dice-num")})
+                                                    diceNum: str2bool(event.target.getAttribute("data-dice-num"))})
 
                     
                 }}>
@@ -351,7 +353,7 @@ export default class Game extends React.Component {
                                                     yourTurn: this.props.yourTurn,
                                                     chipNum: this.state.selectedChip.num,
                                                     targetId: ('game_start-cell_player' + i),
-                                                    diceNum: document.getElementById('game_start-cell_player' + i).getAttribute("data-dice-num")
+                                                    diceNum: str2bool(document.getElementById('game_start-cell_player' + i).getAttribute("data-dice-num"))
                                                 });
                                             return;
                                         }
@@ -366,13 +368,16 @@ export default class Game extends React.Component {
                                                 yourTurn: this.props.yourTurn,
                                                 chipNum: this.state.selectedChip.num,
                                                 targetId: this.state.chips[i][k].position,
-                                                diceNum: document.getElementById(this.state.chips[i][k].position).getAttribute("data-dice-num")
+                                                diceNum: str2bool(document.getElementById(this.state.chips[i][k].position).getAttribute("data-dice-num"))
                                             });
                                         }
                                     }}
                                 >
-                                    <div className={`game_chip-cheat ${this.props.gameOn && this.state.chips[i][k].shield ? 'game_chip-shield' : ''}`}></div>
-                                    <div className={`game_chip-cheat ${this.props.gameOn && this.state.chips[i][k].flight ? 'game_chip-flight' : ''}`}></div>
+                                    {this.props.gameOn ? <React.Fragment>
+                                        {this.state.chips[i][k].shield ? <div className="game_chip-cheat game_chip-shield"></div> : null}
+                                        {this.state.chips[i][k].flight ? <div className="game_chip-cheat game_chip-flight"></div> : null}
+                                        {this.state.chips[i][k].free_shortcuts ? <div className="game_chip-cheat game_chip-free_shortcuts"></div> : null}
+                                    </React.Fragment> : null}
                                 </div>
                                 )}
                             )}
@@ -392,7 +397,15 @@ function updateDiceActive() {
     }
     this.props.setActiveDice(dice);
 }
+function getFreeShortcuts(chip) {
+    let res = []
+    if (!chip.free_shortcuts) return [];
+    let start = this.scheme[chip.position];
+    if (start.links.for1) res.push({ id: start.links.for1, diceNum: false });
+    if (start.links.for3) res.push({ id: start.links.for3, diceNum: false });
 
+    return res;
+}
 function returnChipsToBase(playerNum) {
     [1, 2, 3, 4].forEach( k => {
         let chip = this.state.chips[playerNum][k];
@@ -404,6 +417,7 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     let board = document.getElementsByClassName("game_board")[0];
     let cellElem = document.getElementById(cellId);
     let chipElem = document.getElementById(chip.id);
+    if (!board || !cellElem || !chipElem) return;
     let cellSize = this.cellSize;
     let transform = board.style.transform;
     board.style.transform = 'none';
@@ -427,8 +441,8 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
     }
 
     if (isLast) {
-        if (diceNum) {
-            this.state.dice[diceNum] = undefined;
+        if (diceNum || diceNum === false) {
+            diceNum && (this.state.dice[diceNum] = undefined);
             setTimeout(() => {
                 this.props.disable(false);
                 this.props.moveMade();
@@ -450,11 +464,18 @@ function buildRoute(chip, cellId, diceNum) {
     let chipCell = scheme[chip.position];
     let currentPlayer = '' + chip.player;
     
-    if (dice === 1 && chipCell.links.for1 && chipCell.links.for1 === cellId) {
+    if (diceNum === false) {
+        if (!chip.free_shortcuts) return [];
+
+        if (chipCell.links.for1 === cellId) return [ chipCell.links.for1 ];
+        if (chipCell.links.for3 === cellId) return [ chipCell.links.for3 ];
+    }
+
+    if (!chip.no_shortcuts && dice === 1 && chipCell.links.for1 && chipCell.links.for1 === cellId) {
         return [chipCell.links.for1];
     }    
 
-    if (dice === 3 && chipCell.links.for3 && chipCell.links.for3 === cellId) {
+    if (!chip.no_shortcuts && dice === 3 && chipCell.links.for3 && chipCell.links.for3 === cellId) {
         return [chipCell.links.for3];
     } 
 
@@ -497,7 +518,7 @@ function buildRoute(chip, cellId, diceNum) {
         }
         
         if (canMove) {
-            if (current.links.end && current.links.end === cellId) 
+            if (!chip.no_shortcuts && current.links.end && current.links.end === cellId) 
                 route.push(current.links.end);
             
             if (current.links.toSH && current.links.toSH === cellId)
@@ -607,7 +628,7 @@ function getChipsToMove() {
             let possible = this.getPossibleMoves(chip, d);
             chip.canSkip = chip.canSkip && possible.every(item => item.canSkip);
             return possible.length !== 0;
-        });
+        }) || getFreeShortcuts.call(this, chip).length;
     });
 
     return chips;
@@ -629,10 +650,10 @@ function getPossibleMoves(chip, dice) {
     let chipCell = scheme[chip.position];
     let currentPlayer = '' + chip.player;
     let result = [];
-    if (dice === 1 && this.chipCanMove(chip, chipCell.links.for1))
+    if (!chip.no_shortcuts && dice === 1 && this.chipCanMove(chip, chipCell.links.for1))
         result.push({ id: chipCell.links.for1 });
 
-    if (dice === 3 && this.chipCanMove(chip, chipCell.links.for3))
+    if (!chip.no_shortcuts && dice === 3 && this.chipCanMove(chip, chipCell.links.for3))
         result.push({ id: chipCell.links.for3 });
 
     if (dice === 6 && chipCell.links.for6)
@@ -680,7 +701,7 @@ function getPossibleMoves(chip, dice) {
         if (canMove) {
             result.push({ id: current.id });
 
-            if (current.links.end && this.chipCanMove(chip, current.links.end))
+            if (!chip.no_shortcuts && current.links.end && this.chipCanMove(chip, current.links.end))
                 result.push({ id: current.links.end });
 
             if (current.links.toSH && !scheme[current.links.toSH].chips.length)
@@ -712,8 +733,7 @@ function getCellsToFinish(scheme, playerNum, position) {
     return ret;
 }
 function performMove(chip, diceNum, finalCellId, flight) {
-    console.log(diceNum, finalCellId, flight)
-    let route = flight ? [finalCellId] : this.buildRoute(chip, finalCellId, diceNum);
+    let route = flight ? [finalCellId] : buildRoute.call(this, chip, finalCellId, diceNum);
     this.props.disable(true);
     if (diceNum === 'test')
         route = ['game_start-cell_player1', finalCellId];
@@ -751,4 +771,9 @@ function defaultChipsPositions(playersOrder) {
     })
 
     return ret;
+}
+function str2bool(str) {
+    if (str === 'true') return true;
+    if (str === 'false') return false;
+    return str;
 }

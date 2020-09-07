@@ -94,6 +94,7 @@ export default class SideMenu extends React.Component {
                                          tableId={this.props.tableId}
                                          myTurn={this.props.turn === this.props.yourTurn}
                                          canReroll={!!this.props.dice.length}
+                                         disable={this.props.disable}
                             />
                         </div>
                         : <div>

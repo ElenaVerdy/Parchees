@@ -23,12 +23,13 @@ export default function CheatsBlock (props) {
 			case 'skip':
 			case 'reroll':
 			case 'runaway':
-			case 'free_shortcuts':
 				props.socket.emit("use-item", { tableId: props.tableId, cheatId: cheat.id, buy });
 				break;
-
+				
 			case 'shield':
 			case 'flight':
+			case 'free_shortcuts':
+			case 'no_shortcuts':
 				userChoosesChip()
 				.then(id => {
 					if (!id) return;
@@ -39,7 +40,6 @@ export default function CheatsBlock (props) {
 				})
 				break;
 
-			case 'no_shortcuts':
 			case 'move_back':
 				console.log('one opponent');
 				break;
@@ -53,14 +53,16 @@ export default function CheatsBlock (props) {
 	const userChoosesChip = () => {
 		let click;
 		return new Promise((resolve, reject) => {
-			Array.from(document.getElementsByClassName('game_chip')).forEach(elem => elem.classList.add('game_chip-to-be-selected'));
+			Array.from(document.getElementsByClassName('game_chip')).forEach(elem => elem.classList.add('game-cheat_chip-to-select'));
 			click = event => event.target.classList.contains('game_chip') ? resolve(event.target.id) : reject();
 			document.addEventListener('click', click);
+			props.disable(true);
 		})
 		.catch(() => {})
 		.finally(() => {
-			Array.from(document.getElementsByClassName('game_chip')).forEach(elem => elem.classList.remove('game_chip-to-be-selected'));
+			Array.from(document.getElementsByClassName('game_chip')).forEach(elem => elem.classList.remove('game-cheat_chip-to-select'));
 			document.removeEventListener('click', click);
+			props.disable(false);
 		})
 	}
 	const disableCheat = (cheatId) => {
