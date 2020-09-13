@@ -1,28 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './CheatsBlock.css';
 import { cheats } from "../../metadata.json";
 import ReactTooltip from 'react-tooltip';
 import Modal from 'react-modal';
 
 export default function CheatsBlock (props) {
-	const [toBuyIndex, setToBuyIndex] = React.useState(0);
-	const [wantToBuy, setWantToBuy] = React.useState(false);
+	const [toBuyIndex, setToBuyIndex] = useState(0);
+	const [wantToBuy, setWantToBuy] = useState(false);
+	const [luckOn, setluckOn] = useState(false);
 
 	const chooseCheat = (index) => {
 		let ch = cheats[index];
-		if (disableCheat(ch.id)) return;
+		if (!validateCheat(ch)) return;
 		setToBuyIndex(index);
 		setWantToBuy(!props.userInfo[ch.id]);
 		if (props.userInfo[ch.id]) {
 			usedItem(ch, false);
 		}
-	}
-
+	};
+	useEffect(() => {
+		if (!props.myTurn && luckOn) {console.log('off');setluckOn(false);}
+	});
 	const usedItem = (cheat, buy) => {
+		console.log(cheat)
 		switch (cheat.id) {
+			case 'luck':
+				setluckOn(true);
 			case 'skip':
 			case 'reroll':
-			case 'runaway':
 				props.socket.emit("use-item", { tableId: props.tableId, cheatId: cheat.id, buy });
 				break;
 				
@@ -30,18 +35,16 @@ export default function CheatsBlock (props) {
 			case 'flight':
 			case 'free_shortcuts':
 			case 'no_shortcuts':
+			case 'cat':
 				userChoosesChip()
 				.then(id => {
 					if (!id) return;
 					let player = +id[16];
 					let num = +id[21];
 					if (!player || !num) return;
+					if (!validateChipCheat()) return;
 					props.socket.emit("use-item", { tableId: props.tableId, cheatId: cheat.id, buy, player, num });
 				})
-				break;
-
-			case 'move_back':
-				console.log('one opponent');
 				break;
 
 			default:
@@ -65,15 +68,23 @@ export default function CheatsBlock (props) {
 			props.disable(false);
 		})
 	}
-	const disableCheat = (cheatId) => {
-		if (cheatId !== 'reroll') return !props.myTurn;
-		return !props.canReroll;
-	};
+	const validateCheat = (cheat) => {
+		let err = ''
+		err || !props.myTurn && (err = 'Читы можно использовать только в свой ход!');
+		err || (cheat.id === 'luck' && luckOn) && (err = 'Чит уже активирован');
+		err || ((cheat.id === 'skip' || cheat.id === 'reroll') && props.canSkip) && (err = 'Вы можете бросить кубик или закончить ход без читов');
+		return err ? props.showError(err) : true;
+	}
+	const validateChipCheat = () => {
+		let err = ''
+		err || !props.myTurn && (err = 'Ваш ход уже закончился');
+		return err ? props.showError(err) : true;
+	}
     return (
 		<div className="cheat-block_wrapper">
 			{cheats.map((i, index) => (
-				<div key={i.id} className={`cheat-block pointer${disableCheat(i.id) ? ' disabled' : ''}`} data-tip data-for={`cheat-block_tooltip-${i.id}`} onClick={chooseCheat.bind(null, index)}>
-					<ReactTooltip id={`cheat-block_tooltip-${i.id}`} className={`cheat-block_tooltip`} place="bottom" effect="solid" arrowColor="white" data-event={i.id}>
+				<div key={i.id} className={`cheat-block pointer${i.id === 'luck' && luckOn ? ' cheat-block_active' : ''}`} data-tip data-for={`cheat-block_tooltip-${i.id}`} onClick={chooseCheat.bind(null, index)}>
+					<ReactTooltip id={`cheat-block_tooltip-${i.id}`} className={`cheat-block_tooltip`} place="bottom" effect="solid" arrowColor="white">
 						<div>
 							<div className="cheat-block_tooltip-title">
 								{i.title}

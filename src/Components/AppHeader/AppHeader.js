@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './AppHeader.css';
 import Shop from '../Shop/Shop';
 
 export default function AppHeader(props){
-	const [shopIsOpen, setShopIsOpen] = React.useState(false);
+	const [shopIsOpen, setShopIsOpen] = useState(false);
+	const [lastBet, setLastBet] = useState(false);
+	const [lastRating, setLastRating] = useState(false);
+
+	useEffect(() => {
+		if (props.bet) setLastBet(props.bet);
+		if (props.avgRating) setLastRating(props.avgRating);
+	}, [props.bet, props.avgRating])
     return (
 		<div className="app-header flex-sb">
 			<Shop shopIsOpen={shopIsOpen} setShopIsOpen={setShopIsOpen.bind(this)} userInfo={props.userInfo} socket={props.socket} />
@@ -27,7 +34,17 @@ export default function AppHeader(props){
 			<div className="app-header_right flex-center">
 				<div className="app-header_btn-wrapper pointer"><div className="app-header_btn app-header_music-btn"></div></div>
 				<div className="app-header_btn-wrapper pointer"><div className="app-header_btn app-header_sound-btn"></div></div>
-				<div className={`app-header_btn-wrapper pointer${props.tableId ? '' : ' app-header_btn-wrapper-hidden'}`}><div className="app-header_btn app-header_leave-btn" onClick={props.toTables} /></div>
+				<div className={`app-header_btn-wrapper pointer${props.tableId ? '' : ' app-header_btn-wrapper-hidden'}`}>
+				<div className="flex-center">
+					<div className="app-header_chips flex-center">
+						<div className="app-header_chips-number"> {lastBet} </div>
+					</div>
+					<div className="app-header_star flex-center">
+						<div className="app-header_chips-number"> {lastRating} </div>
+					</div>
+					<div className="app-header_btn app-header_leave-btn" onClick={props.toTables} />
+				</div>
+				</div>
 			</div>
 		</div>
     );

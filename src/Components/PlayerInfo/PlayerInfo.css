@@ -162,3 +162,19 @@
     display: block;
     background-image: url(../../assets/icons/fire.svg);
 }
+.player-info_tooltip-msg {
+    opacity: 1 !important;
+    color: var(--color-black) !important;
+    z-index: 2;
+    padding: 3px 5px !important;
+    background: linear-gradient(to bottom, #FEFEFA 0%, #EFEFEB 100%) !important;
+    font-size: 15px !important;
+}
+.player-info_msg {
+    text-align: center;
+    word-wrap: break-word;
+    overflow: hidden;
+    max-height: 3.6em;
+    line-height: 1.2em;
+    max-width: 100px;
+}

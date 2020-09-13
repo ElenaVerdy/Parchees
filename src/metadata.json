@@ -25,10 +25,10 @@
             "price": 3
         },
         {
-            "id": "runaway",
-            "title": "Убегалка",
-            "iconClass": "cheat-block__runaway",
-            "description": "Если кто-то попытается вас съесть, то ваша фишка просто убежит. Быстрый бег - лучшая самооборона!",
+            "id": "cat",
+            "title": "Шалунишка",
+            "iconClass": "cheat-block__cat",
+            "description": "Чей-то кот случайно сдвинул одну фишку. Не вы. Тссс!",
             "currency": "money",
             "price": 3
         },
@@ -57,10 +57,10 @@
             "price": 3
         },
         {
-            "id": "move_back",
-            "title": "Шаг назад",
-            "description": "Противник дезориентирован и уходит от финиша. Вы здесь не при чем!",
-            "iconClass": "cheat-block__move-back",
+            "id": "luck",
+            "title": "Удача",
+            "description": "Некоторым игрокам очень уж везет на дубли. Источник такой удачи - ¯\\_(ツ)_/¯",
+            "iconClass": "cheat-block__luck",
             "currency": "money",
             "price": 3
         }

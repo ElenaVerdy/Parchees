@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './PlayerInfo.css';
+import ReactTooltip from 'react-tooltip';
 
 export default function PlayerInfo (props) {
+	function msgHandler(data){
+		setMsgText(data.text);
+		ReactTooltip.show(tooltipRef);
+		setTimeout(() => ReactTooltip.hide(tooltipRef), 0);
+	}
+	useEffect(() => {
+		document.addEventListener(`messege-from-${props.playersInfo.vk_id}`, msgHandler);
+		return function cleanup() {
+			document.removeEventListener(`messege-from-${props.playersInfo.vk_id}`, msgHandler);
+		};
+	  });
 	let position;
+	let tooltipRef;
+	const [msgText, setMsgText] = useState('');
+
 	if (props.num === props.myNum) position = 'bottom-right';
 	if ((props.myNum - props.num === -1) || (props.myNum === 4 && props.num === 1))
 		position = 'bottom-left';
@@ -20,7 +35,14 @@ export default function PlayerInfo (props) {
 						<div className='icon player-info_rank-star'></div>
 					</div>
 				</div>
-				<div className="player-info_img"><img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.playersInfo.username }></img></div>
+				<div className="player-info_img">
+					<img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.playersInfo.username }
+						ref={ref => setTimeout(() => tooltipRef = ref, 10)} data-offset={`{'${[position.split('-')[1] === 'left' ? 'right' : 'left']}': 30}`}
+						data-tip data-for={`player-info_tooltip-${props.playersInfo.id}`} data-place={position.split('-')[0] === 'bottom' ? `top` : 'bottom'} data-delay-hide={1500}></img>
+					<ReactTooltip id={`player-info_tooltip-${props.playersInfo.id}`} className='player-info_tooltip-msg' effect="solid" arrowColor="white" >
+						<div className='player-info_msg'> {msgText} </div>
+					</ReactTooltip>
+				</div>
 			</div> 
 			<div className={`player-info_ready player-info_ready_${position} ${props.playersInfo.ready ? "player-info_ready-active" : ''} ${props.playerLeft ? " transparent" : ""}`}>
 				<div className="player-info_fire"></div>

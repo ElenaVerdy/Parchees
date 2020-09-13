@@ -60,28 +60,29 @@
 .app-header_chips, .app-header_money {
     height: 100%;
 }
-.app-header_chips::before {
+.app-header_chips::before,
+.app-header_money::before,
+.app-header_star::before {
     margin: 3px 5px;
     width: 25px;
     height: 25px;
     display: block;
     background-position: center;
     background-size: cover;
-    box-shadow: 1px 1px 3px;
-    border-radius: 50px;
     content: '  ';
     background-image: url(../../assets/icons/chip.svg);
 }
-.app-header_money::before {
-    margin: 3px 5px;
-    width: 25px;
-    border-radius: 50px;
-    height: 25px;
-    display: block;
+.app-header_chips::before{
     box-shadow: 1px 1px 3px;
-    background-position: center;
-    background-size: cover;
-    content: '  ';
+    border-radius: 50px;
+}
+
+.app-header_star::before {
+    background-image: url(../../assets/icons/star.svg);
+}
+.app-header_money::before {
+    box-shadow: 1px 1px 3px;
+    border-radius: 50px;
     background-image: url(../../assets/icons/coin.svg);
 }
 

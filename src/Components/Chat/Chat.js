@@ -90,6 +90,11 @@ function newMsg({ old, room, player, text }) {
 		let tmp = this.state[room === 'main' ? 'msgsMain' : 'msgsRoom'];
 		tmp.unshift({ player, text });
 		this.setState({[room === 'main' ? 'msgsMain' : 'msgsRoom']: tmp });
+		if (room !== 'main') {
+			let event = new Event(`messege-from-${this.props.userInfo.id}`);
+			event.text = text;
+			document.dispatchEvent(event);
+		}
 	}
 }
 

@@ -54,7 +54,7 @@ export default class Game extends React.Component {
             this.scheme = createScheme();
             setTimeout(() => this.props.playersOrder.map( i => this.returnChipsToBase(i)), 1000);
         }
-        if (prevProps.moveData !== this.props.moveData && this.props.moveData)
+        if (prevProps.moveData !== this.props.moveData && this.props.moveData && this.state.chips[this.props.moveData.playerNum])
             performMove.call(this,
                              this.state.chips[this.props.moveData.playerNum][this.props.moveData.num],
                              this.props.moveData.diceNum,

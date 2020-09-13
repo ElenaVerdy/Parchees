@@ -2,7 +2,7 @@ import React from 'react';
 import './SideMenu.css';
 import GameStart from '../GameStart/GameStart';
 // import ReactDice from "react-dice-complete";
-import ReactDice from '../react-dice-complete/src/ReactDice'
+import ReactDice from '../ReactDice/ReactDice'
 import CheatsBlock from "../CheatsBlock/CheatsBlock";
 import 'react-dice-complete/dist/react-dice-complete.css';
 
@@ -62,12 +62,12 @@ export default class SideMenu extends React.Component {
                     (this.props.gameOn ?
                         <div>
                             {this.props.turn === this.props.yourTurn ? 
-                                ( this.props.dice.length && !this.props.doublesStreak ? 
+                                ( this.props.dice.length && !this.props.doublesStreak ?
                                     <button className="btn-grey" disabled={this.props.disabled || !this.props.canSkip}
                                             onClick={() => { this.props.disabled || !this.props.canSkip || this.props.socket.emit("finish-turn", {tableId: this.props.tableId}); }}>
                                         {this.dictionary.finish}
                                     </button>
-                                    : <button className="btn-grey" disabled={this.props.disabled} onClick={() => {
+                                    : <button className="btn-grey" disabled={this.props.disabled || !this.props.canSkip} onClick={() => {
                                         if (this.props.disabled) return;
                                         this.props.socket.emit("roll-dice", {dice:[], tableId: this.props.tableId})
                                     }}>{this.dictionary.throwDice}</button>)
@@ -95,6 +95,8 @@ export default class SideMenu extends React.Component {
                                          myTurn={this.props.turn === this.props.yourTurn}
                                          canReroll={!!this.props.dice.length}
                                          disable={this.props.disable}
+                                         showError={this.props.showError}
+                                         canSkip={!this.props.dice.length || this.props.canSkip}
                             />
                         </div>
                         : <div>

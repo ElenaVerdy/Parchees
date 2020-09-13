@@ -9,6 +9,7 @@
     border-right: 1px solid var(--color-black);
     position: relative;
 }
+.cheat-block_active,
 .cheat-block:hover {
     background: linear-gradient(to bottom, #FDEE00 0%, #EEDF00 100%)
 }
@@ -31,8 +32,8 @@
 .cheat-block__shield {
     background-image: url(../../assets/icons/shield.svg);
 }
-.cheat-block__runaway {
-    background-image: url(../../assets/icons/sport.svg);
+.cheat-block__cat {
+    background-image: url(../../assets/icons/cat.svg);
 }
 .cheat-block__no-shortcuts {
     background-image: url(../../assets/icons/no-shortcuts.svg);
@@ -43,9 +44,8 @@
 .cheat-block__flight {
     background-image: url(../../assets/icons/flight.svg);
 }
-.cheat-block__move-back {
-    background-image: url(../../assets/icons/skip.svg);
-    transform: rotate(180deg);
+.cheat-block__luck {
+    background-image: url(../../assets/icons/luck.svg);
 }
 .cheat-block_price {
     position: absolute;

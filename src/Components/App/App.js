@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import './App.css';
 import './common.css'
 import Game from "../Game/Game"
+import Loading from "../Loading/Loading"
 import Lobby from "../Lobby/Lobby"
 import SideMenu from "../SideMenu/SideMenu"
 import Chat from "../Chat/Chat"
@@ -31,9 +32,9 @@ const init = function() {
 			resolve({
 				photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
 				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-				first_name: 'Lindsey',
+				first_name: 'Lindsey' + (Math.random() * 12 ^ 0),
 				last_name: "Stirling",
-				id: 123123123
+				id: (Math.random() * 123456789 ^ 0)
 			});
 		}
 	})
@@ -48,6 +49,7 @@ export default class App extends React.Component {
 			userInfo: {},
 			tables: [],
 			tableId: null,
+			bet: null,
 			playersInfo: [],
 			playersOrder: [],
 			doublesStreak: 0,
@@ -75,21 +77,21 @@ export default class App extends React.Component {
 		this.logAction = logAction.bind(this);
 		this.timers = [];
 	}
-	
+
 	componentDidMount() {
 		init().then(userInfo => {
 			this.setState({ userInfo });
 			this.socket.emit("init", userInfo);
 		});
 		this.socket.on("request-auth", () => {
-			if (this.state.userInfo.id) return this.socket.emit("init", this.state.userInfo);
+			if (this.state.userInfo.id) return this.socket.emit("init", { ...this.state.userInfo, id: Math.random() * 1000000 ^ 0 });
 		});
 		this.socket.on("init-finished", data => {
 			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
 		});
 		this.socket.on("update-user-info", data => this.setState({ userInfo: { ...this.state.userInfo, ...data } }))
 		this.socket.on("connect-to", data => {
-			this.setState({ tableId: data.id });
+			this.setState({ tableId: data.id, bet: data.bet });
 		});
 		this.socket.on("err", data => this.setState({ error: data.text }));
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
@@ -174,9 +176,9 @@ export default class App extends React.Component {
   	render() {
 		return (
 			<div id="main-container" className="main-container">
-				{this.state.loading ? <div className="loading"></div> :
+				{this.state.loading ? <div className="loading"><Loading></Loading></div> :
 				<div className="App">
-					<AppHeader tableId={this.state.tableId} toTables={toTables.bind(this)} userInfo={this.state.userInfo} socket={this.socket} />
+					<AppHeader tableId={this.state.tableId} toTables={toTables.bind(this)} userInfo={this.state.userInfo} socket={this.socket} avgRating={avgRating.call(this)} bet={this.state.bet} />
 					<div className="App_main">
 						<div className="App_main-offside">
 							<SideMenu socket={this.socket}
@@ -193,6 +195,7 @@ export default class App extends React.Component {
 									userInfo={this.state.userInfo}
 									diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}
 									canSkip={this.state.canSkip}
+									showError={error => this.setState({ error }) }
 							/>
 							<Chat roomId={this.state.tableId} socket={this.socket} userInfo={this.state.userInfo}></Chat>
 
@@ -243,10 +246,14 @@ export default class App extends React.Component {
 		);
 	}
 }
+function avgRating() {
+	return this.state.playersInfo.length ? (this.state.playersInfo.reduce((sum, cur) => sum + cur.rating, 0) / this.state.playersInfo.length ^ 0) : 0;
+}
 function toTables() {
 	socket.emit('leave-table', { tableId: this.state.tableId });
 	this.setState({
 		tableId: null,
+		bet: null,
 		playersInfo: [],
 		playersOrder: [],
 		doublesStreak: 0,
