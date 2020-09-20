@@ -38,6 +38,7 @@ export default class Game extends React.Component {
         this.socket.on('removed', () => {console.log('removed')});
 		this.socket.on("cheat-updated", data => {
             if (['flight', 'shield', 'free_shortcuts', 'no_shortcuts'].indexOf(data.cheatId) !== -1) {
+                // eslint-disable-next-line
                 this.state.chips[data.player][data.num][data.cheatId] = data.on;
                 this.setState({ dice: this.state.dice.slice(), selectedChip: null });
             }

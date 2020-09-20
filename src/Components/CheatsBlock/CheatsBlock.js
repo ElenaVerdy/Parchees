@@ -19,10 +19,9 @@ export default function CheatsBlock (props) {
 		}
 	};
 	useEffect(() => {
-		if (!props.myTurn && luckOn) {console.log('off');setluckOn(false);}
-	});
+		if (!props.myTurn && luckOn) setluckOn(false);
+	}, [props.myTurn, luckOn]);
 	const usedItem = (cheat, buy) => {
-		console.log(cheat)
 		switch (cheat.id) {
 			case 'luck':
 				setluckOn(true);
@@ -70,14 +69,14 @@ export default function CheatsBlock (props) {
 	}
 	const validateCheat = (cheat) => {
 		let err = ''
-		err || !props.myTurn && (err = 'Читы можно использовать только в свой ход!');
-		err || (cheat.id === 'luck' && luckOn) && (err = 'Чит уже активирован');
-		err || ((cheat.id === 'skip' || cheat.id === 'reroll') && props.canSkip) && (err = 'Вы можете бросить кубик или закончить ход без читов');
+		err || (!props.myTurn && (err = 'Читы можно использовать только в свой ход!'));
+		err || ((cheat.id === 'luck' && luckOn) && (err = 'Чит уже активирован'));
+		err || (((cheat.id === 'skip' || cheat.id === 'reroll') && props.canSkip) && (err = 'Вы можете бросить кубик или закончить ход без читов'));
 		return err ? props.showError(err) : true;
 	}
 	const validateChipCheat = () => {
 		let err = ''
-		err || !props.myTurn && (err = 'Ваш ход уже закончился');
+		err || (!props.myTurn && (err = 'Ваш ход уже закончился'));
 		return err ? props.showError(err) : true;
 	}
     return (

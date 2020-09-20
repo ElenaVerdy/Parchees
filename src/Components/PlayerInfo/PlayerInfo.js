@@ -37,7 +37,7 @@ export default function PlayerInfo (props) {
 				</div>
 				<div className="player-info_img">
 					<img width={50} height={50} src={props.playersInfo.photo_50} alt={ props.playersInfo.username }
-						ref={ref => setTimeout(() => tooltipRef = ref, 10)} data-offset={`{'${[position.split('-')[1] === 'left' ? 'right' : 'left']}': 30}`}
+						ref={ref => setTimeout(() => tooltipRef = ref, 10)} data-offset={`{'${[position.split('-')[1] === 'left' ? 'right' : 'left']}': 30}`} data-event="some-event"
 						data-tip data-for={`player-info_tooltip-${props.playersInfo.id}`} data-place={position.split('-')[0] === 'bottom' ? `top` : 'bottom'} data-delay-hide={1500}></img>
 					<ReactTooltip id={`player-info_tooltip-${props.playersInfo.id}`} className='player-info_tooltip-msg' effect="solid" arrowColor="white" >
 						<div className='player-info_msg'> {msgText} </div>

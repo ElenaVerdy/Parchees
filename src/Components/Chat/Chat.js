@@ -82,7 +82,7 @@ function sendMsg() {
 	this.setState({ inputText: '', blockBtn: true });
 	setTimeout(() => this.setState({blockBtn: false}), 1000);
 }
-function newMsg({ old, room, player, text }) {
+function newMsg({ old, room, player, text, vk_id }) {
 	if (Array.isArray(old)) {
 		if (room === 'main') this.setState({ msgsMain: old });
 		if (room === this.props.roomId) this.setState({ msgsRoom: old });
@@ -91,7 +91,8 @@ function newMsg({ old, room, player, text }) {
 		tmp.unshift({ player, text });
 		this.setState({[room === 'main' ? 'msgsMain' : 'msgsRoom']: tmp });
 		if (room !== 'main') {
-			let event = new Event(`messege-from-${this.props.userInfo.id}`);
+			console.log(`messege-from-${vk_id}`)
+			let event = new Event(`messege-from-${vk_id}`);
 			event.text = text;
 			document.dispatchEvent(event);
 		}

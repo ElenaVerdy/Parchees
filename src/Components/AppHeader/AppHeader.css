@@ -37,6 +37,7 @@
     margin: 3px 10px;
 }
 .app-header_leave-btn {
+    min-width: 30px;
     background-image: url(../../assets/icons/leave.svg);
 }
 .app-header_shop-btn {
@@ -59,6 +60,15 @@
 }
 .app-header_chips, .app-header_money {
     height: 100%;
+}
+.app-header_btn-lottery-sign {
+    position: absolute;
+    width: 8px;
+    top: 5px;
+    right: 703px;
+    height: 9px;
+    background: #da0000;
+    border-radius: 90px;
 }
 .app-header_chips::before,
 .app-header_money::before,

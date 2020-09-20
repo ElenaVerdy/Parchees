@@ -34,7 +34,7 @@ const init = function() {
 				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
 				first_name: 'Lindsey' + (Math.random() * 12 ^ 0),
 				last_name: "Stirling",
-				id: (Math.random() * 123456789 ^ 0)
+				id: 123123123//(Math.random() * 123456789 ^ 0)
 			});
 		}
 	})
@@ -88,6 +88,7 @@ export default class App extends React.Component {
 		});
 		this.socket.on("init-finished", data => {
 			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
+			this.socket.emit("get-lottery-field");
 		});
 		this.socket.on("update-user-info", data => this.setState({ userInfo: { ...this.state.userInfo, ...data } }))
 		this.socket.on("connect-to", data => {
@@ -112,6 +113,7 @@ export default class App extends React.Component {
 		});
 		this.socket.on("all-players-ready", handleAllPlayersReady.bind(this));
 		this.socket.on("game-start", this.handleGameStart);
+		this.socket.on("lottery-field", data => this.setState({lotteryField: data.field}));
 		this.socket.on("next-turn", data => {
 			if (this.state.disabled || data.actionCount !== this.state.actionCount)
 				this.logAction('next-turn', data);
@@ -170,7 +172,16 @@ export default class App extends React.Component {
 			}
 		}
 		if (prevState.error !== this.state.error && this.state.error)
-			console.log(this.state.error)
+			console.log(this.state.error);
+
+		if (prevState.userInfo.timeToLottery !== this.state.userInfo.timeToLottery) {
+			clearTimeout(this.lotteryTimeout);
+			if (this.state.userInfo.timeToLottery) this.lotteryTimeout = setTimeout(() => {
+				let userInfo = { ...this.state.userInfo };
+				userInfo.timeToLottery--;
+				this.setState({ userInfo })
+			}, 1000);
+		}
 	}
 
   	render() {
@@ -178,7 +189,14 @@ export default class App extends React.Component {
 			<div id="main-container" className="main-container">
 				{this.state.loading ? <div className="loading"><Loading></Loading></div> :
 				<div className="App">
-					<AppHeader tableId={this.state.tableId} toTables={toTables.bind(this)} userInfo={this.state.userInfo} socket={this.socket} avgRating={avgRating.call(this)} bet={this.state.bet} />
+					<AppHeader tableId={this.state.tableId}
+							   toTables={toTables.bind(this)}
+							   userInfo={this.state.userInfo}
+							   socket={this.socket}
+							   avgRating={avgRating.call(this)}
+							   bet={this.state.bet}
+							   lotteryField={this.state.lotteryField}
+					/>
 					<div className="App_main">
 						<div className="App_main-offside">
 							<SideMenu socket={this.socket}

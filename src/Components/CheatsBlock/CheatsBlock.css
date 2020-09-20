@@ -35,10 +35,10 @@
 .cheat-block__cat {
     background-image: url(../../assets/icons/cat.svg);
 }
-.cheat-block__no-shortcuts {
+.cheat-block__no_shortcuts {
     background-image: url(../../assets/icons/no-shortcuts.svg);
 }
-.cheat-block__free-shortcuts {
+.cheat-block__free_shortcuts {
     background-image: url(../../assets/icons/free-shortcuts.svg);
 }
 .cheat-block__flight {

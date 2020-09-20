@@ -1,0 +1,65 @@
+.lottery_modal {
+    width: calc(var(--cell-size) * 15.5);
+    height: calc(var(--cell-size) * 11);
+}
+.lottery_header {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 10px auto 0px;
+}
+.lottery_main {
+    flex: 1;
+    display: flex;
+    padding-top: 40px;
+}
+.lottery_container {
+    padding: 0 30px;
+    border-right: 1px solid var(--color-black);
+    height: fit-content;
+}
+.lottery_row {
+    display: flex;
+}
+.lottery_item {
+    width: calc(var(--cell-size) * 1.2);
+    height: calc(var(--cell-size) * 1.2);
+    line-height: calc(var(--cell-size) * 1.1);
+    border: 1px dashed var(--color-black);
+    background-position: center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    text-align: center;
+    padding: 2px;
+    transition: all 0.7s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.lottery_item-prize {
+    background-color: #9966CC;
+}
+.lottery_item-bottom {
+    height: calc(var(--cell-size) * 0.6);
+    line-height: calc(var(--cell-size) * 0.55);
+}
+.lottery_item-left {
+    width: calc(var(--cell-size) * 0.6);
+}
+.lottery_item-chips {
+    background-image: url(../../assets/icons/chip.svg);
+}
+.cheat-block__reroll_lottery {
+    background-image: url(../../assets/icons/dice.svg);
+}
+.lottery-price {
+    display: inline-flex;
+    position: relative;
+    top: 1px;
+}
+.shop_close-btn {
+    border-radius: 4px;
+    border: 0px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    margin: 3px auto 3px;
+    padding: 4px 40px;
+    font-weight: 400;
+    font-size: calc(var(--cell-size) * 0.5);
+}

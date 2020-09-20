@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './Shop.css'
 import { cheats } from "../../metadata.json";
@@ -7,7 +7,7 @@ Modal.setAppElement('#root');
 
 export default function Shop(props){
 	const tabs = ['Читы', 'Фишки', 'Поле'];
-	const [tab, setTab] = React.useState(0);
+	const [tab, setTab] = useState(0);
     return (
 		<Modal
 			isOpen={props.shopIsOpen}

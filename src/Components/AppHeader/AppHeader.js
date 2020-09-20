@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './AppHeader.css';
 import Shop from '../Shop/Shop';
+import Lottery from '../Lottery/Lottery';
 
 export default function AppHeader(props){
 	const [shopIsOpen, setShopIsOpen] = useState(false);
+	const [lotteryIsOpen, setLotteryIsOpen] = useState(false);
 	const [lastBet, setLastBet] = useState(false);
 	const [lastRating, setLastRating] = useState(false);
 
@@ -14,10 +16,14 @@ export default function AppHeader(props){
     return (
 		<div className="app-header flex-sb">
 			<Shop shopIsOpen={shopIsOpen} setShopIsOpen={setShopIsOpen.bind(this)} userInfo={props.userInfo} socket={props.socket} />
+			<Lottery isOpen={lotteryIsOpen} setIsOpen={setLotteryIsOpen} lottery={props.lotteryField} userInfo={props.userInfo} socket={props.socket} ></Lottery>
 			<div className="app-header_left flex-center">
 				<div className="app-header_btn-wrapper pointer" onClick={setShopIsOpen.bind(this, true)}><div className="app-header_btn app-header_shop-btn"></div></div>
 				<div className="app-header_btn-wrapper pointer"><div className="app-header_btn app-header_records-btn"></div></div>
-				<div className="app-header_btn-wrapper pointer"><div className="app-header_btn app-header_dice-btn"></div></div>
+				<div className="app-header_btn-wrapper pointer" onClick={setLotteryIsOpen.bind(this, true)}>
+					<div className="app-header_btn app-header_dice-btn"></div>
+					{props.userInfo.timeToLottery ? null : <div className="app-header_btn-lottery-sign"></div>}
+				</div>
 				<div className="app-header_btn-wrapper pointer">
 					<div className="app-header_chips flex-center">
 						<div className="app-header_chips-number">{ props.userInfo.chips }</div>
