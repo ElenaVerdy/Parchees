@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './Shop.css'
-import { cheats } from "../../metadata.json";
+import { cheats, money } from "../../metadata.json";
 
 Modal.setAppElement('#root');
 
 export default function Shop(props){
-	const tabs = ['Читы', 'Фишки', 'Поле'];
+	const tabs = ['Читы', 'Фишки', 'Поле', 'Денюшки'];
 	const [tab, setTab] = useState(0);
     return (
 		<Modal
@@ -39,6 +39,27 @@ export default function Shop(props){
 						))}
 					</div>
 				) : null}
+				{tab === 1 || tab === 2 ? (
+					<div className="shop_items-wrapper flex-center">
+						<div className="shop_placeholder">Скоро...</div>
+						<div className="shop_timer"></div>
+					</div>
+				) : null}
+				{tab === 3 ? (
+					<div className="shop_items-wrapper flex-sb">
+						{money.map(item => (
+							<div className="shop_item" key={item.id}>
+								<div className="shop_item-title">{item.title}</div>
+								<div className={`shop_item-money-icon ${item.iconClass}`}></div>
+								<div className="shop_item-description">{item.description}</div>
+								<div className="shop_item-price flex-center">
+									<div className="shop_item-price-number">{item.priceText}</div>
+								</div>
+								<button className={`shop_item-buy`} onClick={buyVK.bind(null, props.userInfo, item.id, props.socket)}>купить</button>
+							</div>
+						))}
+					</div>
+				) : null}
 			</div>
 			<button className="shop_close-btn btn-brown" onClick={props.setShopIsOpen.bind(this, false)}>закрыть</button>
 		</Modal>
@@ -49,4 +70,21 @@ function buy(userInfo, id, socket) {
 	if (ch.price > userInfo.money) return;
 
 	socket.emit('buy-item', { id });
+}
+
+function buyVK(userInfo, id, socket) {
+	let VK = window.VK;
+	if (!VK) return;
+
+	VK.callMethod('showOrderBox', { type: 'item', item: id });
+
+	VK.addCallback('onOrderSuccess', function(order_id) {
+		console.log('succ');
+	});
+	VK.addCallback('onOrderFail', function() {
+		console.log('fail');
+	});
+	VK.addCallback('onOrderCancel', function() {
+		console.log('cancel');
+	});
 }

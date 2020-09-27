@@ -111,7 +111,7 @@ export default class SideMenu extends React.Component {
                             </div>
                         </div>)
                     : <div>
-                        <GameStart startGame={(bet) => {this.props.socket.emit("new-table", { ...this.props.userInfo, bet })}}></GameStart>
+                        <GameStart startGame={(bet) => {this.props.socket.emit("new-table", { ...this.props.userInfo, bet })}} userInfo={this.props.userInfo} ></GameStart>
                         <div className="side-menu_info">{this.dictionary.mainMenu}</div>
                     </div>
             }

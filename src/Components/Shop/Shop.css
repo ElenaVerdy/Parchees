@@ -60,6 +60,21 @@
     background-position: center;
     margin: 7.5px auto;
 }
+.shop_item-money-icon {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    background-position: center;
+    background-size: cover;
+    margin: 7.5px auto;
+}
+.shop_item-icon-chips {
+    background-image: url(../../assets/icons/chip.svg);
+}
+.shop_item-icon-money {
+    background-image: url(../../assets/icons/coin.svg);
+}
 .shop_item-description {
     text-align: center;
     font-size: 17px;
@@ -103,4 +118,18 @@
     background-size: cover;
     background-position: center;
     background-image: url(../../assets/icons/coin.svg);
+}
+.shop_timer {
+    width: 70px;
+    height: 70px;
+    background-image: url(../../assets/icons/clock.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+}
+.shop_placeholder {
+    font-size: 40px;
+    width: 345px;
+    text-align: end;
 }

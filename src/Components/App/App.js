@@ -66,7 +66,9 @@ export default class App extends React.Component {
 			moveData: null,
 			actionCount: 0,
 			canSkip: false,
-			loading: true
+			loading: true,
+			topByRank: [],
+			topByChips: []
 		}
 		this.socket = socket;
 		this.handleGameStart = handleGameStart.bind(this);
@@ -84,9 +86,10 @@ export default class App extends React.Component {
 			this.socket.emit("init", userInfo);
 		});
 		this.socket.on("request-auth", () => {
-			if (this.state.userInfo.id) return this.socket.emit("init", { ...this.state.userInfo, id: Math.random() * 1000000 ^ 0 });
+			if (this.state.userInfo.id) return this.socket.emit("init", { ...this.state.userInfo }); // Math.random() * 1000000 ^ 0 });
 		});
 		this.socket.on("init-finished", data => {
+			debug || initRatings.call(this, data);
 			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
 			this.socket.emit("get-lottery-field");
 		});
@@ -196,6 +199,8 @@ export default class App extends React.Component {
 							   avgRating={avgRating.call(this)}
 							   bet={this.state.bet}
 							   lotteryField={this.state.lotteryField}
+							   topByRank={this.state.topByRank}
+							   topByChips={this.state.topByChips}
 					/>
 					<div className="App_main">
 						<div className="App_main-offside">
@@ -213,7 +218,7 @@ export default class App extends React.Component {
 									userInfo={this.state.userInfo}
 									diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}
 									canSkip={this.state.canSkip}
-									showError={error => this.setState({ error }) }
+									showError={error => this.setState({ error })}
 							/>
 							<Chat roomId={this.state.tableId} socket={this.socket} userInfo={this.state.userInfo}></Chat>
 
@@ -372,4 +377,20 @@ function getPlayersOrder(num) {
     }
         
     return playersOrder;
+}
+
+function initRatings(data) {
+	VK.api("users.get", { access_token, fields: 'photo_50,photo_100', user_ids: data.topByRank.concat(data.topByChips).map(i => i.vk_id).join(',') }, (res) => {
+		const respData = res && res.response;
+		console.log(data)
+		let topByRank = data.topByRank.map(item => {
+			return { ...respData.find(i => item.vk_id === i.id), ...item };
+		});
+		let topByChips = data.topByChips.map(item => {
+			return { ...respData.find(i => item.vk_id === i.id), ...item };
+		});
+		this.setState({ topByRank, topByChips });
+		delete data.topByRank;
+		delete data.topByChips;
+	});
 }

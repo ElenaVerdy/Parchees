@@ -1,0 +1,73 @@
+.records_modal {
+    width: calc(var(--cell-size) * 8);
+    height: calc(var(--cell-size) * 13);
+}
+.records_header {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 10px auto 0px;
+}
+.records_main {
+    flex: 1;
+    display: flex;
+    margin-top: 3px;
+    flex-direction: column;
+}
+.records_container {
+    padding: 0 30px;
+    border-right: 1px solid var(--color-black);
+    height: fit-content;
+}
+.records_tab-icon::before {
+    margin: 0px 5px 0px -5px;
+    width: 20px;
+    height: 20px;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    content: '  ';
+}
+.records_tab-icon-rating::before {
+    background-image: url(../../assets/icons/star.svg);
+}
+.records_tab-icon-chips::before {
+    background-image: url(../../assets/icons/chip.svg);
+}
+.records_chips::before {
+    background-image: url(../../assets/icons/chip.svg);
+}
+.records_name {
+    white-space: break-word;
+}
+.records_main-wrapper {
+    margin-top: 4px;
+    height: 455px;
+    min-height: 455px;
+    overflow-y: scroll;
+}
+.records_record-wrapper {
+    margin-top: 15px;
+}
+.records_num {
+    width: 20px;
+    min-width: 20px;
+    text-align: end;
+}
+.records_photo {
+    border-radius: 7px;
+    margin: 0px 8px;
+    height: 25px;
+    min-width: 25px;
+    overflow: hidden;
+    box-shadow: 0px 1px 2px var(--color-black);
+}
+.shop_close-btn {
+    border-radius: 4px;
+    border: 0px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    margin: 3px auto 3px;
+    padding: 4px 40px;
+    font-weight: 400;
+    font-size: calc(var(--cell-size) * 0.5);
+}

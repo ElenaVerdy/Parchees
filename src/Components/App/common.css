@@ -3,6 +3,7 @@ table {
 }
 .disabled {
     opacity: 0.5;
+    cursor: default;
 }
 button {
     font-family: inherit;
@@ -91,6 +92,10 @@ div {
 }
 .flex {
     display: flex;
+}
+.flex-grow {
+    display: flex;
+    flex-grow: 1;
 }
 .transparent {
     opacity: 0;

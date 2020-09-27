@@ -64,5 +64,71 @@
             "currency": "money",
             "price": 3
         }
+    ],
+    "money": [
+        {
+            "id": "chips_5000",
+            "title": "Немножко",
+            "description": "5000 фишек",
+            "iconClass": "shop_item-icon-chips",
+            "currency": "votes",
+            "priceText": "1 голос"
+        },
+        {
+            "id": "chips_25000",
+            "title": "Множко",
+            "description": "25000 фишек",
+            "iconClass": "shop_item-icon-chips",
+            "currency": "votes",
+            "priceText": "3 голоса"
+        },
+        {
+            "id": "chips_100000",
+            "title": "Гора",
+            "description": "100000 фишек",
+            "iconClass": "shop_item-icon-chips",
+            "currency": "votes",
+            "priceText": "10 голосов"
+        },
+        {
+            "id": "chips_500000",
+            "title": "Фургон",
+            "description": "500000 фишек",
+            "iconClass": "shop_item-icon-chips",
+            "currency": "votes",
+            "priceText": "40 голосов"
+        },
+        {
+            "id": "money_15",
+            "title": "Чучуть",
+            "description": "15 монеток",
+            "iconClass": "shop_item-icon-money",
+            "currency": "votes",
+            "priceText": "5 голосов"
+        },
+        {
+            "id": "money_50",
+            "title": "Недостаточно",
+            "description": "50 монеток",
+            "iconClass": "shop_item-icon-money",
+            "currency": "votes",
+            "priceText": "12 голосов"
+        },
+        {
+            "id": "money_150",
+            "title": "Достаточно",
+            "description": "150 монеток",
+            "iconClass": "shop_item-icon-money",
+            "currency": "votes",
+            "priceText": "25 голосов"
+        },
+        {
+            "id": "money_500",
+            "title": "Наследство",
+            "description": "500 монеток",
+            "iconClass": "shop_item-icon-money",
+            "currency": "votes",
+            "priceText": "70 голосов"
+        }
     ]
 }

@@ -5,7 +5,7 @@ import './GameStart.css'
 Modal.setAppElement('#root');
 
 export default function GameStart(props){
-	const bets = [100, 200, 300, 500, 1000, 1500, 2000, 2500];
+	const bets = [100, 300, 500, 1000, 2500, 5000, 10000, 25000];
 	const [modalIsOpen, setIsOpen] = React.useState(false);
 	const [selectedBet, setBet] = React.useState(3);
     return (
@@ -19,11 +19,11 @@ export default function GameStart(props){
 				contentLabel="Example Modal"
 			>
 				<div onClick={setIsOpen.bind(this, false)} className="abs-top-right"></div>
-				<div className="game-start_header">выбирите ставку</div>
+				<div className="game-start_header">выберите ставку</div>
 				<div className="game-start_bets-container">
 					{bets.map((bet, index) => (
-						<div className={`pointer game-start_bet ${selectedBet === index ? 'game-start_bet-selected' : ''}`} 
-							key={bet} onClick={setBet.bind(this, index)}>{bet}</div>
+						<div className={`game-start_bet ${selectedBet === index ? 'game-start_bet-selected' : ''} ${props.userInfo.chips < bet ? 'disabled' : 'pointer'}`} 
+							key={bet} onClick={() => props.userInfo.chips >= bet && setBet(index)}>{bet}</div>
 					))}
 				</div>
 				<button className="game_start_btn btn-brown" onClick={() => {props.startGame(bets[selectedBet])}}>начать</button>
