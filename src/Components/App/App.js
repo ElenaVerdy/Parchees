@@ -382,7 +382,6 @@ function getPlayersOrder(num) {
 function initRatings(data) {
 	VK.api("users.get", { access_token, fields: 'photo_50,photo_100', user_ids: data.topByRank.concat(data.topByChips).map(i => i.vk_id).join(',') }, (res) => {
 		const respData = res && res.response;
-		console.log(data)
 		let topByRank = data.topByRank.map(item => {
 			return { ...respData.find(i => item.vk_id === i.id), ...item };
 		});

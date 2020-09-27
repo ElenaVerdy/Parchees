@@ -20,9 +20,9 @@ export default class Chat extends React.Component {
 	}
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.roomId && !this.props.roomId && this.state.selectedRoom !== 'main')
-			this.setState({selectedRoom: 'main'});
+			this.setState({ selectedRoom: 'main', msgsRoom: [] });
 		if (!prevProps.roomId && this.props.roomId)
-			this.setState({selectedRoom: 'room'});
+			this.setState({ selectedRoom: 'room' });
 	}
 	render() {
 		return (
