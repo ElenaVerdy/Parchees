@@ -6,7 +6,7 @@
             "title": "Пропуск хода",
             "description": "Любите часовые засады в домике? Закончивайте ход, даже если у вас остались не использованные ходы",
             "currency": "money",
-            "price": 5
+            "price": 1
         },
         {
             "id": "reroll",
@@ -14,7 +14,7 @@
             "iconClass": "cheat-block__reroll",
             "description": "В любом деле нужно много упорства! Бросьте кубик еще раз, устройте себе тренировку",
             "currency": "money",
-            "price": 3
+            "price": 1
         },
         {
             "id": "shield",
@@ -22,7 +22,7 @@
             "iconClass": "cheat-block__shield",
             "description": "Вашу фишку нельзя скушать. И все тут.",
             "currency": "money",
-            "price": 3
+            "price": 1
         },
         {
             "id": "cat",
@@ -30,7 +30,7 @@
             "iconClass": "cheat-block__cat",
             "description": "Чей-то кот случайно сдвинул одну фишку. Не вы. Тссс!",
             "currency": "money",
-            "price": 3
+            "price": 2
         },
         {
             "id": "no_shortcuts",
@@ -38,7 +38,7 @@
             "description": "Срезать по полдоски за раз - это только ваша прерогатива. Запретите сопернику так делать!",
             "iconClass": "cheat-block__no_shortcuts",
             "currency": "money",
-            "price": 3
+            "price": 2
         },
         {
             "id": "free_shortcuts",

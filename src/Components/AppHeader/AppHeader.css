@@ -52,6 +52,9 @@
 .app-header_music-btn {
     background-image: url(../../assets/icons/music.svg);
 }
+.app-header_question {
+    background-image: url(../../assets/icons/question.svg);
+}
 .app-header_sound-btn {
     background-image: url(../../assets/icons/speaker.svg);
 }

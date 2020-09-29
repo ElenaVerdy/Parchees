@@ -1,5 +1,5 @@
 .records_modal {
-    width: calc(var(--cell-size) * 8);
+    width: calc(var(--cell-size) * 9);
     height: calc(var(--cell-size) * 13);
 }
 .records_header {

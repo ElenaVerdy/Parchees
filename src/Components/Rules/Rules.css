@@ -1,0 +1,32 @@
+.rules_modal {
+    width: calc(var(--cell-size) * 10);
+    height: calc(var(--cell-size) * 13);
+}
+.records_header {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 10px auto 0px;
+}
+.rules_main {
+    flex: 1;
+    display: flex;
+    margin-top: 3px;
+    flex-direction: column;
+    height: calc(var(--cell-size) * 10);
+    overflow-y: scroll;
+}
+.rules_p {
+    margin: 5px;
+}
+.rules_li {
+    margin: 3px 0px;
+}
+.rules_chip-icon {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    min-width: 10px;
+    border: solid 1px black;
+    border-radius: 50%;
+    margin: 3px 4px 0px 3px;
+}

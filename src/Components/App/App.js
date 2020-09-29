@@ -2,18 +2,18 @@ import React from 'react';
 import Modal from 'react-modal';
 import io from "socket.io-client";
 import './App.css';
-import './common.css'
-import Game from "../Game/Game"
-import Loading from "../Loading/Loading"
-import Lobby from "../Lobby/Lobby"
-import SideMenu from "../SideMenu/SideMenu"
-import Chat from "../Chat/Chat"
-import GameFinished from "../GameFinished/GameFinished"
-import AppHeader from "../AppHeader/AppHeader"
-import cloneDeep from 'lodash.clonedeep'
+import './common.css';
+import Game from "../Game/Game";
+import Loading from "../Loading/Loading";
+import Lobby from "../Lobby/Lobby";
+import SideMenu from "../SideMenu/SideMenu";
+import Chat from "../Chat/Chat";
+import GameFinished from "../GameFinished/GameFinished";
+import AppHeader from "../AppHeader/AppHeader";
+import cloneDeep from 'lodash.clonedeep';
 
-let debug = window.location.href === "http://192.168.1.67:3000/";
-const ENDPOINT = debug ? "http://192.168.1.67:8000/" : "https://parcheesi.herokuapp.com/";
+let debug = window.location.href === "http://192.168.1.64:3000/";
+const ENDPOINT = debug ? "http://192.168.1.64:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
 const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
 const init = function() {
@@ -68,7 +68,8 @@ export default class App extends React.Component {
 			canSkip: false,
 			loading: true,
 			topByRank: [],
-			topByChips: []
+			topByChips: [],
+			justInstalled: false
 		}
 		this.socket = socket;
 		this.handleGameStart = handleGameStart.bind(this);
@@ -90,7 +91,7 @@ export default class App extends React.Component {
 		});
 		this.socket.on("init-finished", data => {
 			debug || initRatings.call(this, data);
-			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false });
+			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false, justInstalled: data.justInstalled });
 			this.socket.emit("get-lottery-field");
 		});
 		this.socket.on("update-user-info", data => this.setState({ userInfo: { ...this.state.userInfo, ...data } }))
@@ -201,6 +202,7 @@ export default class App extends React.Component {
 							   lotteryField={this.state.lotteryField}
 							   topByRank={this.state.topByRank}
 							   topByChips={this.state.topByChips}
+							   justInstalled={this.state.justInstalled}
 					/>
 					<div className="App_main">
 						<div className="App_main-offside">

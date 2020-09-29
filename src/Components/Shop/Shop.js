@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from 'react-modal';
 import './Shop.css'
 import { cheats, money } from "../../metadata.json";
@@ -7,7 +7,6 @@ Modal.setAppElement('#root');
 
 export default function Shop(props){
 	const tabs = ['Читы', 'Фишки', 'Поле', 'Денюшки'];
-	const [tab, setTab] = useState(0);
     return (
 		<Modal
 			isOpen={props.shopIsOpen}
@@ -20,9 +19,9 @@ export default function Shop(props){
 			<div className="shop_header">Магазин</div>
 			<div className="shop_main">
 				<div className="shop_tabs flex-center">
-					{tabs.map((item, i) => (<div className={`pointer shop_tab${i === tab ? ' shop_tab-selected' : ''}`} onClick={setTab.bind(null, i)} key={i}>{ item }</div>))}
+					{tabs.map((item, i) => (<div className={`pointer shop_tab${i === props.tab ? ' shop_tab-selected' : ''}`} onClick={props.setTab.bind(null, i)} key={i}>{ item }</div>))}
 				</div>
-				{tab === 0 ? (
+				{props.tab === 0 ? (
 					<div className="shop_items-wrapper flex-sb">
 						{cheats.map(ch => (
 							<div className="shop_item" key={ch.id}>
@@ -39,13 +38,13 @@ export default function Shop(props){
 						))}
 					</div>
 				) : null}
-				{tab === 1 || tab === 2 ? (
+				{props.tab === 1 || props.tab === 2 ? (
 					<div className="shop_items-wrapper flex-center">
 						<div className="shop_placeholder">Скоро...</div>
 						<div className="shop_timer"></div>
 					</div>
 				) : null}
-				{tab === 3 ? (
+				{props.tab === 3 ? (
 					<div className="shop_items-wrapper flex-sb">
 						{money.map(item => (
 							<div className="shop_item" key={item.id}>
