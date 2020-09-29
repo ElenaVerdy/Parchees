@@ -17,10 +17,10 @@ export default class LobbyHeader extends React.Component {
 						<div className='lobby-header_rank'><div className='icon lobby-header_rank-star'></div><div className="lobby-header_rank-number">{ userInfo.rating }</div></div>
 					</div>
 				</div>
-				<div className='lobby-header_left'>
+				{/* <div className='lobby-header_left'>
 					<button className="btn-grey btn-grey-small">с компьютером</button>
 					<button className="btn-grey btn-grey-small">играть с другом</button>
-				</div>
+				</div> */}
 			</div>
 		)
 	}
