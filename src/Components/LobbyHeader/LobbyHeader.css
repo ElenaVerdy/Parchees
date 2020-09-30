@@ -6,7 +6,6 @@
 .lobby-header_right {
     display: flex;
     flex: 10 auto;
-    border-right: 1px solid var(--color-black);
     padding: 0px 3px;
 }
 .lobby-header_left {

@@ -72,7 +72,6 @@ export default class App extends React.Component {
 			justInstalled: false
 		}
 		this.socket = socket;
-		this.handleGameStart = handleGameStart.bind(this);
 		this.handleNextTurn = handleNextTurn.bind(this);
 		this.diceRolled = diceRolled.bind(this);
 		this.endGame = endGame.bind(this);
@@ -99,6 +98,10 @@ export default class App extends React.Component {
 			this.setState({ tableId: data.id, bet: data.bet });
 		});
 		this.socket.on("err", data => this.setState({ error: data.text }));
+		this.socket.on("removed", () => {
+			toTables.call(this);
+			this.setState({ error: "Вы были удалены из игры за бездействие." });
+		})
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
@@ -116,7 +119,7 @@ export default class App extends React.Component {
 			}
 		});
 		this.socket.on("all-players-ready", handleAllPlayersReady.bind(this));
-		this.socket.on("game-start", this.handleGameStart);
+		this.socket.on("game-start", handleGameStart.bind(this));
 		this.socket.on("lottery-field", data => this.setState({lotteryField: data.field}));
 		this.socket.on("next-turn", data => {
 			if (this.state.disabled || data.actionCount !== this.state.actionCount)

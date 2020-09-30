@@ -14,7 +14,7 @@ export default function PlayerInfo (props) {
 			document.removeEventListener(`messege-from-${props.playersInfo.vk_id}`, msgHandler);
 		};
 	  });
-	let position;
+	let position = '';
 	let tooltipRef;
 	const [msgText, setMsgText] = useState('');
 
