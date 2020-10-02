@@ -51,7 +51,7 @@
 }
 .app_modal-error {
   width: calc(var(--cell-size) * 6);
-  height: calc(var(--cell-size) * 3);
+  min-height: calc(var(--cell-size) * 3);
   padding: 5px 15px !important;
 }
 .app_modal-error_text {
