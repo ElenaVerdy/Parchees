@@ -100,7 +100,6 @@ export default class App extends React.Component {
 		this.socket.on("err", data => this.setState({ error: data.text }));
 		this.socket.on("removed", () => {
 			toTables.call(this);
-			this.setState({ error: "Вы были удалены из игры за бездействие." });
 		})
 		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
 		this.socket.on("update-players", data => {

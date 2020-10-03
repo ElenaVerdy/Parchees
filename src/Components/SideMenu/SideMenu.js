@@ -56,12 +56,13 @@ export default class SideMenu extends React.Component {
         this.ReactDice.rollAll();
     }
   	render() {
+        let myTurn = this.props.turn === this.props.yourTurn;
         return (
             <div className="side-menu_container">
                 {this.props.tableId ?
                     (this.props.gameOn ?
                         <div>
-                            {this.props.turn === this.props.yourTurn ? 
+                            {myTurn ? 
                                 ( this.props.dice.length && !this.props.doublesStreak ?
                                     <button className="btn-grey" disabled={this.props.disabled || !this.props.canSkip}
                                             onClick={() => { this.props.disabled || !this.props.canSkip || this.props.socket.emit("finish-turn", {tableId: this.props.tableId}); }}>
@@ -73,7 +74,7 @@ export default class SideMenu extends React.Component {
                                     }}>{this.dictionary.throwDice}</button>)
                                 : <button className="btn-grey" disabled>{this.dictionary.otherPlayersMove}</button>}
                             <div className="side-menu_info">
-                                {this.props.turn === this.props.yourTurn ? 
+                                {myTurn ? 
                                 (this.props.dice.length ? 
                                     (this.props.doublesStreak ? 
                                         this.dictionary.double.replace("@", this.props.doublesStreak) : "") + this.dictionary.makeYourMove 
@@ -92,11 +93,12 @@ export default class SideMenu extends React.Component {
                             <CheatsBlock userInfo={this.props.userInfo}
                                          socket={this.props.socket}
                                          tableId={this.props.tableId}
-                                         myTurn={this.props.turn === this.props.yourTurn}
+                                         myTurn={myTurn}
                                          canReroll={!!this.props.dice.length}
                                          disable={this.props.disable}
                                          showError={this.props.showError}
                                          canSkip={!this.props.dice.length || this.props.canSkip}
+                                         canThrow={!(this.props.dice.length && !this.props.doublesStreak)}
                             />
                         </div>
                         : <div>

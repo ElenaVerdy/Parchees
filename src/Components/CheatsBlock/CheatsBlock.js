@@ -71,6 +71,7 @@ export default function CheatsBlock (props) {
 		let err = ''
 		err || (!props.myTurn && (err = 'Читы можно использовать только в свой ход!'));
 		err || ((cheat.id === 'luck' && luckOn) && (err = 'Чит уже активирован'));
+		err || ((cheat.id === 'luck' && !luckOn && !props.canThrow) && (err = 'Вы не можете бросить кубик. Нет смысла тратить чит.'))
 		err || (((cheat.id === 'skip' || cheat.id === 'reroll') && props.canSkip) && (err = 'Вы можете бросить кубик или закончить ход без читов'));
 		return err ? props.showError(err) : true;
 	}

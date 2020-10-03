@@ -35,7 +35,6 @@ export default class Game extends React.Component {
     }
     
     componentDidMount() {
-        this.socket.on('removed', () => {console.log('removed')});
 		this.socket.on("cheat-updated", data => {
             if (['flight', 'shield', 'free_shortcuts', 'no_shortcuts'].indexOf(data.cheatId) !== -1) {
                 // eslint-disable-next-line
