@@ -34,7 +34,7 @@ const init = function() {
 				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
 				first_name: 'Lindsey' + (Math.random() * 12 ^ 0),
 				last_name: "Stirling",
-				id: 123123123//(Math.random() * 123456789 ^ 0)
+				id: (Math.random() * 123456789 ^ 0)
 			});
 		}
 	})
@@ -83,10 +83,10 @@ export default class App extends React.Component {
 	componentDidMount() {
 		init().then(userInfo => {
 			this.setState({ userInfo });
-			this.socket.emit("init", userInfo);
+			this.socket.emit("init", { ...userInfo, vk_id: userInfo.id });
 		});
 		this.socket.on("request-auth", () => {
-			if (this.state.userInfo.id) return this.socket.emit("init", { ...this.state.userInfo }); // Math.random() * 1000000 ^ 0 });
+			if (this.state.userInfo.id) return this.socket.emit("init", this.state.userInfo);
 		});
 		this.socket.on("init-finished", data => {
 			debug || initRatings.call(this, data);
