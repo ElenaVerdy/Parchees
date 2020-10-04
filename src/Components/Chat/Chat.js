@@ -91,7 +91,6 @@ function newMsg({ old, room, player, text, vk_id }) {
 		tmp.unshift({ player, text });
 		this.setState({[room === 'main' ? 'msgsMain' : 'msgsRoom']: tmp });
 		if (room !== 'main') {
-			console.log(`messege-from-${vk_id}`)
 			let event = new Event(`messege-from-${vk_id}`);
 			event.text = text;
 			document.dispatchEvent(event);

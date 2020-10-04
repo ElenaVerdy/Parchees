@@ -62,8 +62,8 @@ export default class SideMenu extends React.Component {
                 {this.props.tableId ?
                     (this.props.gameOn ?
                         <div>
-                            {myTurn ? 
-                                ( this.props.dice.length && !this.props.doublesStreak ?
+                            {myTurn ?
+                                (this.props.dice.length && !this.props.doublesStreak ?
                                     <button className="btn-grey" disabled={this.props.disabled || !this.props.canSkip}
                                             onClick={() => { this.props.disabled || !this.props.canSkip || this.props.socket.emit("finish-turn", {tableId: this.props.tableId}); }}>
                                         {this.dictionary.finish}

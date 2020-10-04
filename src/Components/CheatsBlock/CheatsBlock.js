@@ -54,6 +54,7 @@ export default function CheatsBlock (props) {
 	}
 	const userChoosesChip = () => {
 		let click;
+		document.dispatchEvent(new Event('drop-selected-chip'));
 		return new Promise((resolve, reject) => {
 			Array.from(document.getElementsByClassName('game_chip')).forEach(elem => elem.classList.add('game-cheat_chip-to-select'));
 			click = event => event.target.classList.contains('game_chip') ? resolve(event.target.id) : reject();
@@ -72,7 +73,8 @@ export default function CheatsBlock (props) {
 		err || (!props.myTurn && (err = 'Читы можно использовать только в свой ход!'));
 		err || ((cheat.id === 'luck' && luckOn) && (err = 'Чит уже активирован'));
 		err || ((cheat.id === 'luck' && !luckOn && !props.canThrow) && (err = 'Вы не можете бросить кубик. Нет смысла тратить чит.'))
-		err || (((cheat.id === 'skip' || cheat.id === 'reroll') && props.canSkip) && (err = 'Вы можете бросить кубик или закончить ход без читов'));
+		err || ((cheat.id === 'skip' && props.canSkip) && (err = 'Вы можете закончить ход без читов'));
+		err || ((cheat.id === 'reroll' && props.canThrow) && (err = 'Вы можете бросить кубик без читов'));
 		return err ? props.showError(err) : true;
 	}
 	const validateChipCheat = () => {

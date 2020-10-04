@@ -41,7 +41,8 @@ export default class Game extends React.Component {
                 this.state.chips[data.player][data.num][data.cheatId] = data.on;
                 this.setState({ dice: this.state.dice.slice(), selectedChip: null });
             }
-        })
+        });
+        document.addEventListener('drop-selected-chip', () => this.setState({ selectedChip: null }))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -613,13 +614,17 @@ function createScheme() {
 }
 
 function getChipsToMove() {
-    if (this.props.playersOrder.length === 0 || (!this.state.dice[0] && !this.state.dice[1]) || this.props.turn !== this.props.yourTurn) 
+    let player = this.props.playersOrder[this.props.turn];
+    if (this.props.playersOrder.length === 0 || this.props.turn !== this.props.yourTurn) {
         return [];
+    } else if (!this.state.dice[0] && !this.state.dice[1]) {
+        return this.state.chips[player].filter(chip => {
+            chip.canSkip = true;
+            return getFreeShortcuts.call(this, chip).length;
+        })
+    }
 
     let dice = this.state.dice.slice();
-
-    let player = this.props.playersOrder[this.props.turn];
-
     let chips = this.state.chips[player].slice();
 
     chips = chips.filter(chip => {

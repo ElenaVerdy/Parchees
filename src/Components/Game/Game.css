@@ -311,7 +311,7 @@
     width: calc(var(--cell-size) * .8 - 1px);    
     height: calc(var(--cell-size) * .8 - 1px);
     border: 1px solid;
-    border-radius: var(--cell-size);
+    border-radius: calc(var(--cell-size) * 0.3);
     float: left;
     position: absolute;
     transition: all 0.2s ease-in-out;
@@ -359,6 +359,12 @@
 }
 .game_chip-can-be-eaten:hover {
     box-shadow:  0px 0px 5px 5px orange;
+}
+.game-cheat_chip-to-select {
+    box-shadow:  0px 0px 3px 2px;
+}
+.game-cheat_chip-to-select:hover {
+    box-shadow:  0px 0px 5px 5px;
 }
 #game_chip_player1_num1 {
     top: calc(var(--cell-size) * 8.3 + 1px);
