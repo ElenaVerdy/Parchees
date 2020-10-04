@@ -378,6 +378,7 @@ export default class Game extends React.Component {
                                         {this.state.chips[i][k].shield ? <div className="game_chip-cheat game_chip-shield"></div> : null}
                                         {this.state.chips[i][k].flight ? <div className="game_chip-cheat game_chip-flight"></div> : null}
                                         {this.state.chips[i][k].free_shortcuts ? <div className="game_chip-cheat game_chip-free_shortcuts"></div> : null}
+                                        {this.state.chips[i][k].no_shortcuts ? <div className="game_chip-cheat game_chip-no_shortcuts"></div> : null}
                                     </React.Fragment> : null}
                                 </div>
                                 )}

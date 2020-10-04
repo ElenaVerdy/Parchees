@@ -454,3 +454,8 @@
     top: 19px;
     right: 11px;
 }
+.game_chip-no_shortcuts::after {
+    background-image: url(../../assets/icons/no-shortcuts.svg);
+    top: 19px;
+    right: 11px;
+}
