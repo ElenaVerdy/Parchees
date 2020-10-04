@@ -22,6 +22,11 @@ export default function CheatsBlock (props) {
 		if (!props.myTurn && luckOn) setluckOn(false);
 	}, [props.myTurn, luckOn]);
 	const usedItem = (cheat, buy) => {
+		if (buy && props.userInfo.money < cheat.price) {
+			props.showError('Недостаточно монеток!');
+			setWantToBuy(false);
+			return;
+		}
 		switch (cheat.id) {
 			case 'luck':
 				setluckOn(true);
