@@ -58,6 +58,7 @@ export default function Shop(props){
 					</div>
 				</div>
 				<div className="lottery_left-container">
+					<div className="lottery_gift-line flex-center">500 в подарок</div>
 					{props.userInfo.timeToLottery ? null : <button className="btn-grey" disabled={disabled} onClick={() => { disabled || rollDice(); }}>Бросить бесплатно</button>}
 					{props.userInfo.timeToLottery ?
 						<button className="btn-grey" disabled={disabled || !props.userInfo.money} onClick={() => { disabled || rollDice(); }}>

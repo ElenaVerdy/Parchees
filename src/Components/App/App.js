@@ -62,7 +62,6 @@ export default class App extends React.Component {
 			disabled: false,
 			gameFinishedModal: false,
 			gameResults: [],
-			doAfterDisable: {},
 			moveData: null,
 			actionCount: 0,
 			canSkip: false,
@@ -71,6 +70,7 @@ export default class App extends React.Component {
 			topByChips: [],
 			justInstalled: false
 		}
+		this.doAfterDisable = {};
 		this.socket = socket;
 		this.handleNextTurn = handleNextTurn.bind(this);
 		this.diceRolled = diceRolled.bind(this);
@@ -154,8 +154,9 @@ export default class App extends React.Component {
 			this.socket.emit("get-tables-request");
 
 		if ((prevState.disabled && !this.state.disabled) || (prevState.actionCount !== this.state.actionCount)) {
-			if (!this.state.doAfterDisable[this.state.actionCount]) return;
-			let action = this.state.doAfterDisable[this.state.actionCount];
+			if (!this.doAfterDisable[this.state.actionCount]) return;
+			let action = this.doAfterDisable[this.state.actionCount];
+			delete this.doAfterDisable[this.state.actionCount];
 			switch (action.name) {
 				case 'next-turn':
 					this.handleNextTurn(action.data);
@@ -239,7 +240,6 @@ export default class App extends React.Component {
 														dice={this.state.dice}
 														disable={this.disable}
 														disabled={this.state.disabled}
-														logAction={this.logAction}
 														setActiveDice={activeDice => {this.setState({activeDice})}}
 														moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
 														moveData={this.state.moveData}
@@ -279,6 +279,7 @@ function avgRating() {
 }
 function toTables() {
 	socket.emit('leave-table', { tableId: this.state.tableId });
+	this.doAfterDisable = {};
 	this.setState({
 		tableId: null,
 		bet: null,
@@ -294,7 +295,6 @@ function toTables() {
 		disabled: false,
 		gameFinishedModal: false,
 		gameResults: [],
-		doAfterDisable: {},
 		moveData: null,
 		actionCount: 0,
 		canSkip: false
@@ -308,9 +308,7 @@ function diceRolled(data) {
 	this.setState({ doublesStreak: tmp, dice: data.dice });
 }
 function logAction(name, data) {
-	let doAfterDisable = this.state.doAfterDisable;
-	doAfterDisable[data.actionCount] = { name, data };
-	this.setState({ doAfterDisable });
+	this.doAfterDisable[data.actionCount] = { name, data };
 }
 function endGame(data) {
 	this.setState({
@@ -321,8 +319,8 @@ function endGame(data) {
 		disabled: false,
 		gameResults: data.results,
 		actionCount: this.state.actionCount + 1,
-		doAfterDisable: []
 	});
+	this.doAfterDisable = {};
 }
 function handleGameStart(data) {
 	this.setState({

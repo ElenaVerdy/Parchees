@@ -19,7 +19,7 @@
     background: -moz-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
     background: -o-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
     background: -ms-linear-gradient(top, #E9D66B 0%, #DAC75C 100%);
-    max-width: 200px;
+    max-width: 250px;
     transition: max-width .5s linear;
     overflow: hidden;
 }
