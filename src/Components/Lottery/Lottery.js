@@ -11,7 +11,7 @@ export default function Shop(props){
 	useEffect(() => {
 		props.socket.on('lottery-rolled', ({ dice }) => {
 			setDice(dice);
-			diceRef.current.rollAll(dice);
+			diceRef && diceRef.current && diceRef.current.rollAll(dice);
 		});
 		return () => props.socket.off('lottery-rolled');
 	});

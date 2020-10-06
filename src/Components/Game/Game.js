@@ -72,7 +72,7 @@ export default class Game extends React.Component {
                     this.returnChipsToBase(this.props.playersOrder[playerLeftIndex]);
                 }
             } else {
-                this.setState({ chips: defaultChipsPositions(this.props.playersOrder) })
+                this.setState({ chips: defaultChipsPositions(this.props.playersOrder) });
             }
         }
 
@@ -750,7 +750,7 @@ function defaultChipsPositions(playersOrder) {
             };
         });
     })
-
+    console.log(ret);
     return ret;
 }
 function str2bool(str) {

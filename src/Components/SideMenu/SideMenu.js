@@ -50,9 +50,6 @@ export default class SideMenu extends React.Component {
             this.setState({ready: false});
         }
 	}
-    rollAll () {
-        this.ReactDice.rollAll();
-    }
   	render() {
         let myTurn = this.props.turn === this.props.yourTurn;
         return (
