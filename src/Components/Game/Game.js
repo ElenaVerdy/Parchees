@@ -458,7 +458,6 @@ function moveChipToCell(chip, cellId, isBase = false, isLast = false, diceNum = 
 }
 
 function buildRoute(chip, cellId, diceNum) {
-    
     let scheme = this.scheme;
     let result = [];
     
@@ -473,17 +472,9 @@ function buildRoute(chip, cellId, diceNum) {
         if (chipCell.links.for3 === cellId) return [ chipCell.links.for3 ];
     }
 
-    if (!chip.no_shortcuts && dice === 1 && chipCell.links.for1 && chipCell.links.for1 === cellId) {
-        return [chipCell.links.for1];
-    }    
-
-    if (!chip.no_shortcuts && dice === 3 && chipCell.links.for3 && chipCell.links.for3 === cellId) {
-        return [chipCell.links.for3];
-    } 
-
-    if (dice === 6 && chipCell.links.for6 && chipCell.links.for6 === cellId) {
-        return [chipCell.links.for6];
-    }
+    if (!chip.no_shortcuts && dice === 1 && chipCell.links.for1 === cellId) return [chipCell.links.for1];
+    if (!chip.no_shortcuts && dice === 3 && chipCell.links.for3 === cellId) return [chipCell.links.for3];
+    if (dice === 6 && chipCell.links.for6 === cellId) return [chipCell.links.for6];
 
     let route = [];
 
@@ -502,11 +493,7 @@ function buildRoute(chip, cellId, diceNum) {
         }
 
         for (let i = 1; i <= dice; i++) {
-            if (toFinish)
-                current = scheme[(current.links["toFinish" + currentPlayer]) || current.links.next];
-            else
-                current = scheme[current.links.next];
-            
+            current = scheme[toFinish ? (current.links["toFinish" + currentPlayer]) || current.links.next : current.links.next]
             if (!current) return [];
 
             route.push(current.id)
@@ -561,25 +548,13 @@ function createScheme() {
             })
         }
         if (i % 12 === 1) {
-            let n;
-
-            switch (i) {
-                case 1:
-                    n = 1;
-                    break;
-                case 13:
-                    n = 4;
-                    break;
-                case 25:
-                    n = 3;
-                    break;
-                case 37:
-                    n = 2;
-                    break;
-                default:
-                    break;
-            
-            }
+            let startMap = {
+                1: 1,
+                13: 4,
+                25: 3,
+                37: 2
+            };
+            let n = startMap[i];
             let start = {
                 isStart: true,
                 id:("game_start-cell_player" + n),

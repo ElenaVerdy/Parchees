@@ -12,8 +12,8 @@ import GameFinished from "../GameFinished/GameFinished";
 import AppHeader from "../AppHeader/AppHeader";
 import cloneDeep from 'lodash.clonedeep';
 
-let debug = window.location.href === "http://192.168.1.64:3000/";
-const ENDPOINT = debug ? "http://192.168.1.64:8000/" : "https://parcheesi.herokuapp.com/";
+let debug = window.location.href === "http://192.168.1.69:3000/";
+const ENDPOINT = debug ? "http://192.168.1.69:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
 const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
 const init = function() {
@@ -301,11 +301,7 @@ function toTables() {
 	});
 }
 function diceRolled(data) {
-	let tmp = 0;
-	if (data.dice[0] === data.dice[1])
-		tmp = this.state.doublesStreak === 2 ? 0 : this.state.doublesStreak + 1;
-
-	this.setState({ doublesStreak: tmp, dice: data.dice });
+	this.setState({ doublesStreak: data.doublesStreak, dice: data.dice });
 }
 function logAction(name, data) {
 	this.doAfterDisable[data.actionCount] = { name, data };

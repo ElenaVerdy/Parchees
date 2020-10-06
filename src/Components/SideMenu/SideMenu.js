@@ -4,7 +4,6 @@ import GameStart from '../GameStart/GameStart';
 // import ReactDice from "react-dice-complete";
 import ReactDice from '../ReactDice/ReactDice'
 import CheatsBlock from "../CheatsBlock/CheatsBlock";
-import 'react-dice-complete/dist/react-dice-complete.css';
 
 export default class SideMenu extends React.Component {
 	constructor(props) {
@@ -27,8 +26,7 @@ export default class SideMenu extends React.Component {
         }
 
 		this.state = {
-            ready: false,
-            doublesStreak: 0
+            ready: false
 		}
 	}
 	componentDidUpdate(prevProps, prevState) {
@@ -97,8 +95,7 @@ export default class SideMenu extends React.Component {
                                          canReroll={!!this.props.dice.length}
                                          disable={this.props.disable}
                                          showError={this.props.showError}
-                                         canSkip={!this.props.dice.length || this.props.canSkip}
-                                         canThrow={!(this.props.dice.length && !this.props.doublesStreak)}
+                                         canThrow={!(this.props.dice.length && !this.props.doublesStreak) && this.props.canSkip}
                             />
                         </div>
                         : <div>
