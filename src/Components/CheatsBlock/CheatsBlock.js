@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux'
+
 import './CheatsBlock.css';
 import { cheats } from "../../metadata.json";
 import ReactTooltip from 'react-tooltip';
 import Modal from 'react-modal';
 
 export default function CheatsBlock (props) {
+	const user = useSelector(state => state.user)
+
 	const [toBuyIndex, setToBuyIndex] = useState(0);
 	const [wantToBuy, setWantToBuy] = useState(false);
 	const [luckOn, setluckOn] = useState(false);
@@ -13,16 +17,18 @@ export default function CheatsBlock (props) {
 		let ch = cheats[index];
 		if (!validateCheat(ch)) return;
 		setToBuyIndex(index);
-		setWantToBuy(!props.userInfo[ch.id]);
-		if (props.userInfo[ch.id]) {
+		setWantToBuy(!user[ch.id]);
+		if (user[ch.id]) {
 			usedItem(ch, false);
 		}
 	};
+
 	useEffect(() => {
 		if (!props.myTurn && luckOn) setluckOn(false);
 	}, [props.myTurn, luckOn]);
+
 	const usedItem = (cheat, buy) => {
-		if (buy && props.userInfo.money < cheat.price) {
+		if (buy && user.money < cheat.price) {
 			props.showError('Недостаточно монеток!');
 			setWantToBuy(false);
 			return;
@@ -104,7 +110,7 @@ export default function CheatsBlock (props) {
 							<div className="cheat-block_tooltip-title">
 								{i.title}
 							</div>
-							{props.userInfo[i.id] ? <div className="cheat-block_tooltip-qty">{`У вас есть: ${props.userInfo[i.id]}`}</div> : null}
+							{user[i.id] ? <div className="cheat-block_tooltip-qty">{`У вас есть: ${user[i.id]}`}</div> : null}
 							<div className="cheat-block_tooltip-description">
 								{i.description}
 							</div>
@@ -114,8 +120,8 @@ export default function CheatsBlock (props) {
 							</div>
 						</div>
 					</ReactTooltip>
-					{props.userInfo[i.id] ? <div className="cheat-block_qty">
-						{props.userInfo[i.id]}
+					{user[i.id] ? <div className="cheat-block_qty">
+						{user[i.id]}
 					</div> : null}
 					<div className={`cheat-block_icon ${i.iconClass}`}>
 					</div>

@@ -12,6 +12,9 @@ import GameFinished from "../GameFinished/GameFinished";
 import AppHeader from "../AppHeader/AppHeader";
 import cloneDeep from 'lodash.clonedeep';
 
+import { connect } from "react-redux"
+import { setUser, decrementLotteryTimer } from '../../store/modules/user'
+
 let debug = window.location.href === "http://192.168.1.3:3000/";
 const ENDPOINT = debug ? "http://192.168.1.3:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
@@ -34,19 +37,18 @@ const init = function() {
 				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
 				first_name: 'Lindsey',
 				last_name: "Stirling",
-				id: 123123123
+				id: `123123123${Math.random() > .5 ? 1 : 0}`
 			});
 		}
 	})
 }
 
 const socket = io.connect(ENDPOINT);
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			userInfo: {},
 			tables: [],
 			playersInGame: 0,
 			playersInMenu: 0,
@@ -84,18 +86,25 @@ export default class App extends React.Component {
 
 	componentDidMount() {
 		init().then(userInfo => {
-			this.setState({ userInfo });
-			this.socket.emit("init", { ...userInfo, vk_id: userInfo.id });
+            this.props.setUser(userInfo)
+
+            this.socket.emit("init", { ...userInfo, vk_id: userInfo.id });
 		});
+
 		this.socket.on("request-auth", () => {
-			if (this.state.userInfo.id) return this.socket.emit("init", this.state.userInfo);
+			if (this.props.user.id) return this.socket.emit("init", this.props.user);
 		});
+
 		this.socket.on("init-finished", data => {
 			debug || initRatings.call(this, data);
-			this.setState({ userInfo: { ...this.state.userInfo, ...data}, loading: false, justInstalled: data.justInstalled });
+
+            this.props.setUser({ ...this.props.user, ...data})
+			this.setState({ loading: false, justInstalled: data.justInstalled });
+
 			this.socket.emit("get-lottery-field");
 		});
-		this.socket.on("update-user-info", data => this.setState({ userInfo: { ...this.state.userInfo, ...data } }))
+
+        this.socket.on("update-user-info", data => this.props.setUser({ ...this.props.user, ...data }))
 		this.socket.on("connect-to", data => {
 			this.setState({ tableId: data.id, bet: data.bet });
 		});
@@ -190,12 +199,11 @@ export default class App extends React.Component {
 		if (prevState.error !== this.state.error && this.state.error)
 			console.log(this.state.error);
 
-		if (prevState.userInfo.timeToLottery !== this.state.userInfo.timeToLottery) {
+		if (prevProps.user.timeToLottery !== this.props.user.timeToLottery) {
 			clearTimeout(this.lotteryTimeout);
-			if (this.state.userInfo.timeToLottery) this.lotteryTimeout = setTimeout(() => {
-				let userInfo = { ...this.state.userInfo };
-				userInfo.timeToLottery--;
-				this.setState({ userInfo })
+
+			if (this.props.user.timeToLottery) this.lotteryTimeout = setTimeout(() => {
+				this.props.decrementLotteryTimer()
 			}, 1000);
 		}
 	}
@@ -208,7 +216,6 @@ export default class App extends React.Component {
 					<AppHeader
 						tableId={this.state.tableId}
 						toTables={toTables.bind(this)}
-						userInfo={this.state.userInfo}
 						socket={this.socket}
 						avgRating={avgRating.call(this)}
 						bet={this.state.bet}
@@ -231,12 +238,11 @@ export default class App extends React.Component {
 								doublesStreak={this.state.doublesStreak}
 								disable={this.disable}
 								disabled={this.state.disabled}
-								userInfo={this.state.userInfo}
 								diceRolled={() => {this.setState({actionCount: this.state.actionCount + 1, disabled: false})}}
 								canSkip={this.state.canSkip}
 								showError={error => this.setState({ error })}
 							/>
-							<Chat roomId={this.state.tableId} socket={this.socket} userInfo={this.state.userInfo}></Chat>
+							<Chat roomId={this.state.tableId} socket={this.socket}></Chat>
 
 						</div>
 						<div className="App_main-container">
@@ -260,7 +266,7 @@ export default class App extends React.Component {
 							:
 								<Lobby tables={this.state.tables}
 									socket={this.socket}
-									userInfo={this.state.userInfo}
+									userInfo={this.props.user}
 									inGame={this.state.playersInGame}
 									inMenu={this.state.playersInMenu}
 								/>
@@ -407,3 +413,14 @@ function initRatings(data) {
 		delete data.topByChips;
 	});
 }
+
+const mapStateToProps = (state) => ({
+	user: state.user
+});
+
+const mapDispatchToProps = {
+    setUser,
+    decrementLotteryTimer
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

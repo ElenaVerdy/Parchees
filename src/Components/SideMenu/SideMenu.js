@@ -91,7 +91,6 @@ export default function SideMenu (props) {
                             rollDone={() => props.diceRolled()}
                         />
                         <CheatsBlock
-                            userInfo={props.userInfo}
                             socket={socket}
                             tableId={tableId}
                             myTurn={myTurn}
@@ -120,7 +119,7 @@ export default function SideMenu (props) {
                 )
             : 
                 <div>
-                    <GameStart socket={socket} userInfo={props.userInfo} />
+                    <GameStart socket={socket} />
                     <div className="side-menu_info">{dictionary.mainMenu}</div>
                 </div>
             }

@@ -1,7 +1,10 @@
 import React from 'react';
+
+import { connect } from "react-redux"
+
 import './Chat.css';
 
-export default class Chat extends React.Component {
+class Chat extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -73,8 +76,8 @@ function sendMsg() {
 	if (!this.state.inputText.trim() || this.state.blockBtn) return;
 	this.props.socket.emit('send-msg', {
 		player: {
-			id: this.props.userInfo.id,
-			name: this.props.userInfo.name
+			id: this.props.user.id,
+			name: this.props.user.name
 		},
 		text: this.state.inputText,
 		room: this.state.selectedRoom ==='main' ? 'main' : this.props.roomId
@@ -103,3 +106,9 @@ function talkTo(name) {
 	this.setState({inputText: (name + ', ' + this.state.inputText)});
 	document.getElementById("chat_input").focus();
 }
+
+const mapStateToProps = (state) => ({
+	user: state.user
+});
+
+export default connect(mapStateToProps)(Chat);
