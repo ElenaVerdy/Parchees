@@ -1,18 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Modal from 'react-modal';
 import './GameStart.css'
 
 Modal.setAppElement('#root');
 
 export default function GameStart(props){
-	const bets = React.useMemo(() => [100, 300, 500, 1000, 2500, 5000, 10000, 25000], []);
-	const [modalIsOpen, setIsOpen] = React.useState(false);
-	const [selectedBet, setBet] = React.useState(3);
+	const [ modalIsOpen, setIsOpen ] = useState(false);
+	const bets = useMemo(() => [100, 300, 500, 1000, 2500, 5000, 10000, 25000], []);
+	const [ selectedBet, setBet ] = useState(3);
+
 	useEffect(() => {
 		let maxIndex = bets.findIndex(i => i > props.userInfo.chips);
-		maxIndex = maxIndex === 0 ? null : (maxIndex === -1 ? 7 : maxIndex - 1);
+
+		if (maxIndex === 0) {
+			maxIndex = null;
+		} else if (maxIndex === -1) {
+			maxIndex = 7;
+		} else {
+			maxIndex -= 1;
+		}
+
 		setBet(maxIndex);
-	}, [props.userInfo.chips, bets])
+	}, [ props.userInfo.chips, bets ]);
+
+	const startGame = () => {
+		props.socket.emit("new-table", { ...props.userInfo, bet: bets[selectedBet] });
+	}
+
     return (
 		<div>
 			<button className="btn-grey" onClick={setIsOpen.bind(this, true)}>Новая игра!</button>
@@ -31,7 +45,7 @@ export default function GameStart(props){
 							key={bet} onClick={() => props.userInfo.chips >= bet && setBet(index)}>{bet}</div>
 					))}
 				</div>
-				<button className="game_start_btn btn-brown" onClick={() => {props.startGame(bets[selectedBet])}}>начать</button>
+				<button className="game_start_btn btn-brown" onClick={ startGame }>начать</button>
 			</Modal>
 		</div>
     );

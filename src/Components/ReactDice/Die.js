@@ -4,7 +4,7 @@ class Die extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentValue: props.defaultRoll || 6,
+      currentValue: null,
     }
     this.rollDie = this.rollDie.bind(this)
   }

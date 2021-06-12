@@ -11,6 +11,7 @@
     flex: 1;
     display: flex;
     margin-top: 3px;
+    padding: 10px;
     flex-direction: column;
     height: calc(var(--cell-size) * 10);
     overflow-y: scroll;
@@ -19,7 +20,7 @@
     margin: 5px;
 }
 .rules_li {
-    margin: 3px 0px;
+    margin: 5px 0px;
 }
 .rules_chip-icon {
     display: inline-block;

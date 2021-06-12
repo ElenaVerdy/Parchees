@@ -6,7 +6,7 @@ import 'react-dice-complete/dist/react-dice-complete.css';
 
 Modal.setAppElement('#root');
 
-export default function Shop(props){
+export default function Lottery(props){
 	const diceRef = useRef(null);
 	useEffect(() => {
 		props.socket.on('lottery-rolled', ({ dice }) => {

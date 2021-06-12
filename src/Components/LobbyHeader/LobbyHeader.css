@@ -11,6 +11,12 @@
 .lobby-header_left {
     width: 150px;
 }
+.lobby-header_left_counts {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
 .lobby-header_photo {
     border-radius: 7px;
     margin-right: 8px;

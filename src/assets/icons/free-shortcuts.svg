@@ -1,3 +1,46 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" width="106" height="106"><defs><path d="M102.71 52.4C102.71 80 80.3 102.4 52.71 102.4C25.11 102.4 2.71 80 2.71 52.4C2.71 24.8 25.11 2.4 52.71 2.4C80.3 2.4 102.71 24.8 102.71 52.4Z" id="b1HNFvfxG"></path><path d="M81.24 27.64L26.24 82.64" id="btPE1pQRH"></path><path d="M52.71 27.64L81.24 27.64L52.71 27.64Z" id="b5jMzf6XZv"></path><path d="M81.24 55.14L81.24 27.31L81.24 55.14Z" id="euUmlamZV"></path><path d="" id="aBY6BOaZ0"></path></defs><g><g><g><use xlink:href="#b1HNFvfxG" opacity="1" fill="#00dc00" fill-opacity="1"></use><g><use xlink:href="#b1HNFvfxG" opacity="1" fill-opacity="0" stroke="#272727" stroke-width="7" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#btPE1pQRH" opacity="1" fill-opacity="0" stroke="#272727" stroke-width="7" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#b5jMzf6XZv" opacity="1" fill-opacity="0" stroke="#272727" stroke-width="7" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#euUmlamZV" opacity="1" fill-opacity="0" stroke="#272727" stroke-width="7" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#aBY6BOaZ0" opacity="1" fill-opacity="0" stroke="#272727" stroke-width="5" stroke-opacity="1"></use></g></g></g></g></svg>
+<svg width="108" height="108" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
+ <defs>
+  <path id="b1HNFvfxG" d="m102.71,52.4c0,27.6 -22.41,50 -50,50c-27.6,0 -50,-22.4 -50,-50c0,-27.6 22.4,-50 50,-50c27.59,0 50,22.4 50,50z"/>
+  <path id="btPE1pQRH" d="m81.24,27.64l-55,55"/>
+  <path id="b5jMzf6XZv" d="m52.71,27.64l28.53,0l-28.53,0z"/>
+  <path id="euUmlamZV" d="m81.24,55.14l0,-27.83l0,27.83z"/>
+  <path id="aBY6BOaZ0"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="110" width="110" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null" id="svg_1">
+   <g stroke="null" id="svg_2">
+    <g stroke="null" id="svg_3">
+     <use stroke="null" x="1.2766" y="1.45106" id="svg_4" fill="#00dc00" xlink:href="#b1HNFvfxG"/>
+     <g stroke="null" id="svg_5">
+      <use stroke="#272727" x="1.2766" y="1.45106" id="svg_6" stroke-width="7" fill-opacity="0" xlink:href="#b1HNFvfxG"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_7">
+     <g stroke="null" id="svg_8">
+      <use stroke="#272727" x="1.2766" y="1.45106" id="svg_9" stroke-width="7" fill-opacity="0" xlink:href="#btPE1pQRH"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_10">
+     <g stroke="null" id="svg_11">
+      <use stroke="#272727" x="1.2766" y="1.45106" id="svg_12" stroke-width="7" fill-opacity="0" xlink:href="#b5jMzf6XZv"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_13">
+     <g stroke="null" id="svg_14">
+      <use stroke="#272727" x="1.2766" y="1.45106" id="svg_15" stroke-width="7" fill-opacity="0" xlink:href="#euUmlamZV"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_16">
+     <g stroke="null" id="svg_17">
+      <use stroke="#272727" x="1.2766" y="1.45106" id="svg_18" stroke-width="5" fill-opacity="0" xlink:href="#aBY6BOaZ0"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

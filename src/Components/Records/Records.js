@@ -4,7 +4,7 @@ import './Records.css';
 
 Modal.setAppElement('#root');
 
-export default function Shop(props){
+export default function Records(props){
 	const [tab, setTab] = useState(0);
     return (
 		<Modal

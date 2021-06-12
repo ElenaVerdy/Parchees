@@ -12,8 +12,8 @@ import GameFinished from "../GameFinished/GameFinished";
 import AppHeader from "../AppHeader/AppHeader";
 import cloneDeep from 'lodash.clonedeep';
 
-let debug = window.location.href === "http://192.168.1.69:3000/";
-const ENDPOINT = debug ? "http://192.168.1.69:8000/" : "https://parcheesi.herokuapp.com/";
+let debug = window.location.href === "http://192.168.1.3:3000/";
+const ENDPOINT = debug ? "http://192.168.1.3:8000/" : "https://parcheesi.herokuapp.com/";
 const VK = window.VK;
 const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
 const init = function() {
@@ -32,9 +32,9 @@ const init = function() {
 			resolve({
 				photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
 				photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-				first_name: 'Lindsey' + (Math.random() * 12 ^ 0),
+				first_name: 'Lindsey',
 				last_name: "Stirling",
-				id: (Math.random() * 123456789 ^ 0)
+				id: 123123123
 			});
 		}
 	})
@@ -48,6 +48,8 @@ export default class App extends React.Component {
 		this.state = {
 			userInfo: {},
 			tables: [],
+			playersInGame: 0,
+			playersInMenu: 0,
 			tableId: null,
 			bet: null,
 			playersInfo: [],
@@ -101,8 +103,14 @@ export default class App extends React.Component {
 		this.socket.on("removed", () => {
 			toTables.call(this);
 			this.setState({ error: "Вы были удалены из игры за бездействие." });
-		})
-		this.socket.on("update-tables", data => {this.setState({ tables: data })})		
+		});
+		this.socket.on("update-tables", ({ availableTables, playersInMenu, playersInGame }) => {
+			this.setState({
+				tables: availableTables,
+				playersInMenu,
+				playersInGame
+			});
+		});
 		this.socket.on("update-players", data => {
 			if (this.state.gameOn && !data.players) {
 				let playersInfo = cloneDeep(this.state.playersInfo);
@@ -197,58 +205,65 @@ export default class App extends React.Component {
 			<div id="main-container" className="main-container">
 				{this.state.loading ? <div className="loading"><Loading></Loading></div> :
 				<div className="App">
-					<AppHeader tableId={this.state.tableId}
-							   toTables={toTables.bind(this)}
-							   userInfo={this.state.userInfo}
-							   socket={this.socket}
-							   avgRating={avgRating.call(this)}
-							   bet={this.state.bet}
-							   lotteryField={this.state.lotteryField}
-							   topByRank={this.state.topByRank}
-							   topByChips={this.state.topByChips}
-							   justInstalled={this.state.justInstalled}
+					<AppHeader
+						tableId={this.state.tableId}
+						toTables={toTables.bind(this)}
+						userInfo={this.state.userInfo}
+						socket={this.socket}
+						avgRating={avgRating.call(this)}
+						bet={this.state.bet}
+						lotteryField={this.state.lotteryField}
+						topByRank={this.state.topByRank}
+						topByChips={this.state.topByChips}
+						justInstalled={this.state.justInstalled}
 					/>
 					<div className="App_main">
 						<div className="App_main-offside">
-							<SideMenu socket={this.socket}
-									tableId={this.state.tableId}
-									gameOn={this.state.gameOn}
-									countDown={this.state.countDown}
-									yourTurn={this.state.yourTurn}
-									turn={this.state.turn}
-									dice={this.state.dice}
-									activeDice={this.state.activeDice}
-									doublesStreak={this.state.doublesStreak}
-									disable={this.disable}
-									disabled={this.state.disabled}
-									userInfo={this.state.userInfo}
-									diceRolled={() => this.setState({actionCount: this.state.actionCount + 1, disabled: false})}
-									canSkip={this.state.canSkip}
-									showError={error => this.setState({ error })}
+							<SideMenu
+								socket={this.socket}
+								tableId={this.state.tableId}
+								gameOn={this.state.gameOn}
+								countDown={this.state.countDown}
+								yourTurn={this.state.yourTurn}
+								turn={this.state.turn}
+								dice={this.state.dice}
+								activeDice={this.state.activeDice}
+								doublesStreak={this.state.doublesStreak}
+								disable={this.disable}
+								disabled={this.state.disabled}
+								userInfo={this.state.userInfo}
+								diceRolled={() => {this.setState({actionCount: this.state.actionCount + 1, disabled: false})}}
+								canSkip={this.state.canSkip}
+								showError={error => this.setState({ error })}
 							/>
 							<Chat roomId={this.state.tableId} socket={this.socket} userInfo={this.state.userInfo}></Chat>
 
 						</div>
 						<div className="App_main-container">
-							{this.state.tableId ? <Game tableId={this.state.tableId}
-														socket={this.socket}
-														playersInfo={this.state.playersInfo}
-														playersOrder={this.state.playersOrder}
-														yourTurn={this.state.yourTurn}
-														gameOn={this.state.gameOn}
-														turn={this.state.turn}
-														dice={this.state.dice}
-														disable={this.disable}
-														disabled={this.state.disabled}
-														setActiveDice={activeDice => {this.setState({activeDice})}}
-														moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
-														moveData={this.state.moveData}
-														setCanSkip={(canSkip) => this.setState({ canSkip })}
-												  />
-							: <Lobby tables={this.state.tables}
-									 socket={this.socket}
-								 	 userInfo={this.state.userInfo}
-							  />
+							{this.state.tableId ?
+								<Game
+									tableId={this.state.tableId}
+									socket={this.socket}
+									playersInfo={this.state.playersInfo}
+									playersOrder={this.state.playersOrder}
+									yourTurn={this.state.yourTurn}
+									gameOn={this.state.gameOn}
+									turn={this.state.turn}
+									dice={this.state.dice}
+									disable={this.disable}
+									disabled={this.state.disabled}
+									setActiveDice={activeDice => {this.setState({activeDice})}}
+									moveMade={() => this.setState({ moveData: null, actionCount: this.state.actionCount + 1 })}
+									moveData={this.state.moveData}
+									setCanSkip={(canSkip) => this.setState({ canSkip })}
+								/>
+							:
+								<Lobby tables={this.state.tables}
+									socket={this.socket}
+									userInfo={this.state.userInfo}
+									inGame={this.state.playersInGame}
+									inMenu={this.state.playersInMenu}
+								/>
 							}
 							<div className={`App_game-finished_container${this.state.gameFinishedModal ? " App_game-finished_container_shown" : ""}`}>
 								<GameFinished results={this.state.gameResults}
