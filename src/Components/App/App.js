@@ -13,7 +13,7 @@ import AppHeader from '../AppHeader/AppHeader'
 import cloneDeep from 'lodash.clonedeep'
 
 import { connect } from 'react-redux'
-import { setUser, decrementLotteryTimer } from '../../store/modules/user'
+import { setUser, decrementLotteryTimer, fetchUserFromVK } from '../../store/modules/user'
 import { setTables } from '../../store/modules/tables'
 
 import {
@@ -24,33 +24,6 @@ import {
 
 
 const VK = window.VK
-const init = function () {
-    return new Promise((resolve) => {
-        if (!IS_DEBUG) {
-            VK.init(function () {
-                VK.api('users.get', { access_token: VK_ACCESS_TOKEN, fields: 'photo_50,photo_100' }, (res) => {
-                    const data = res && res.response && res.response[0]
-
-                    if (!data) {
-                        throw new Error('can not fetch user data')
-                    }
-
-                    resolve(data)
-                })
-            }, function () {
-                console.log('bad')
-            }, '5.103')
-        } else {
-            resolve({
-                photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
-                photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-                first_name: 'Lindsey',
-                last_name: 'Stirling',
-                id: `123123123${Math.random() > .5 ? 1 : 0}`
-            })
-        }
-    })
-}
 
 const socket = io.connect(ENDPOINT)
 
@@ -93,10 +66,8 @@ class App extends React.Component {
     }
 
     componentDidMount () {
-        init().then(user => {
-            this.props.setUser(user)
-
-            this.socket.emit('init', { ...user, vk_id: user.id })
+        this.props.fetchUserFromVK().then(() => {
+            this.socket.emit('init', this.props.user)
         })
 
         this.socket.on('request-auth', () => {
@@ -123,7 +94,7 @@ class App extends React.Component {
             this.socket.emit('get-lottery-field')
         })
 
-        this.socket.on('update-user-info', data => this.props.setUser({ ...this.props.user, ...data }))
+        this.socket.on('update-user-info', data => this.props.setUser(data))
         this.socket.on('connect-to', data => {
             this.setState({ tableId: data.id, bet: data.bet })
         })
@@ -487,6 +458,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+    fetchUserFromVK,
     setUser,
     decrementLotteryTimer,
     setTables
