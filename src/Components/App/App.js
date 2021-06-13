@@ -15,15 +15,19 @@ import cloneDeep from 'lodash.clonedeep';
 import { connect } from "react-redux"
 import { setUser, decrementLotteryTimer } from '../../store/modules/user'
 
-let debug = window.location.href === "http://192.168.1.3:3000/";
-const ENDPOINT = debug ? "http://192.168.1.3:8000/" : "https://parcheesi.herokuapp.com/";
+import {
+    IS_DEBUG,
+    ENDPOINT,
+    VK_ACCESS_TOKEN
+} from '../../constants/constants'
+
+
 const VK = window.VK;
-const access_token = 'dfc81daadfc81daadfc81daa51dfba9a4cddfc8dfc81daa812a9735657f3387f235945d';
 const init = function() {
 	return new Promise((resolve, reject) => {
-		if (!debug) {
+		if (!IS_DEBUG) {
 			VK.init(function() {
-				VK.api("users.get", { access_token, fields: 'photo_50,photo_100' }, (res) => {
+				VK.api("users.get", { access_token: VK_ACCESS_TOKEN, fields: 'photo_50,photo_100' }, (res) => {
 					const data = res && res.response && res.response[0];
 					if (!data) throw new Error('can not fetch user data');
 					resolve(data);
@@ -96,10 +100,19 @@ class App extends React.Component {
 		});
 
 		this.socket.on("init-finished", data => {
-			debug || initRatings.call(this, data);
+            const {
+                topByRank,
+                topByChips,
+                justInstalled,
+                ...user
+            } = data
 
-            this.props.setUser({ ...this.props.user, ...data})
-			this.setState({ loading: false, justInstalled: data.justInstalled });
+            if (!IS_DEBUG) {
+                initRatings.call(this, data);
+            }
+
+            this.props.setUser({ ...this.props.user, ...user})
+			this.setState({ loading: false, justInstalled });
 
 			this.socket.emit("get-lottery-field");
 		});
@@ -399,20 +412,28 @@ function getPlayersOrder(num) {
     return playersOrder;
 }
 
-function initRatings(data) {
-	VK.api("users.get", { access_token, fields: 'photo_50,photo_100', user_ids: data.topByRank.concat(data.topByChips).map(i => i.vk_id).join(',') }, (res) => {
+async function initRatings(data) {
+    const userIds = data.topByRank.concat(data.topByChips).map(i => i.vk_id).join(',')
+
+	VK.api("users.get", {
+        access_token: VK_ACCESS_TOKEN,
+        fields: 'photo_50,photo_100',
+        user_ids: userIds
+    }, (res) => {
 		const respData = res && res.response;
+
 		let topByRank = data.topByRank.map(item => {
 			return { ...respData.find(i => item.vk_id === i.id), ...item };
 		});
+
 		let topByChips = data.topByChips.map(item => {
 			return { ...respData.find(i => item.vk_id === i.id), ...item };
 		});
-		this.setState({ topByRank, topByChips });
-		delete data.topByRank;
-		delete data.topByChips;
+
+        this.setState({ topByRank, topByChips });
 	});
 }
+
 
 const mapStateToProps = (state) => ({
 	user: state.user
@@ -420,7 +441,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     setUser,
-    decrementLotteryTimer
+    decrementLotteryTimer,
+    socketEmit: {
+        type: 'socket/'
+    }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
