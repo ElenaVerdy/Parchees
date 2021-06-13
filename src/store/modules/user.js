@@ -8,7 +8,7 @@ export const userSlice = createSlice({
 
     reducers: {
         setUser (state, { payload }) {
-            state = Object.assign(state, payload)
+            Object.assign(state, payload)
         },
 
         decrementLotteryTimer (state) {
