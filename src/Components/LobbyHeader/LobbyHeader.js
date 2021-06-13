@@ -2,8 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import './LobbyHeader.css'
 
-export default function LobbyHeader (props) {
+export default function LobbyHeader () {
     const user = useSelector(state => state.user)
+    const inGame = useSelector(state => state.tables.playersInGame)
+    const inMenu = useSelector(state => state.tables.playersInMenu)
 
     return(
         <div className='lobby-header'>
@@ -16,8 +18,8 @@ export default function LobbyHeader (props) {
             </div>
             <div className='lobby-header_left'>
                 <button className="btn-grey btn-grey-small">с компьютером</button>
-                <div className="lobby-header_left_counts">В игре: <span>{ props.inGame }</span></div>
-                <div className="lobby-header_left_counts">В меню: <span>{ props.inMenu }</span></div>
+                <div className="lobby-header_left_counts">В игре: <span>{ inGame }</span></div>
+                <div className="lobby-header_left_counts">В меню: <span>{ inMenu }</span></div>
             </div>
         </div>
     )

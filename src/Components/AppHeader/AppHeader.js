@@ -34,8 +34,8 @@ export default function AppHeader (props){
 
     return (
         <div className="app-header flex-sb">
-            <Shop shopIsOpen={shopIsOpen} setShopIsOpen={setShopIsOpen.bind(this)} userInfo={user} socket={props.socket} tab={shopTab} setTab={setShopTab} />
-            <Lottery isOpen={lotteryIsOpen} setIsOpen={setLotteryIsOpen} lottery={props.lotteryField} userInfo={user} socket={props.socket} ></Lottery>
+            <Shop shopIsOpen={shopIsOpen} setShopIsOpen={setShopIsOpen.bind(this)} socket={props.socket} tab={shopTab} setTab={setShopTab} />
+            <Lottery isOpen={lotteryIsOpen} setIsOpen={setLotteryIsOpen} lottery={props.lotteryField} socket={props.socket} ></Lottery>
             <Records isOpen={recordsIsOpen} setIsOpen={setRecordsIsOpen} topByRank={props.topByRank} topByChips={props.topByChips} ></Records>
             <Rules isOpen={rulesOpen} setIsOpen={setRulesOpen}></Rules>
             <div className="app-header_left flex-center">

@@ -14,6 +14,7 @@ import cloneDeep from 'lodash.clonedeep'
 
 import { connect } from 'react-redux'
 import { setUser, decrementLotteryTimer } from '../../store/modules/user'
+import { setTables } from '../../store/modules/tables'
 
 import {
     IS_DEBUG,
@@ -58,9 +59,6 @@ class App extends React.Component {
         super(props)
 
         this.state = {
-            tables: [],
-            playersInGame: 0,
-            playersInMenu: 0,
             tableId: null,
             bet: null,
             playersInfo: [],
@@ -137,7 +135,7 @@ class App extends React.Component {
         })
 
         this.socket.on('update-tables', ({ availableTables, playersInMenu, playersInGame }) => {
-            this.setState({
+            this.props.setTables({
                 tables: availableTables,
                 playersInMenu,
                 playersInGame
@@ -320,11 +318,7 @@ class App extends React.Component {
                                         setCanSkip={(canSkip) => this.setState({ canSkip })}
                                     />
                                     :
-                                    <Lobby tables={this.state.tables}
-                                        socket={this.socket}
-                                        inGame={this.state.playersInGame}
-                                        inMenu={this.state.playersInMenu}
-                                    />
+                                    <Lobby socket={this.socket} />
                                 }
                                 <div className={`App_game-finished_container${this.state.gameFinishedModal ? ' App_game-finished_container_shown' : ''}`}>
                                     <GameFinished results={this.state.gameResults}
@@ -495,9 +489,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     setUser,
     decrementLotteryTimer,
-    socketEmit: {
-        type: 'socket/'
-    }
+    setTables
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

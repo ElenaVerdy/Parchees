@@ -48,7 +48,8 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    user: state.user
+    user: state.user,
+    tables: state.tables.tables
 })
 
 export default connect(mapStateToProps)(Game)
