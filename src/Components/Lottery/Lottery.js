@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import './Lottery.css'
 import ReactDice from '../ReactDice/ReactDice'
@@ -8,6 +9,7 @@ Modal.setAppElement('#root')
 
 export default function Lottery (props){
     const diceRef = useRef(null)
+    const user = useSelector(state => state.user)
 
     useEffect(() => {
         props.socket.on('lottery-rolled', ({ dice }) => {
@@ -23,7 +25,7 @@ export default function Lottery (props){
     const [disabled, setDisabled] = useState(false)
 
     function rollDice () {
-        props.socket.emit('lottery-roll', { buy: !!props.userInfo.timeToLottery })
+        props.socket.emit('lottery-roll', { buy: !!user.timeToLottery })
         setDisabled(true)
     }
 
@@ -67,11 +69,11 @@ export default function Lottery (props){
                 </div>
                 <div className="lottery_left-container">
                     <div className="lottery_gift-line flex-center">500 в подарок</div>
-                    {props.userInfo.timeToLottery ? null : <button className="btn-grey" disabled={disabled} onClick={() => {
+                    {user.timeToLottery ? null : <button className="btn-grey" disabled={disabled} onClick={() => {
                         disabled || rollDice()
                     }}>Бросить бесплатно</button>}
-                    {props.userInfo.timeToLottery ?
-                        <button className="btn-grey" disabled={disabled || !props.userInfo.money} onClick={() => {
+                    {user.timeToLottery ?
+                        <button className="btn-grey" disabled={disabled || !user.money} onClick={() => {
                             disabled || rollDice()
                         }}>
 							Бросить за <div className="lottery-price flex-center">
@@ -80,7 +82,7 @@ export default function Lottery (props){
                             </div>
                         </button>
                         : null}
-                    <div className="side-menu_info">{props.userInfo.timeToLottery ? timerStr(props.userInfo.timeToLottery) : 'Проверь свою удачу'}</div>
+                    <div className="side-menu_info">{user.timeToLottery ? timerStr(user.timeToLottery) : 'Проверь свою удачу'}</div>
                     <ReactDice numDice={2}
                         rollTime={1}
                         ref={diceRef}

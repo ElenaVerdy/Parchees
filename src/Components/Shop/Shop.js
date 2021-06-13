@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import './Shop.css'
 import { cheats, money } from '../../metadata.json'
@@ -7,6 +8,7 @@ Modal.setAppElement('#root')
 
 export default function Shop (props){
     const tabs = ['Читы', 'Фишки', 'Поле', 'Денюшки']
+    const user = useSelector(state => state.user)
 
     return (
         <Modal
@@ -27,14 +29,14 @@ export default function Shop (props){
                         {cheats.map(ch => (
                             <div className="shop_item" key={ch.id}>
                                 <div className="shop_item-title">{ch.title}</div>
-                                {props.userInfo[ch.id] ? <div className="shop_item-qty">{props.userInfo[ch.id]}</div> : null}
+                                {user[ch.id] ? <div className="shop_item-qty">{user[ch.id]}</div> : null}
                                 <div className={`shop_item-icon ${ch.iconClass}`}></div>
                                 <div className="shop_item-description">{ch.description}</div>
                                 <div className="shop_item-price flex-center">
                                     <div className="shop_item-price-icon"></div>
                                     <div className="shop_item-price-number">{ch.price}</div>
                                 </div>
-                                <button className={`shop_item-buy${ch.price > props.userInfo.money ? ' disabled' : ''}`} onClick={buy.bind(null, props.userInfo, ch.id, props.socket)}>купить</button>
+                                <button className={`shop_item-buy${ch.price > user.money ? ' disabled' : ''}`} onClick={buy.bind(null, user, ch.id, props.socket)}>купить</button>
                             </div>
                         ))}
                     </div>
@@ -66,10 +68,10 @@ export default function Shop (props){
     )
 }
 
-function buy (userInfo, id, socket) {
+function buy (user, id, socket) {
     const ch = cheats.find(item => item.id === id)
 
-    if (ch.price > userInfo.money) {
+    if (ch.price > user.money) {
         return
     }
 

@@ -13,7 +13,7 @@ export default class Lobby extends React.Component {
         return(
             <div className='lobby-container'>
                 <LobbyHeader { ...this.props }/>
-                <Tables tables={this.props.tables} socket={this.props.socket} userInfo={this.props.userInfo} />
+                <Tables tables={this.props.tables} socket={this.props.socket} />
             </div>
         )
     }

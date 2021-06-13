@@ -36,7 +36,7 @@ export default function AppHeader (props){
         <div className="app-header flex-sb">
             <Shop shopIsOpen={shopIsOpen} setShopIsOpen={setShopIsOpen.bind(this)} userInfo={user} socket={props.socket} tab={shopTab} setTab={setShopTab} />
             <Lottery isOpen={lotteryIsOpen} setIsOpen={setLotteryIsOpen} lottery={props.lotteryField} userInfo={user} socket={props.socket} ></Lottery>
-            <Records isOpen={recordsIsOpen} setIsOpen={setRecordsIsOpen} userInfo={user} topByRank={props.topByRank} topByChips={props.topByChips} ></Records>
+            <Records isOpen={recordsIsOpen} setIsOpen={setRecordsIsOpen} topByRank={props.topByRank} topByChips={props.topByChips} ></Records>
             <Rules isOpen={rulesOpen} setIsOpen={setRulesOpen}></Rules>
             <div className="app-header_left flex-center">
                 <div className="app-header_btn-wrapper pointer" onClick={openShopWithTab.bind(this, 0)}><div className="app-header_btn app-header_shop-btn"></div></div>

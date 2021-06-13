@@ -95,10 +95,10 @@ class App extends React.Component {
     }
 
     componentDidMount () {
-        init().then(userInfo => {
-            this.props.setUser(userInfo)
+        init().then(user => {
+            this.props.setUser(user)
 
-            this.socket.emit('init', { ...userInfo, vk_id: userInfo.id })
+            this.socket.emit('init', { ...user, vk_id: user.id })
         })
 
         this.socket.on('request-auth', () => {
@@ -322,7 +322,6 @@ class App extends React.Component {
                                     :
                                     <Lobby tables={this.state.tables}
                                         socket={this.socket}
-                                        userInfo={this.props.user}
                                         inGame={this.state.playersInGame}
                                         inMenu={this.state.playersInMenu}
                                     />

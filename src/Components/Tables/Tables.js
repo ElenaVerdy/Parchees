@@ -1,8 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import './Tables.css'
 
 
-export default class Game extends React.Component {
+class Game extends React.Component {
     componentDidMount () {
         this.props.socket.emit('get-tables-request')
         this.timer = setInterval(()=>{
@@ -26,13 +27,13 @@ export default class Game extends React.Component {
                             <div className="tables_row tables_row-body" key={t.tableId}>
                                 <div className="tables_players">
                                     <div className="tables_join-button" onClick={() => {
-                                        this.props.socket.emit('connect-to-request', {...this.props.userInfo, id: t.tableId})
+                                        this.props.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}>играть</div>
                                     {t.players.map((player, index) => (<div className="tables_player-icon" key={`${t.playerId}_pl${index}`}>
                                         <img width={40} height={40} src={player.photo_50} alt={player.username} />
                                     </div>))}
                                     <div className="tables_player-icon table-join-icon" onClick={() => {
-                                        this.props.socket.emit('connect-to-request', {...this.props.userInfo, id: t.tableId})
+                                        this.props.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}></div>
                                 </div>
                                 <div className="tables_bet">{ t.bet }</div>
@@ -45,3 +46,9 @@ export default class Game extends React.Component {
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps)(Game)
