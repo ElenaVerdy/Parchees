@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import user from './modules/user'
 import tables from './modules/tables'
-import thunk from 'redux-thunk';
+import ratings from './modules/ratings'
+import thunk from 'redux-thunk'
 
 export default configureStore({
     reducer: {
         user,
-        tables
+        tables,
+        ratings
     },
 
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(thunk)

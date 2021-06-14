@@ -10,7 +10,7 @@ export const tablesSlice = createSlice({
     },
 
     reducers: {
-        setTables (state, payload) {
+        setTables (state, { payload }) {
             Object.assign(state, payload)
         }
     }

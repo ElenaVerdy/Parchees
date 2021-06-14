@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import './Records.css'
 
 Modal.setAppElement('#root')
 
 export default function Records (props){
+    const topByRank = useSelector(state => state.ratings.topByRank)
+    const topByChips = useSelector(state => state.ratings.topByChips)
     const [tab, setTab] = useState(0)
 
     return (
@@ -31,7 +34,7 @@ export default function Records (props){
                 </div>
                 {tab === 0 ? (
                     <div className="records_main-wrapper">
-                        {props.topByRank.map((item, i) => {
+                        {topByRank.map((item, i) => {
                             return (
                                 <div
                                     key={ item.id }
@@ -48,7 +51,7 @@ export default function Records (props){
                 ) : null}
                 {tab === 1 ? (
                     <div className="records_main-wrapper">
-                        {props.topByChips.map((item, i) => {
+                        {topByChips.map((item, i) => {
                             return (
                                 <div
                                     key={ item.id }

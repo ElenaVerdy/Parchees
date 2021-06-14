@@ -14,16 +14,11 @@ import cloneDeep from 'lodash.clonedeep'
 
 import { connect } from 'react-redux'
 import { setUser, decrementLotteryTimer, fetchUserFromVK } from '../../store/modules/user'
+import { fetchRatingsFromVK } from '../../store/modules/ratings'
 import { setTables } from '../../store/modules/tables'
 
-import {
-    IS_DEBUG,
-    ENDPOINT,
-    VK_ACCESS_TOKEN
-} from '../../constants/constants'
+import { ENDPOINT } from '../../constants/constants'
 
-
-const VK = window.VK
 
 const socket = io.connect(ENDPOINT)
 
@@ -50,8 +45,6 @@ class App extends React.Component {
             actionCount: 0,
             canSkip: false,
             loading: true,
-            topByRank: [],
-            topByChips: [],
             justInstalled: false
         }
 
@@ -84,9 +77,10 @@ class App extends React.Component {
                 ...user
             } = data
 
-            if (!IS_DEBUG) {
-                initRatings.call(this, { topByRank, topByChips })
-            }
+            this.props.fetchRatingsFromVK({
+                byRank: topByRank,
+                byChips: topByChips
+            })
 
             this.props.setUser({ ...this.props.user, ...user})
             this.setState({ loading: false, justInstalled })
@@ -241,8 +235,6 @@ class App extends React.Component {
                             avgRating={avgRating.call(this)}
                             bet={this.state.bet}
                             lotteryField={this.state.lotteryField}
-                            topByRank={this.state.topByRank}
-                            topByChips={this.state.topByChips}
                             justInstalled={this.state.justInstalled}
                         />
                         <div className="App_main">
@@ -430,28 +422,6 @@ function getPlayersOrder (num) {
     return playersOrder
 }
 
-function initRatings (data) {
-    const userIds = data.topByRank.concat(data.topByChips).map(i => i.vk_id).join(',')
-
-    VK.api('users.get', {
-        access_token: VK_ACCESS_TOKEN,
-        fields: 'photo_50,photo_100',
-        user_ids: userIds
-    }, (res) => {
-        const respData = res && res.response
-
-        const topByRank = data.topByRank.map(item => {
-            return { ...respData.find(i => item.vk_id === i.id), ...item }
-        })
-
-        const topByChips = data.topByChips.map(item => {
-            return { ...respData.find(i => item.vk_id === i.id), ...item }
-        })
-
-        this.setState({ topByRank, topByChips })
-    })
-}
-
 
 const mapStateToProps = (state) => ({
     user: state.user
@@ -460,6 +430,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     fetchUserFromVK,
     setUser,
+    fetchRatingsFromVK,
     decrementLotteryTimer,
     setTables
 }
