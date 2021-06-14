@@ -3,10 +3,6 @@ import DiceContainer from './DiceContainer'
 
 // eslint-disable-next-line react/display-name
 const ReactDice = React.forwardRef((props, ref) => {
-    const totalCb = (total, diceValues) => {
-        props.rollDone(total, diceValues)
-    }
-
     return (
         <DiceContainer
             {...props}
@@ -16,7 +12,6 @@ const ReactDice = React.forwardRef((props, ref) => {
             outline={false}
             outlineColor={'#000000'}
             sides={6}
-            totalCb={totalCb}
             ref={ref}
             numDice={2}
             disableIndividual={true}

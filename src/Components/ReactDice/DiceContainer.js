@@ -18,7 +18,6 @@ export default class DiceContainer extends Component {
 
         this.dice = []
         this.rollCount = 0
-
         this.rollDone = this.rollDone.bind(this)
         this.rollAll = this.rollAll.bind(this)
         this.getRollResults = this.getRollResults.bind(this)
@@ -58,7 +57,7 @@ export default class DiceContainer extends Component {
         }
 
         this.setState({ totalValue, diceValues })
-        this.props.totalCb(totalValue, diceValues)
+        this.props.rollDone(totalValue, diceValues)
     }
 
     componentDidUpdate (prevProps) {

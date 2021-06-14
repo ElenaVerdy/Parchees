@@ -6,8 +6,6 @@ class Die extends Component {
         this.state = {
             currentValue: null
         }
-
-        this.rollDie = this.rollDie.bind(this)
     }
 
     getRandomInt () {
@@ -19,10 +17,6 @@ class Die extends Component {
 
     rollDie (value, auto) {
         if (this.props.disableRandom && !value && !auto) {
-            setTimeout(() => {
-                this.props.rollDone(this.state.currentValue)
-            }, this.props.rollTime * 1000)
-
             return
         }
 
