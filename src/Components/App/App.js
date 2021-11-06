@@ -103,14 +103,16 @@ class App extends React.Component {
             })
         })
 
+        this.socket.on('player-left', ({ playerIndex }) => {
+            const playersInfo = cloneDeep(this.state.playersInfo)
+
+            playersInfo[playerIndex].left = true
+
+            this.setState({ playersInfo })
+        })
+
         this.socket.on('update-players', data => {
-            if (this.state.gameOn && !data.players) {
-                const playersInfo = cloneDeep(this.state.playersInfo)
-
-                playersInfo[data.playerLeftIndex].left = true
-
-                this.setState({ playersInfo })
-            } else if (data.afterWin || (!this.state.gameOn && data.players)) {
+            if (data.afterWin || !this.state.gameOn) {
                 const playersOrder = getPlayersOrder(data.players.length)
 
                 this.setState({

@@ -3,6 +3,14 @@ import { IS_DEBUG, VK_ACCESS_TOKEN } from '../../constants/constants'
 
 const VK = window.VK
 
+const getRandomNumber = () => {
+    let number = Math.random()
+
+    if (number < 0.25) return 1
+    if (number < 0.5) return 2
+    if (number < 0.75) return 3
+    return 4
+}
 
 export const fetchUserFromVK = createAsyncThunk(
     'user/fetchUserFromVKStatus',
@@ -29,7 +37,7 @@ export const fetchUserFromVK = createAsyncThunk(
                     photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
                     first_name: 'Lindsey',
                     last_name: 'Stirling',
-                    id: `123123123${Math.random() > .5 ? 1 : 0}`
+                    id: `123123123${getRandomNumber()}`
                 })
             }
         })

@@ -77,7 +77,7 @@ export default function SideMenu (props) {
                                     className="btn-grey"
                                     disabled={disabled || !canSkip}
                                     onClick={() => {
-                                        socket.emit('roll-dice', { dice: [], tableId })
+                                        socket.emit('roll-dice', { tableId })
                                     }}
                                 >
                                     {dictionary.throwDice}
@@ -142,7 +142,7 @@ export default function SideMenu (props) {
     )
 }
 
-function useItem ({ socket, payload }) {
+function useItem (socket, payload) {
     socket.emit('use-item', payload)
 }
 

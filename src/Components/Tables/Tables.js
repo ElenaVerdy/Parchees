@@ -12,9 +12,9 @@ class Tables extends React.Component {
     }
 
     componentDidMount () {
-        this.socket.emit('get-tables-request')
+        this.socket.emit('get-tables-request', {})
         this.timer = setInterval(()=>{
-            this.socket.emit('get-tables-request')
+            this.socket.emit('get-tables-request', {})
         }, 1000)
     }
     componentWillUnmount () {
