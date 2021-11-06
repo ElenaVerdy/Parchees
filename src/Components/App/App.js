@@ -1,6 +1,5 @@
 import React from 'react'
 import Modal from 'react-modal'
-import io from 'socket.io-client'
 import './App.css'
 import './common.css'
 import Game from '../Game/Game'
@@ -12,19 +11,16 @@ import GameFinished from '../GameFinished/GameFinished'
 import AppHeader from '../AppHeader/AppHeader'
 import cloneDeep from 'lodash.clonedeep'
 
+import { SocketContext } from '../../context/socket'
+
 import { connect } from 'react-redux'
 import { setUser, decrementLotteryTimer, fetchUserFromVK } from '../../store/modules/user'
 import { fetchRatingsFromVK } from '../../store/modules/ratings'
 import { setTables } from '../../store/modules/tables'
 
-import { ENDPOINT } from '../../constants/constants'
-
-
-const socket = io.connect(ENDPOINT)
-
 class App extends React.Component {
-    constructor (props) {
-        super(props)
+    constructor (props, context) {
+        super(props, context)
 
         this.state = {
             tableId: null,
@@ -49,7 +45,7 @@ class App extends React.Component {
         }
 
         this.doAfterDisable = {}
-        this.socket = socket
+        this.socket = this.context
         this.handleNextTurn = handleNextTurn.bind(this)
         this.diceRolled = diceRolled.bind(this)
         this.endGame = endGame.bind(this)
@@ -231,7 +227,6 @@ class App extends React.Component {
                         <AppHeader
                             tableId={this.state.tableId}
                             toTables={toTables.bind(this)}
-                            socket={this.socket}
                             avgRating={avgRating.call(this)}
                             bet={this.state.bet}
                             lotteryField={this.state.lotteryField}
@@ -240,7 +235,6 @@ class App extends React.Component {
                         <div className="App_main">
                             <div className="App_main-offside">
                                 <SideMenu
-                                    socket={this.socket}
                                     tableId={this.state.tableId}
                                     gameOn={this.state.gameOn}
                                     countDown={this.state.countDown}
@@ -257,14 +251,13 @@ class App extends React.Component {
                                     canSkip={this.state.canSkip}
                                     showError={error => this.setState({ error })}
                                 />
-                                <Chat roomId={this.state.tableId} socket={this.socket}></Chat>
+                                <Chat roomId={this.state.tableId}></Chat>
 
                             </div>
                             <div className="App_main-container">
                                 {this.state.tableId ?
                                     <Game
                                         tableId={this.state.tableId}
-                                        socket={this.socket}
                                         playersInfo={this.state.playersInfo}
                                         playersOrder={this.state.playersOrder}
                                         yourTurn={this.state.yourTurn}
@@ -281,7 +274,7 @@ class App extends React.Component {
                                         setCanSkip={(canSkip) => this.setState({ canSkip })}
                                     />
                                     :
-                                    <Lobby socket={this.socket} />
+                                    <Lobby />
                                 }
                                 <div className={`App_game-finished_container${this.state.gameFinishedModal ? ' App_game-finished_container_shown' : ''}`}>
                                     <GameFinished results={this.state.gameResults}
@@ -314,7 +307,7 @@ function avgRating () {
 }
 
 function toTables () {
-    socket.emit('leave-table', { tableId: this.state.tableId })
+    this.socket.emit('leave-table', { tableId: this.state.tableId })
     this.doAfterDisable = {}
     this.setState({
         tableId: null,
@@ -422,6 +415,7 @@ function getPlayersOrder (num) {
     return playersOrder
 }
 
+App.contextType = SocketContext;
 
 const mapStateToProps = (state) => ({
     user: state.user

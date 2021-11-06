@@ -1,12 +1,13 @@
 import React from 'react'
 
 import { connect } from 'react-redux'
+import { SocketContext } from '../../context/socket'
 
 import './Chat.css'
 
 class Chat extends React.Component {
-    constructor (props){
-        super(props)
+    constructor (props, context){
+        super(props, context)
         this.state = {
             inputText: '',
             blockBtn: false,
@@ -17,10 +18,12 @@ class Chat extends React.Component {
 
         this.sendMsg = sendMsg.bind(this)
         this.talkTo = talkTo.bind(this)
+
+        this.socket = this.context
     }
     componentDidMount () {
-        this.props.socket.on('new-msg', newMsg.bind(this))
-        this.props.socket.emit('get-common-msgs')
+        this.socket.on('new-msg', newMsg.bind(this))
+        this.socket.emit('get-common-msgs')
     }
     componentDidUpdate (prevProps) {
         if (prevProps.roomId && !this.props.roomId && this.state.selectedRoom !== 'main') {
@@ -69,6 +72,8 @@ class Chat extends React.Component {
     }
 }
 
+Chat.contextType = SocketContext;
+
 function messege (props) {
     return (
         <div className="chat_messege p-tb-5" key={props.i}>
@@ -84,7 +89,7 @@ function sendMsg () {
         return
     }
 
-    this.props.socket.emit('send-msg', {
+    this.socket.emit('send-msg', {
         player: {
             id: this.props.user.id,
             name: this.props.user.name

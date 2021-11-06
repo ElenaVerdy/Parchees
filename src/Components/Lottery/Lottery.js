@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
+import { SocketContext } from '../../context/socket'
 import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import './Lottery.css'
@@ -8,16 +9,18 @@ import 'react-dice-complete/dist/react-dice-complete.css'
 Modal.setAppElement('#root')
 
 export default function Lottery (props){
+    const socket = useContext(SocketContext)
+
     const diceRef = useRef(null)
     const user = useSelector(state => state.user)
 
     useEffect(() => {
-        props.socket.on('lottery-rolled', ({ dice }) => {
+        socket.on('lottery-rolled', ({ dice }) => {
             setDice(dice)
             diceRef && diceRef.current && diceRef.current.rollAll(dice)
         })
 
-        return () => props.socket.off('lottery-rolled')
+        return () => socket.off('lottery-rolled')
     })
 
     useEffect(() => setDice([]), [props.isOpen])
@@ -25,7 +28,7 @@ export default function Lottery (props){
     const [disabled, setDisabled] = useState(false)
 
     function rollDice () {
-        props.socket.emit('lottery-roll', { buy: !!user.timeToLottery })
+        socket.emit('lottery-roll', { buy: !!user.timeToLottery })
         setDisabled(true)
     }
 

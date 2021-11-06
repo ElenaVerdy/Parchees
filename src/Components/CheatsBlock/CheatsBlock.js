@@ -44,7 +44,7 @@ export default function CheatsBlock (props) {
         if (cheat.id === 'luck') {
             setluckOn(true)
         } else if (['skip', 'reroll'].includes(cheat.id)) {
-            props.socket.emit('use-item', { tableId: props.tableId, cheatId: cheat.id, buy })
+            props.useItem({ tableId: props.tableId, cheatId: cheat.id, buy })
         } else if (['shield', 'flight', 'free_shortcuts', 'no_shortcuts', 'cat'].includes(cheat.id)) {
             userChoosesChip()
                 .then(id => {
@@ -63,7 +63,7 @@ export default function CheatsBlock (props) {
                         return
                     }
 
-                    props.socket.emit('use-item', { tableId: props.tableId, cheatId: cheat.id, buy, player, num })
+                    props.useItem({ tableId: props.tableId, cheatId: cheat.id, buy, player, num })
                 })
         } else {
             throw new Error('wrong cheat.id')

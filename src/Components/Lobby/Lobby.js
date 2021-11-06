@@ -7,7 +7,7 @@ export default function Lobby (props) {
     return(
         <div className='lobby-container'>
             <LobbyHeader />
-            <Tables socket={props.socket} />
+            <Tables />
         </div>
     )
 }

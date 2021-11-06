@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { SocketContext } from '../../context/socket'
 import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import './Shop.css'
@@ -7,6 +8,8 @@ import { cheats, money } from '../../metadata.json'
 Modal.setAppElement('#root')
 
 export default function Shop (props){
+    const socket = useContext(SocketContext)
+
     const tabs = ['Читы', 'Фишки', 'Поле', 'Денюшки']
     const user = useSelector(state => state.user)
 
@@ -36,7 +39,7 @@ export default function Shop (props){
                                     <div className="shop_item-price-icon"></div>
                                     <div className="shop_item-price-number">{ch.price}</div>
                                 </div>
-                                <button className={`shop_item-buy${ch.price > user.money ? ' disabled' : ''}`} onClick={buy.bind(null, user, ch.id, props.socket)}>купить</button>
+                                <button className={`shop_item-buy${ch.price > user.money ? ' disabled' : ''}`} onClick={buy.bind(null, user, ch.id, socket)}>купить</button>
                             </div>
                         ))}
                     </div>

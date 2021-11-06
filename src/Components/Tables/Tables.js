@@ -1,13 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { SocketContext } from '../../context/socket'
 import './Tables.css'
 
 
-class Game extends React.Component {
+class Tables extends React.Component {
+    constructor (props, context){
+        super(props, context)
+
+        this.socket = this.context
+    }
+
     componentDidMount () {
-        this.props.socket.emit('get-tables-request')
+        this.socket.emit('get-tables-request')
         this.timer = setInterval(()=>{
-            this.props.socket.emit('get-tables-request')
+            this.socket.emit('get-tables-request')
         }, 1000)
     }
     componentWillUnmount () {
@@ -27,13 +34,13 @@ class Game extends React.Component {
                             <div className="tables_row tables_row-body" key={t.tableId}>
                                 <div className="tables_players">
                                     <div className="tables_join-button" onClick={() => {
-                                        this.props.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
+                                        this.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}>играть</div>
                                     {t.players.map((player, index) => (<div className="tables_player-icon" key={`${t.playerId}_pl${index}`}>
                                         <img width={40} height={40} src={player.photo_50} alt={player.username} />
                                     </div>))}
                                     <div className="tables_player-icon table-join-icon" onClick={() => {
-                                        this.props.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
+                                        this.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}></div>
                                 </div>
                                 <div className="tables_bet">{ t.bet }</div>
@@ -47,9 +54,11 @@ class Game extends React.Component {
     }
 }
 
+Tables.contextType = SocketContext;
+
 const mapStateToProps = (state) => ({
     user: state.user,
     tables: state.tables.tables
 })
 
-export default connect(mapStateToProps)(Game)
+export default connect(mapStateToProps)(Tables)

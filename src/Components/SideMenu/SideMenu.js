@@ -1,12 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
+import { SocketContext } from '../../context/socket'
 import './SideMenu.css'
 import GameStart from '../GameStart/GameStart'
 import ReactDice from '../ReactDice/ReactDice'
 import CheatsBlock from '../CheatsBlock/CheatsBlock'
 
 export default function SideMenu (props) {
-    const { socket, tableId, gameOn, dice, disabled, canSkip, doublesStreak, disable } = props
+    const { tableId, gameOn, dice, disabled, canSkip, doublesStreak, disable } = props
+
+    const socket = useContext(SocketContext)
     const diceRef = useRef(null)
+
     const dictionary = {
         mainMenu: 'Создай новый стол или присоединись к существующему!',
         throwDice: 'Бросить кубик',
@@ -98,7 +102,7 @@ export default function SideMenu (props) {
                             rollDone={() => props.diceRolled()}
                         />
                         <CheatsBlock
-                            socket={socket}
+                            useItem={useItem.bind(null, socket)}
                             tableId={tableId}
                             myTurn={myTurn}
                             canReroll={!!dice.length}
@@ -126,12 +130,20 @@ export default function SideMenu (props) {
                 )
                 :
                 <div>
-                    <GameStart socket={socket} />
+                    <GameStart
+                        startGame={({ bet }) => {
+                            socket.emit('new-table', { bet })
+                        }}
+                    />
                     <div className="side-menu_info">{dictionary.mainMenu}</div>
                 </div>
             }
         </div>
     )
+}
+
+function useItem ({ socket, payload }) {
+    socket.emit('use-item', payload)
 }
 
 function ReadyButton ({ ready, socket, tableId, clicked }) {

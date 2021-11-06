@@ -1,12 +1,13 @@
 import React from 'react'
+import { SocketContext } from '../../context/socket'
 import './Game.css'
 import CountDown from '../CountDown/CountDown'
 import PlayerInfo from '../PlayerInfo/PlayerInfo'
 
 export default class Game extends React.Component {
 
-    constructor (props) {
-        super(props)
+    constructor (props, context) {
+        super(props, context)
 
         this.cellSize = 45
 
@@ -19,7 +20,7 @@ export default class Game extends React.Component {
         }
 
         this.scheme = createScheme()
-        this.socket = this.props.socket
+        this.socket = this.context
 
         this.moveChipToCell = moveChipToCell.bind(this)
 
@@ -451,6 +452,8 @@ function getFreeShortcuts (chip) {
 
     return res
 }
+
+Game.contextType = SocketContext;
 
 function returnChipsToBase (playerNum) {
     [1, 2, 3, 4].forEach( k => {

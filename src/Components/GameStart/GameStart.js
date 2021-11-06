@@ -7,7 +7,7 @@ import './GameStart.css'
 
 Modal.setAppElement('#root')
 
-export default function GameStart (props){
+export default function GameStart ({ startGame }){
     const user = useSelector(state => state.user)
 
     const [ modalIsOpen, setIsOpen ] = useState(false)
@@ -28,10 +28,6 @@ export default function GameStart (props){
         setBet(maxIndex)
     }, [ user.chips, bets ])
 
-    const startGame = () => {
-        props.socket.emit('new-table', { ...user, bet: bets[selectedBet] })
-    }
-
     return (
         <div>
             <button className="btn-grey" onClick={setIsOpen.bind(this, true)}>Новая игра!</button>
@@ -50,7 +46,10 @@ export default function GameStart (props){
                             key={bet} onClick={() => user.chips >= bet && setBet(index)}>{bet}</div>
                     ))}
                 </div>
-                <button className="game_start_btn btn-brown" onClick={ startGame }>начать</button>
+                <button
+                    className="game_start_btn btn-brown"
+                    onClick={() => startGame({ bet: bets[selectedBet] })}
+                >начать</button>
             </Modal>
         </div>
     )
