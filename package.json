@@ -13,7 +13,7 @@
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.4",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.3",
     "react-tooltip": "^4.2.8",
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
@@ -26,9 +26,6 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build && firebase deploy"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -40,13 +37,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "compression-webpack-plugin": "^4.0.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-redux": "^3.3.2",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack-bundle-analyzer": "^3.8.0"
   }
 }
