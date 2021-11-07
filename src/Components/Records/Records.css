@@ -18,21 +18,6 @@
     border-right: 1px solid var(--color-black);
     height: fit-content;
 }
-.records_tab-icon::before {
-    margin: 0px 5px 0px -5px;
-    width: 20px;
-    height: 20px;
-    display: block;
-    background-position: center;
-    background-size: cover;
-    content: '  ';
-}
-.records_tab-icon-rating::before {
-    background-image: url(../../assets/icons/star.svg);
-}
-.records_tab-icon-chips::before {
-    background-image: url(../../assets/icons/chip.svg);
-}
 .records_chips::before {
     background-image: url(../../assets/icons/chip.svg);
 }

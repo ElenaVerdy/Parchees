@@ -1,16 +1,32 @@
 import React, { useContext } from 'react'
-import { SocketContext } from '../../context/socket'
+import { SocketContext } from 'context/socket'
 import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
+import Switch from 'ui/switch/Switch'
 import './Shop.css'
-import { cheats, money } from '../../metadata.json'
+import { cheats, money } from 'metadata.json'
 
 Modal.setAppElement('#root')
+
+const tabs = [
+    {
+        name: 'Читы',
+        id: 'cheats'
+    }, {
+        name: 'Фишки',
+        id: 'chips'
+    }, {
+        name: 'Поле',
+        id: 'fields'
+    }, {
+        name: 'Денюшки',
+        id: 'money'
+    }
+]
 
 export default function Shop (props){
     const socket = useContext(SocketContext)
 
-    const tabs = ['Читы', 'Фишки', 'Поле', 'Денюшки']
     const user = useSelector(state => state.user)
 
     return (
@@ -23,10 +39,12 @@ export default function Shop (props){
         >
             <div className="shop_header">Магазин</div>
             <div className="shop_main">
-                <div className="shop_tabs flex-center">
-                    {tabs.map((item, i) => (<div className={`pointer shop_tab${i === props.tab ? ' shop_tab-selected' : ''}`} onClick={props.setTab.bind(null, i)} key={i}>{ item }</div>))}
-                </div>
-                {props.tab === 0 ? (
+                <Switch
+                    tabs={tabs}
+                    activeTab={props.tab}
+                    setActiveTab={props.setTab}
+                />
+                {props.tab === 'cheats' ? (
                     <div className="shop_items-wrapper flex-sb">
                         {cheats.map(ch => (
                             <div className="shop_item" key={ch.id}>
@@ -43,13 +61,13 @@ export default function Shop (props){
                         ))}
                     </div>
                 ) : null}
-                {props.tab === 1 || props.tab === 2 ? (
+                {props.tab === 'chips' || props.tab === 'fields' ? (
                     <div className="shop_items-wrapper flex-center">
                         <div className="shop_placeholder">Скоро...</div>
                         <div className="shop_timer"></div>
                     </div>
                 ) : null}
-                {props.tab === 3 ? (
+                {props.tab === 'money' ? (
                     <div className="shop_items-wrapper flex-sb">
                         {money.map(item => (
                             <div className="shop_item" key={item.id}>
