@@ -4,11 +4,20 @@ import { IS_DEBUG, VK_ACCESS_TOKEN } from '../../constants/constants'
 const VK = window.VK
 
 const getRandomNumber = () => {
-    let number = Math.random()
+    const number = Math.random()
 
-    if (number < 0.25) return 1
-    if (number < 0.5) return 2
-    if (number < 0.75) return 3
+    if (number < 0.25) {
+        return 1
+    }
+
+    if (number < 0.5) {
+        return 2
+    }
+
+    if (number < 0.75) {
+        return 3
+    }
+
     return 4
 }
 

@@ -417,7 +417,7 @@ function getPlayersOrder (num) {
     return playersOrder
 }
 
-App.contextType = SocketContext;
+App.contextType = SocketContext
 
 const mapStateToProps = (state) => ({
     user: state.user

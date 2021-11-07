@@ -453,7 +453,7 @@ function getFreeShortcuts (chip) {
     return res
 }
 
-Game.contextType = SocketContext;
+Game.contextType = SocketContext
 
 function returnChipsToBase (playerNum) {
     [1, 2, 3, 4].forEach( k => {

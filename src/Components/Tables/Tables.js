@@ -54,7 +54,7 @@ class Tables extends React.Component {
     }
 }
 
-Tables.contextType = SocketContext;
+Tables.contextType = SocketContext
 
 const mapStateToProps = (state) => ({
     user: state.user,

@@ -21,7 +21,6 @@ export default function Shop (props){
             closeTimeoutMS={300}
             contentLabel="Example Modal"
         >
-            <div onClick={props.setShopIsOpen.bind(null, false)} className="abs-top-right"></div>
             <div className="shop_header">Магазин</div>
             <div className="shop_main">
                 <div className="shop_tabs flex-center">

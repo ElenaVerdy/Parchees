@@ -72,7 +72,7 @@ class Chat extends React.Component {
     }
 }
 
-Chat.contextType = SocketContext;
+Chat.contextType = SocketContext
 
 function messege (props) {
     return (

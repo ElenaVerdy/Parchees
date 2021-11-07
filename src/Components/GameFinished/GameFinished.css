@@ -71,7 +71,7 @@ thead .game_finished_tr_chips {
     background-position: center;
     background-size: 20px;
     background-repeat: no-repeat;
-    background-image: url(/static/media/chip.36338ea6.svg);
+    background-image: url(../../assets/icons/chip.svg);
 }
 .game_finished_tr_rank-delta {
     width: 40px;
