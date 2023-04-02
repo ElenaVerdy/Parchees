@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-
 import './CheatsBlock.css'
-import { cheats } from '../../metadata.json'
-import ReactTooltip from 'react-tooltip'
+
+import React, { useEffect, useState } from 'react'
+
 import Modal from 'react-modal'
+import ReactTooltip from 'react-tooltip'
+import { cheats } from '../../metadata.json'
+import { useSelector } from 'react-redux'
 
 export default function CheatsBlock (props) {
     const user = useSelector(state => state.user)
@@ -43,6 +44,7 @@ export default function CheatsBlock (props) {
 
         if (cheat.id === 'luck') {
             setluckOn(true)
+            props.useItem({ tableId: props.tableId, cheatId: cheat.id, buy })
         } else if (['skip', 'reroll'].includes(cheat.id)) {
             props.useItem({ tableId: props.tableId, cheatId: cheat.id, buy })
         } else if (['shield', 'flight', 'free_shortcuts', 'no_shortcuts', 'cat'].includes(cheat.id)) {
