@@ -31,6 +31,7 @@
     overflow-y: scroll;
 }
 .records_record-wrapper {
+    align-items: flex-end;
     margin-top: 15px;
 }
 .records_num {

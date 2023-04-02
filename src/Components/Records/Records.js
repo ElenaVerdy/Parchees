@@ -1,22 +1,27 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import Modal from 'react-modal'
-import Switch from 'ui/switch/Switch'
-import ChipIcon from 'assets/icons/chip.svg'
-import StarIcon from 'assets/icons/star.svg'
 import './Records.css'
 
+import React, { useState } from 'react'
+
+import ChipIcon from 'assets/icons/chip.svg'
+import Modal from 'react-modal'
+import StarIcon from 'assets/icons/star.svg'
+import Switch from 'ui/switch/Switch'
+import { useSelector } from 'react-redux'
+
 Modal.setAppElement('#root')
+
+const RATING_TAB_ID = 'rating'
+const CHIPS_TAB_ID = 'chips'
 
 const tabs = [
     {
         name: 'Рейтинг',
         icon: StarIcon,
-        id: 'rating'
+        id: RATING_TAB_ID
     }, {
         name: 'Фишки',
         icon: ChipIcon,
-        id: 'chips'
+        id: CHIPS_TAB_ID
     }
 ]
 
@@ -40,24 +45,12 @@ export default function Records (props){
                     activeTab={tab}
                     setActiveTab={setTab}
                 />
-                <div className="shop_tabs flex-center">
-                    <div className={`pointer shop_tab${0 === tab ? ' shop_tab-selected' : ''}`} onClick={setTab.bind(null, 0)}>
-                        <div className="records_tab-icon records_tab-icon-rating flex-center">
-                            <div>Рейтинг</div>
-                        </div>
-                    </div>
-                    <div className={`pointer shop_tab${1 === tab ? ' shop_tab-selected' : ''}`} onClick={setTab.bind(null, 1)}>
-                        <div className="records_tab-icon records_tab-icon-chips flex-center">
-                            <div>Фишки</div>
-                        </div>
-                    </div>
-                </div>
-                {tab === 0 ? (
+                {tab === RATING_TAB_ID ? (
                     <div className="records_main-wrapper">
                         {topByRank.map((item, i) => {
                             return (
                                 <div
-                                    key={ item.id }
+                                    key={ item.vk_id }
                                     className={`records_record-wrapper${getRecordWrapperClass(i)} flex`}
                                 >
                                     <div className="records_num">{ i + 1 }</div>
@@ -69,7 +62,7 @@ export default function Records (props){
                         })}
                     </div>
                 ) : null}
-                {tab === 1 ? (
+                {tab === CHIPS_TAB_ID ? (
                     <div className="records_main-wrapper">
                         {topByChips.map((item, i) => {
                             return (
