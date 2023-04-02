@@ -1,8 +1,8 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { SocketContext } from '../../context/socket'
 import './Tables.css'
 
+import React from 'react'
+import { SocketContext } from '../../context/socket'
+import { connect } from 'react-redux'
 
 class Tables extends React.Component {
     constructor (props, context){
@@ -33,13 +33,13 @@ class Tables extends React.Component {
                         return (
                             <div className="tables_row tables_row-body" key={t.tableId}>
                                 <div className="tables_players">
-                                    <div className="tables_join-button" onClick={() => {
+                                    <div className="tables_join-button pointer" onClick={() => {
                                         this.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}>играть</div>
                                     {t.players.map((player, index) => (<div className="tables_player-icon" key={`${t.playerId}_pl${index}`}>
                                         <img width={40} height={40} src={player.photo_50} alt={player.username} />
                                     </div>))}
-                                    <div className="tables_player-icon table-join-icon" onClick={() => {
+                                    <div className="tables_player-icon table-join-icon pointer" onClick={() => {
                                         this.socket.emit('connect-to-request', {...this.props.user, id: t.tableId})
                                     }}></div>
                                 </div>
