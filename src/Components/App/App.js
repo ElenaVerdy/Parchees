@@ -1,20 +1,20 @@
-import React from 'react'
-import Modal from 'react-modal'
 import './App.css'
 import './common.css'
+
+import { decrementLotteryTimer, fetchUserFromVK, setUser } from '../../store/modules/user'
+
+import AppHeader from '../AppHeader/AppHeader'
+import Chat from '../Chat/Chat'
 import Game from '../Game/Game'
+import GameFinished from '../GameFinished/GameFinished'
 import Loading from '../Loading/Loading'
 import Lobby from '../Lobby/Lobby'
+import Modal from 'react-modal'
+import React from 'react'
 import SideMenu from '../SideMenu/SideMenu'
-import Chat from '../Chat/Chat'
-import GameFinished from '../GameFinished/GameFinished'
-import AppHeader from '../AppHeader/AppHeader'
-import cloneDeep from 'lodash.clonedeep'
-
 import { SocketContext } from '../../context/socket'
-
+import cloneDeep from 'lodash.clonedeep'
 import { connect } from 'react-redux'
-import { setUser, decrementLotteryTimer, fetchUserFromVK } from '../../store/modules/user'
 import { fetchRatingsFromVK } from '../../store/modules/ratings'
 import { setTables } from '../../store/modules/tables'
 
@@ -106,9 +106,11 @@ class App extends React.Component {
         this.socket.on('player-left', ({ playerIndex }) => {
             const playersInfo = cloneDeep(this.state.playersInfo)
 
-            playersInfo[playerIndex].left = true
+            if (playersInfo[playerIndex]) {
+                playersInfo[playerIndex].left = true
 
-            this.setState({ playersInfo })
+                this.setState({ playersInfo })
+            }
         })
 
         this.socket.on('update-players', data => {
@@ -172,7 +174,7 @@ class App extends React.Component {
     }
     componentDidUpdate (prevProps, prevState) {
         if (prevState.tableId && !this.state.tableId) {
-            this.socket.emit('get-tables-request')
+            this.socket.emit('get-tables-request', {})
         }
 
         if ((prevState.disabled && !this.state.disabled) || (prevState.actionCount !== this.state.actionCount)) {
