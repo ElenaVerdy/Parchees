@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
-import Die from './Die'
 import './react-dice-complete.css'
+
+import React, { Component } from 'react'
+
+import Die from './Die'
 
 export default class DiceContainer extends Component {
     constructor (props) {
@@ -25,15 +27,15 @@ export default class DiceContainer extends Component {
 
     rollAll (values = []) {
         this.rollCount = 0
-        let index = 0
 
-        for (const die of this.dice) {
-            if (die !== null) {
-                this.rollCount++
-                die.rollDie(values[index])
-                index++
+        values.forEach((value, index) => {
+            if (value === null) {
+                return
             }
-        }
+
+            this.rollCount++
+            this.dice[index].rollDie(value)
+        })
     }
 
     rollDone () {
