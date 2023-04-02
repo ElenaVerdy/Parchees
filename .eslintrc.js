@@ -27,10 +27,7 @@ module.exports = {
             'error',
             4
         ],
-        'linebreak-style': [
-            'error',
-            'windows'
-        ],
+        'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
         'quotes': [
             'error',
             'single'

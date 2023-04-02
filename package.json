@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && firebase deploy"
+    "deploy-firebase": "npm run build && firebase deploy",
+    "deploy-aws": "npm run build && npm run serve"
   },
   "browserslist": {
     "production": [
