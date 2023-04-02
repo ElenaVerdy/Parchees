@@ -1,55 +1,41 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { IS_DEBUG, VK_ACCESS_TOKEN } from '../../constants/constants'
-
-const VK = window.VK
-
-const getRandomNumber = () => {
-    const number = Math.random()
-
-    if (number < 0.25) {
-        return 1
-    }
-
-    if (number < 0.5) {
-        return 2
-    }
-
-    if (number < 0.75) {
-        return 3
-    }
-
-    return 4
-}
 
 export const fetchUserFromVK = createAsyncThunk(
     'user/fetchUserFromVKStatus',
 
-    async () => {
-        return await new Promise((resolve) => {
-            if (!IS_DEBUG) {
-                VK.init(function () {
-                    VK.api('users.get', { access_token: VK_ACCESS_TOKEN, fields: 'photo_50,photo_100' }, (res) => {
-                        const data = res && res.response && res.response[0]
+    () => {
+        // return await new Promise((resolve) => {
+        const queryString = window.location.search
+        const urlParams = new URLSearchParams(queryString)
+        const vk_id = urlParams.get('vk_id')
 
-                        if (!data) {
-                            throw new Error('can not fetch user data')
-                        }
+        return {
+            id: vk_id
+        }
+        // if (!IS_DEBUG) {
+        //     VK.init(function () {
+        //         VK.api('users.get', { access_token: VK_ACCESS_TOKEN, fields: 'photo_50,photo_100' }, (res) => {
+        //             const data = res && res.response && res.response[0]
 
-                        resolve(data)
-                    })
-                }, function () {
-                    console.log('bad')
-                }, '5.103')
-            } else {
-                resolve({
-                    photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
-                    photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
-                    first_name: 'Lindsey',
-                    last_name: 'Stirling',
-                    id: `123123123${getRandomNumber()}`
-                })
-            }
-        })
+        //             if (!data) {
+        //                 throw new Error('can not fetch user data')
+        //             }
+
+        //             resolve(data)
+        //         })
+        //     }, function () {
+        //         console.log('bad')
+        //     }, '5.103')
+        // } else {
+        //     resolve({
+        //         photo_50: 'https://sun9-12.userapi.com/c851016/v851016587/119cab/ai0uN_RKSXc.jpg?ava=1',
+        //         photo_100: 'https://sun1-92.userapi.com/c848416/v848416727/1ba95e/I05FuH5Kb-o.jpg?ava=1',
+        //         first_name: 'Lindsey',
+        //         last_name: 'Stirling',
+        //         id: `123123123${getRandomNumber()}`
+        //     })
+        // }
+        // })
     }
 )
 
