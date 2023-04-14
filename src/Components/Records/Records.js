@@ -67,7 +67,7 @@ export default function Records (props){
                         {topByChips.map((item, i) => {
                             return (
                                 <div
-                                    key={ item.id }
+                                    key={ item.vk_id }
                                     className={`records_record-wrapper${getRecordWrapperClass(i)} flex`}
                                 >
                                     <div className="records_num">{ i + 1 }</div>
